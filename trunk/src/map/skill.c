@@ -15698,6 +15698,9 @@ int skill_delayfix (struct block_list *bl, uint16 skill_id, uint16 skill_lv)
 	if (time < 0)
 		time = -time + status_get_amotion(bl);	// If set to <0, add to attack motion.
 
+	if (time == 0) return 0;
+	//if (time == 0) return battle_config.no_skill_delay;
+	
 	// Delay reductions
 	switch (skill_id) {	//Monk combo skills have their delay reduced by agi/dex.
 	case MO_TRIPLEATTACK:
