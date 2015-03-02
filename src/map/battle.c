@@ -6178,29 +6178,28 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 			else if (tsd && skill_id == NJ_ZENYNAGE)
 				md.damage = md.damage / 2;
 		break;
-#ifdef RENEWAL
 	case NJ_ISSEN:
 		// Official Renewal formula [helvetica]
 		// base damage = currenthp + ((atk * currenthp * skill level) / maxhp)
 		// final damage = base damage + ((mirror image count + 1) / 5 * base damage) - (edef + sdef)
 		// modified def formula
 		{
+
 			short totaldef;
 			struct Damage atk = battle_calc_weapon_attack(src, target, skill_id, skill_lv, 0);
 			struct status_change *sc = status_get_sc(src);
-
-			md.damage = (int64)sstatus->hp + (atk.damage * (int64)sstatus->hp * skill_lv) / (int64)sstatus->max_hp;
-
+			
+			md.damage += (int64)sstatus->hp + (atk.damage * (int64)sstatus->hp * skill_lv) / (int64)sstatus->max_hp;
+			
 			if (sc && sc->data[SC_BUNSINJYUTSU] && (i=sc->data[SC_BUNSINJYUTSU]->val2) > 0) { // mirror image bonus only occurs if active
 				md.div_ = -( i + 2 ); // mirror image count + 2
-				md.damage += (md.damage * (((i + 1) * 10) / 5)) / 10;
+				md.damage += (md.damage * (i + 1));
 			}
 			// modified def reduction, final damage = base damage - (edef + sdef)
 			totaldef = tstatus->def2 + (short)status_get_def(target);
 			md.damage -= totaldef;
 		}
 		break;
-#endif
 	case GS_FLING:
 		md.damage = sd?sd->status.job_level:status_get_lv(src);
 		break;
