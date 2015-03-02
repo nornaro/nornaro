@@ -212,7 +212,7 @@ int naddr_ = 0;   // # of ip addresses
 
 // Maximum packet size in bytes, which the client is able to handle.
 // Larger packets cause a buffer overflow and stack corruption.
-static size_t socket_max_client_packet = 24576;
+static size_t socket_max_client_packet = 2048;
 
 #ifdef SHOW_SERVER_STATS
 // Data I/O statistics
