@@ -4229,8 +4229,8 @@ int pc_useitem(struct map_session_data *sd,int n)
 		return 0;
 
 	 //Prevent mass item usage. [Skotlex]
-	if( DIFF_TICK(sd->canuseitem_tick, tick) > 0 ||
-		(itemdb_iscashfood(sd->status.inventory[n].nameid) && DIFF_TICK(sd->canusecashfood_tick, tick) > 0)
+	if( ( DIFF_TICK(sd->canuseitem_tick, tick) > 0 && sd->inventory_data[n]->type == IT_HEALING ) ||
+		( DIFF_TICK(sd->canusecashfood_tick, tick) > 0 && (itemdb_iscashfood(sd->status.inventory[n].nameid) ))
 	)
 		return 0;
 
