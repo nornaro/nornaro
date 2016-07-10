@@ -384,6 +384,7 @@ extern struct Battle_Config
 	int exp_bonus_attacker;
 	int exp_bonus_max_attacker;
 	int min_skill_delay_limit;
+	int nodelay_skill;
 	int default_walk_delay;
 	int no_skill_delay;
 	int attack_walk_delay;

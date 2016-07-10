@@ -14503,6 +14503,9 @@ int skill_delayfix (struct block_list *bl, int skill_id, int skill_lv)
 	if (skill_id == SA_ABRACADABRA || skill_id == WM_RANDOMIZESPELL)
 		return 0; //Will use picked skill's delay.
 
+	if (time == 0 && battle_config.nodelay_skill == 1) return 0;
+	if (time == 0 && battle_config.nodelay_skill == 2) return battle_config.min_skill_delay_limit;
+
 	if (bl->type&battle_config.no_skill_delay)
 		return battle_config.min_skill_delay_limit;
 
