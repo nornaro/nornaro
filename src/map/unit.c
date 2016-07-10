@@ -1288,6 +1288,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, short skill_num, sh
 
 	if( casttime > 0 || temp )
 	{
+		if( sd && (pc_checkskill(sd,SA_FREECAST) == 0) || !battle_config.freecast_start)
 		unit_stop_walking(src,1);
 		clif_skillcasting(src, src->id, target_id, 0,0, skill_num, skill_get_ele(skill_num, skill_lv), casttime);
 
@@ -1487,7 +1488,8 @@ int unit_skilluse_pos2( struct block_list *src, short skill_x, short skill_y, sh
 
 	if( casttime > 0 )
 	{
-		unit_stop_walking(src,1);
+		if( sd && (pc_checkskill(sd,SA_FREECAST) == 0) || !battle_config.freecast_start)
+			unit_stop_walking(src,1);
 		clif_skillcasting(src, src->id, 0, skill_x, skill_y, skill_num, skill_get_ele(skill_num, skill_lv), casttime);
 		ud->skilltimer = add_timer( tick+casttime, skill_castend_pos, src->id, 0 );
 		if( (sd && pc_checkskill(sd,SA_FREECAST) > 0) || skill_num == LG_EXEEDBREAK )
@@ -1816,7 +1818,8 @@ static int unit_attack_timer_sub(struct block_list* src, int tid, unsigned int t
 			ud->dir = map_calc_dir(src, target->x,target->y );
 		}
 		if(ud->walktimer != INVALID_TIMER)
-			unit_stop_walking(src,1);
+			if( sd && (pc_checkskill(sd,SA_FREECAST) == 0) || !battle_config.freecast_start)
+				unit_stop_walking(src,1);
 		if(md) {
 			if (mobskill_use(md,tick,-1))
 				return 1;

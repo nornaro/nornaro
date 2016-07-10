@@ -6091,6 +6091,8 @@ static const struct _battle_data {
 	{ "gc_skill_edp_boost_formula_a",       &battle_config.gc_skill_edp_boost_formula_a,    0,      0,      1000,           },
 	{ "gc_skill_edp_boost_formula_b",       &battle_config.gc_skill_edp_boost_formula_b,    20,     0,      1000,           },
 	{ "gc_skill_edp_boost_formula_c",       &battle_config.gc_skill_edp_boost_formula_c,    1,      0,      1,              },
+	{ "freecast_start",						&battle_config.freecast_start,					1,      0,      1,				},
+	{ "freecast_stop",						&battle_config.freecast_stop,					1,      0,      1,				},
 };
 
 

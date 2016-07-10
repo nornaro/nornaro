@@ -396,6 +396,8 @@ extern struct Battle_Config
 	int hide_woe_damage;
 	int display_version;
 	int who_display_aid;
+	int freecast_start;
+	int freecast_stop;
 
 	int display_hallucination;	// [Skotlex]
 	int use_statpoint_table;	// [Skotlex]

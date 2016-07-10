@@ -10150,7 +10150,8 @@ int skill_castend_pos(int tid, unsigned int tick, int id, intptr data)
 //				break;
 //			}
 //		}
-		unit_set_walkdelay(src, tick, battle_config.default_walk_delay+skill_get_walkdelay(ud->skillid, ud->skilllv), 1);
+		if( sd && (pc_checkskill(sd,SA_FREECAST) == 0) || !battle_config.freecast_stop)
+			unit_set_walkdelay(src, tick, battle_config.default_walk_delay+skill_get_walkdelay(ud->skillid, ud->skilllv), 1);
 
 		map_freeblock_lock();
 		skill_castend_pos2(src,ud->skillx,ud->skilly,ud->skillid,ud->skilllv,tick,0);
@@ -10990,7 +10991,6 @@ int skill_castend_map (struct map_session_data *sd, short skill_num, const char 
 		skill_failed(sd);
 		return 0;
 	}
-
 	pc_stop_attack(sd);
 	pc_stop_walking(sd,0);
 
