@@ -1729,24 +1729,15 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 					wd.damage = 40*sstatus->str +skill_lv*(sstatus->hp/10 + 35);
 				}
 				if(battle_config.issen == 1){
-					wd.damage = 40*sstatus->str +skill_lv*(sstatus->hp/10 + 35);
-					wd.damage2 = 0;
-					if( sc && sc->data[SC_BUNSINJYUTSU] )
-						wd.damage *= (1+sc->data[SC_BUNSINJYUTSU]->val2);
+					wd.damage = 40 * sstatus->str + (8 / 100) * skill_lv * sstatus->hp;
 				}
 				if(battle_config.issen == 2){
 					wd.damage += sstatus->str;
 					wd.damage *= 40;
 					wd.damage += skill_lv*(sstatus->hp*2/25);
-					if( sc && sc->data[SC_BUNSINJYUTSU] )
-						wd.damage *= (1+sc->data[SC_BUNSINJYUTSU]->val2);
 				}
 				if(battle_config.issen == 3){
-					wd.damage += sstatus->batk;
-					wd.damage *= 40;
-					wd.damage += skill_lv*(sstatus->hp*2/25);
-					if( sc && sc->data[SC_BUNSINJYUTSU] )
-						wd.damage *= (1+sc->data[SC_BUNSINJYUTSU]->val2);
+					wd.damage = (40 * sstatus->str) + ((sstatus->hp * (8 * skill_lv)) / 100);
 				}
 				if(battle_config.issen == 4){
 					if (sd) {
@@ -1767,8 +1758,6 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 					wd.damage += sstatus->batk;
 					wd.damage *= 40;
 					wd.damage += skill_lv*(sstatus->hp*2/25);
-					if( sc && sc->data[SC_BUNSINJYUTSU] )
-						wd.damage *= (1+sc->data[SC_BUNSINJYUTSU]->val2);
 				}
 				if(battle_config.issen == 5){
 					if (sd) {
@@ -1783,8 +1772,6 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 					}
 					wd.damage *= 40;
 					wd.damage += skill_lv*(sstatus->hp*2/25);
-					if( sc && sc->data[SC_BUNSINJYUTSU] )
-						wd.damage *= (1+sc->data[SC_BUNSINJYUTSU]->val2);
 				}
 				if(battle_config.issen == 6){
 					if (sd) {
@@ -1804,6 +1791,8 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 					}
 					wd.damage *= 40;
 					wd.damage += skill_lv*(sstatus->hp*2/25);
+				}
+				if(battle_config.bunshin){
 					if( sc && sc->data[SC_BUNSINJYUTSU] )
 						wd.damage *= (1+sc->data[SC_BUNSINJYUTSU]->val2);
 				}
@@ -6175,6 +6164,7 @@ static const struct _battle_data {
 	{ "freecast_start",						&battle_config.freecast_start,					1,      0,      1,				},
 	{ "freecast_stop",						&battle_config.freecast_stop,					1,      0,      1,				},
 	{ "issen",								&battle_config.issen,							4,      0,      6,				},
+	{ "bunshin",							&battle_config.bunshin,							1,      0,      1,				},
 };
 
 
