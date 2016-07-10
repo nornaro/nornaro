@@ -7,9 +7,6 @@
 #include "status.h" // struct status_data, struct status_change
 #include "unit.h" // struct unit_data
 
-// number of cells that a mercenary can walk to from it's master before being warped
-#define MAX_MER_DISTANCE 15
-
 enum {
 	ARCH_MERC_GUILD,
 	SPEAR_MERC_GUILD,
@@ -42,43 +39,43 @@ struct mercenary_data {
 	struct s_mercenary mercenary;
 	char blockskill[MAX_SKILL];
 
-	int masterteleport_timer;
 	struct map_session_data *master;
 	int contract_timer;
-
+	
 	unsigned devotion_flag : 1;
 };
 
-bool mercenary_class(int class_);
-struct view_data * mercenary_get_viewdata(int class_);
+bool merc_class(int class_);
+struct view_data * merc_get_viewdata(int class_);
 
-bool mercenary_create(struct map_session_data *sd, int class_, unsigned int lifetime);
-bool mercenary_recv_data(struct s_mercenary *merc, bool flag);
-void mercenary_save(struct mercenary_data *md);
+int merc_create(struct map_session_data *sd, int class_, unsigned int lifetime);
+int merc_data_received(struct s_mercenary *merc, bool flag);
+int mercenary_save(struct mercenary_data *md);
 
+void mercenary_damage(struct mercenary_data *md, struct block_list *src, int hp, int sp);
 void mercenary_heal(struct mercenary_data *md, int hp, int sp);
-bool mercenary_dead(struct mercenary_data *md);
+int mercenary_dead(struct mercenary_data *md, struct block_list *src);
 
-int mercenary_delete(struct mercenary_data *md, int reply);
-void mercenary_contract_stop(struct mercenary_data *md);
+int merc_delete(struct mercenary_data *md, int reply);
+void merc_contract_stop(struct mercenary_data *md);
 
 int mercenary_get_lifetime(struct mercenary_data *md);
 int mercenary_get_guild(struct mercenary_data *md);
 int mercenary_get_faith(struct mercenary_data *md);
-void mercenary_set_faith(struct mercenary_data *md, int value);
+int mercenary_set_faith(struct mercenary_data *md, int value);
 int mercenary_get_calls(struct mercenary_data *md);
-void mercenary_set_calls(struct mercenary_data *md, int value);
-void mercenary_kills(struct mercenary_data *md);
+int mercenary_set_calls(struct mercenary_data *md, int value);
+int mercenary_kills(struct mercenary_data *md);
 
-int mercenary_checkskill(struct mercenary_data *md, uint16 skill_id);
+int mercenary_checkskill(struct mercenary_data *md, int skill_id);
 
-/**
- * atcommand.c required
- **/
-void mercenary_readdb(void);
-void mercenary_read_skilldb(void);
+enum merc_msg {  
+  MSG_MER_FINISH 	= 0x4f2,
+  MSG_MER_DIE 		= 0x4f3,
+  MSG_MER_RETIRE 	= 0x4f4,
+  MSG_MER_RUNAWAY 	= 0x4f5,
+};
 
-void do_init_mercenary(void);
-void do_final_mercenary(void);
+int do_init_mercenary(void);
 
 #endif /* _MERCENARY_H_ */

@@ -4,13 +4,16 @@
 #include "../common/cbasetypes.h"
 #include "../common/strlib.h" // StringBuf
 #include "showmsg.h"
-#include "core.h" //[Ind] - For SERVER_TYPE
 
+#include <stdio.h>
+#include <string.h>
+#include <stdarg.h>
 #include <time.h>
 #include <stdlib.h> // atexit
 
 #ifdef WIN32
-	#include "../common/winapi.h"
+	#define WIN32_LEAN_AND_MEAN
+	#include <windows.h>
 
 	#ifdef DEBUGLOGMAP
 		#define DEBUGLOGPATH "log\\map-server.log"
@@ -47,12 +50,11 @@
 int stdout_with_ansisequence = 0;
 
 int msg_silent = 0; //Specifies how silent the console is.
-int console_msg_log = 0;//[Ind] msg error logging
 
 ///////////////////////////////////////////////////////////////////////////////
 /// static/dynamic buffer for the messages
 
-#define SBUF_SIZE 2054 // never put less that what's required for the debug message
+#define SBUF_SIZE 2048 // never put less that what's required for the debug message
 
 #define NEWBUF(buf)				\
 	struct {					\
@@ -191,7 +193,7 @@ Escape sequences for Select Character Set
 int	VFPRINTF(HANDLE handle, const char *fmt, va_list argptr)
 {
 	/////////////////////////////////////////////////////////////////
-	/* XXX Two streams are being used. Disabled to avoid inconsistency [flaviojs]
+	/* XXX Two streams are being used. Disabled to avoid inconsistency [flaviojs]		
 	static COORD saveposition = {0,0};
 	*/
 
@@ -237,7 +239,7 @@ int	VFPRINTF(HANDLE handle, const char *fmt, va_list argptr)
 			memset(numbers,0,sizeof(numbers));
 
 			// skip escape and bracket
-			q=q+2;
+			q=q+2;	
 			for(;;)
 			{
 				if( ISDIGIT(*q) ) 
@@ -352,18 +354,18 @@ int	VFPRINTF(HANDLE handle, const char *fmt, va_list argptr)
 					COORD origin = {0,0};
 					if(num==1)
 					{	// chars from start up to and including cursor
-						cnt = info.dwSize.X * info.dwCursorPosition.Y + info.dwCursorPosition.X + 1;
+						cnt = info.dwSize.X * info.dwCursorPosition.Y + info.dwCursorPosition.X + 1;	
 					}
 					else if(num==2)
 					{	// Number of chars on screen.
-						cnt = info.dwSize.X * info.dwSize.Y;
+						cnt = info.dwSize.X * info.dwSize.Y;	
 						SetConsoleCursorPosition(handle, origin); 
 					}
 					else// 0 and default
 					{	// number of chars from cursor to end
 						origin = info.dwCursorPosition;
 						cnt = info.dwSize.X * (info.dwSize.Y - info.dwCursorPosition.Y) - info.dwCursorPosition.X; 
-					}
+					}				
 					FillConsoleOutputAttribute(handle, info.wAttributes, cnt, origin, &tmp);
 					FillConsoleOutputCharacter(handle, ' ',              cnt, origin, &tmp);
 				}
@@ -378,11 +380,11 @@ int	VFPRINTF(HANDLE handle, const char *fmt, va_list argptr)
 					SHORT cnt;
 					DWORD tmp;
 					if(num==1)
-					{
+					{	
 						cnt = info.dwCursorPosition.X + 1;
 					}
 					else if(num==2)
-					{
+					{	
 						cnt = info.dwSize.X;
 					}
 					else// 0 and default
@@ -506,7 +508,7 @@ int	VFPRINTF(HANDLE handle, const char *fmt, va_list argptr)
 }
 
 int	FPRINTF(HANDLE handle, const char *fmt, ...)
-{
+{	
 	int ret;
 	va_list argptr;
 	va_start(argptr, fmt);
@@ -559,11 +561,11 @@ int	VFPRINTF(FILE *file, const char *fmt, va_list argptr)
 			// assuming regular text is starting there
 
 			// skip escape and bracket
-			q=q+2;
+			q=q+2;	
 			while(1)
 			{
 				if( ISDIGIT(*q) ) 
-				{
+				{					
 					++q;
 					// and next character
 					continue;
@@ -642,7 +644,7 @@ int	VFPRINTF(FILE *file, const char *fmt, va_list argptr)
 	return 0;
 }
 int	FPRINTF(FILE *file, const char *fmt, ...)
-{
+{	
 	int ret;
 	va_list argptr;
 	va_start(argptr, fmt);
@@ -658,6 +660,15 @@ int	FPRINTF(FILE *file, const char *fmt, ...)
 
 #endif// not _WIN32
 
+
+
+
+
+
+
+
+
+
 char timestamp_format[20] = ""; //For displaying Timestamps
 
 int _vShowMessage(enum msg_type flag, const char *string, va_list ap)
@@ -671,39 +682,6 @@ int _vShowMessage(enum msg_type flag, const char *string, va_list ap)
 	if (!string || *string == '\0') {
 		ShowError("Empty string passed to _vShowMessage().\n");
 		return 1;
-	}
-	/**
-	 * For the buildbot, these result in a EXIT_FAILURE from core.c when done reading the params.
-	 **/
-#if defined(BUILDBOT)
-	if( flag == MSG_WARNING ||
-	    flag == MSG_ERROR ||
-	    flag == MSG_SQL ) {
-		buildbotflag = 1;
-	}
-#endif
-	if(
-		( flag == MSG_WARNING && console_msg_log&1 ) ||
-		( ( flag == MSG_ERROR || flag == MSG_SQL ) && console_msg_log&2 ) ||
-		( flag == MSG_DEBUG && console_msg_log&4 ) ) {//[Ind]
-		FILE *log = NULL;
-		if( (log = fopen(SERVER_TYPE == ATHENA_SERVER_MAP ? "./log/map-msg_log.log" : "./log/unknown.log","a+")) ) {
-			char timestring[255];
-			time_t curtime;
-			time(&curtime);
-			strftime(timestring, 254, "%m/%d/%Y %H:%M:%S", localtime(&curtime));
-			fprintf(log,"(%s) [ %s ] : ",
-				timestring,
-				flag == MSG_WARNING ? "Warning" :
-				flag == MSG_ERROR ? "Error" :
-				flag == MSG_SQL ? "SQL Error" :
-				flag == MSG_DEBUG ? "Debug" :
-				"Unknown");
-			va_copy(apcopy, ap);
-			vfprintf(log,string,apcopy);
-			va_end(apcopy);
-			fclose(log);
-		}
 	}
 	if(
 	    (flag == MSG_INFORMATION && msg_silent&1) ||
@@ -809,69 +787,75 @@ int _ShowMessage(enum msg_type flag, const char *string, ...)
 }
 
 // direct printf replacement
-void ShowMessage(const char *string, ...) {
+int ShowMessage(const char *string, ...) {
+	int ret;
 	va_list ap;
 	va_start(ap, string);
-	_vShowMessage(MSG_NONE, string, ap);
+	ret = _vShowMessage(MSG_NONE, string, ap);
 	va_end(ap);
+	return ret;
 }
-void ShowStatus(const char *string, ...) {
+int ShowStatus(const char *string, ...) {
+	int ret;
 	va_list ap;
 	va_start(ap, string);
-	_vShowMessage(MSG_STATUS, string, ap);
+	ret = _vShowMessage(MSG_STATUS, string, ap);
 	va_end(ap);
+	return ret;
 }
-void ShowSQL(const char *string, ...) {
+int ShowSQL(const char *string, ...) {
+	int ret;
 	va_list ap;
 	va_start(ap, string);
-	_vShowMessage(MSG_SQL, string, ap);
+	ret = _vShowMessage(MSG_SQL, string, ap);
 	va_end(ap);
+	return ret;
 }
-void ShowInfo(const char *string, ...) {
+int ShowInfo(const char *string, ...) {
+	int ret;
 	va_list ap;
 	va_start(ap, string);
-	_vShowMessage(MSG_INFORMATION, string, ap);
+	ret = _vShowMessage(MSG_INFORMATION, string, ap);
 	va_end(ap);
+	return ret;
 }
-void ShowNotice(const char *string, ...) {
+int ShowNotice(const char *string, ...) {
+	int ret;
 	va_list ap;
 	va_start(ap, string);
-	_vShowMessage(MSG_NOTICE, string, ap);
+	ret = _vShowMessage(MSG_NOTICE, string, ap);
 	va_end(ap);
+	return ret;
 }
-void ShowWarning(const char *string, ...) {
+int ShowWarning(const char *string, ...) {
+	int ret;
 	va_list ap;
 	va_start(ap, string);
-	_vShowMessage(MSG_WARNING, string, ap);
+	ret = _vShowMessage(MSG_WARNING, string, ap);
 	va_end(ap);
+	return ret;
 }
-void ShowConfigWarning(config_setting_t *config, const char *string, ...)
-{
-	StringBuf buf;
+int ShowDebug(const char *string, ...) {
+	int ret;
 	va_list ap;
-	StringBuf_Init(&buf);
-	StringBuf_AppendStr(&buf, string);
-	StringBuf_Printf(&buf, " (%s:%d)\n", config_setting_source_file(config), config_setting_source_line(config));
 	va_start(ap, string);
-	_vShowMessage(MSG_WARNING, StringBuf_Value(&buf), ap);
+	ret = _vShowMessage(MSG_DEBUG, string, ap);
 	va_end(ap);
-	StringBuf_Destroy(&buf);
+	return ret;
 }
-void ShowDebug(const char *string, ...) {
+int ShowError(const char *string, ...) {
+	int ret;
 	va_list ap;
 	va_start(ap, string);
-	_vShowMessage(MSG_DEBUG, string, ap);
+	ret = _vShowMessage(MSG_ERROR, string, ap);
 	va_end(ap);
+	return ret;
 }
-void ShowError(const char *string, ...) {
+int ShowFatalError(const char *string, ...) {
+	int ret;
 	va_list ap;
 	va_start(ap, string);
-	_vShowMessage(MSG_ERROR, string, ap);
+	ret = _vShowMessage(MSG_FATALERROR, string, ap);
 	va_end(ap);
-}
-void ShowFatalError(const char *string, ...) {
-	va_list ap;
-	va_start(ap, string);
-	_vShowMessage(MSG_FATALERROR, string, ap);
-	va_end(ap);
+	return ret;
 }

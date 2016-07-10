@@ -1,23 +1,22 @@
-//===== rAthena Script ======================================= 
+//===== eAthena Script ======================================= 
 //= Kunlun Town
 //===== By: ================================================== 
 //= x[tsk], KarLaeda
 //===== Current Version: ===================================== 
-//= 1.6
+//= 1.4
 //===== Compatible With: ===================================== 
-//= rAthena Project
+//= eAthena SVN
 //===== Description: ========================================= 
-//= [Official Conversion]
+//= [Aegis Conversion]
 //= Kunlun Town Script
 //===== Additional Comments: ================================= 
 //= 1.5 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//=     Moved Lost Knife mini-quest to quest file.
-//= 1.6 Moved Alberta NPC to pre-re/re paths. [Euphy]
+//=	Moved Lost Knife mini-quest to quest file.
 //============================================================
 
 // Kunlun Transportation
-//============================================================
--	script	::Kunlun_Envoy_gonryun	-1,{
+//============================================================ 
+alberta,245,69,3	script	Kunlun Envoy#gon	776,{
 	mes "[Wa Bai Hu]";
 	mes "Good day~";
 	mes "Let me invite you all";
@@ -102,7 +101,7 @@
 				mes "[Wa Bai Hu]";
 				mes "Thank you, let me guide you there immediately.";
 				close2;
-				set Zeny, Zeny-10000;
+				set zeny,zeny-10000;
 				warp "gon_fild01",258,82;
 				end;
 			}
@@ -144,10 +143,7 @@ gon_fild01,255,79,7	script	Kunlun Envoy#gon2	776,{
 		mes "back. Now, let me guide you";
 		mes "back to Alberta.";
 		close2;
-		if (checkre(0))
-			warp "alberta",244,60;
-		else
-			warp "alberta",243,67;
+		warp "alberta",243,67;
 		end;
 	}
 	mes "[Wa Bai Hu]";
@@ -189,7 +185,7 @@ gonryun,153,64,7	script	Kunlun Envoy#gon4	776,{
 }
 
 // Generic Kunlun NPCs
-//============================================================
+//============================================================ 
 gonryun,200,82,3	script	Jian Chung Xun#gon	774,{
 	mes "[Jian Chung Xun]";
 	mes "I simply adore festivals.";
@@ -416,7 +412,7 @@ gonryun,169,71,3	script	Guidev#gon	770,{
 // Old changelog
 //============================================================ 
 // May be missing npc's and dialogue.
-//= 1.1 Fixed Typos [Nexon]
+//= 1.1 Fixed Typo’s [Nexon]
 //= 1.2 Removed Duplicates [Silent]
 //= 1.3 Max NPC Name is 23 [Toms]
 //= 1.3a Removed temp NPC plugs due Broken Sword quest [Lupus]

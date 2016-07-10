@@ -1,25 +1,21 @@
-//===== rAthena Script ======================================= 
-//= BattleGround System - Flavius Second
+//===== eAthena Script ======================================= 
+// BattleGround System - Flavius Second
 //===== By: ================================================== 
 //= L0ne_W0lf
 //===== Current Version: ===================================== 
-//= 1.7
+//= 1.3
 //===== Compatible With: ===================================== 
-//= rAthena Project
+//= eAthena 1.0
 //===== Description: ========================================= 
-//= [Official Conversion]
+//= [AEGIS Conversion]
 //= Flavius Battleground.
-//= - Winning Team: 9 badges (11 if VIP)
-//= - Losing Team: 3 badges (5 if VIP)
+//= - Winning Team: 9 badges
+//= - Losing Team: 3 badge
 //===== Additional Comments: ================================= 
 //= 1.0 First Version.
 //= 1.1 Fixed NPCs being called for waiting rooms. (bugreport:4395)
 //= 1.2 Fixed pink crystal spawning as blue. [L0ne_W0lf]
 //= 1.3 Updated 'waitingroom' to support required zeny/lvl. [Kisuka]
-//= 1.4 Removed MaxLvl check in waitingrooms. Replaced setwall with setcell.
-//= 1.5 Label standardization. [Euphy]
-//= 1.6 Added GM management function. [Euphy]
-//= 1.7 Added VIP features and created a reward function. [Euphy]
 //============================================================
 
 // Waiting Room NPCs
@@ -27,7 +23,7 @@
 bat_room,142,227,4	script	Lieutenant Huvas	418,{
 	end;
 OnInit:
-	waitingroom "Battle Station",11,"start#bat_b02::OnReadyCheck",1,0,80;
+	waitingroom "Battle Station",10,"start#bat_b02::OnReadyCheck",1,0,80,99;
 	end;
 OnEnterBG:
 	set $@FlaviusBG2_id1, waitingroom2bg("bat_b02",10,290,"start#bat_b02::OnGuillaumeQuit","");
@@ -37,7 +33,7 @@ OnEnterBG:
 bat_room,142,204,0	script	Lieutenant Yukon	414,{
 	end;
 OnInit:
-	waitingroom "Battle Station",11,"start#bat_b02::OnReadyCheck",1,0,80;
+	waitingroom "Battle Station",10,"start#bat_b02::OnReadyCheck",1,0,80,99;
 	end;
 OnEnterBG:
 	set $@FlaviusBG2_id2, waitingroom2bg("bat_b02",390,10,"start#bat_b02::OnCroixQuit","");
@@ -99,16 +95,16 @@ OnReadyCheck:
 	bg_updatescore "bat_b02",$@Guill_ScoreBG2,$@Croix_ScoreBG2;
 	donpcevent "Lieutenant Huvas::OnEnterBG";
 	donpcevent "Lieutenant Yukon::OnEnterBG";
-	donpcevent "OBJ#bat_b02_a::OnKill";
+	donpcevent "OBJ#bat_b02_a::Onkill";
 	donpcevent "OBJ#bat_b02_a::OnEnable";
-	donpcevent "OBJ#bat_b02_b::OnKill";
+	donpcevent "OBJ#bat_b02_b::Onkill";
 	donpcevent "OBJ#bat_b02_b::OnEnable";
-	donpcevent "guardian#bat_b02_a::OnKill";
-	donpcevent "guardian#bat_b02_b::OnKill";
+	donpcevent "guardian#bat_b02_a::Onkill";
+	donpcevent "guardian#bat_b02_b::Onkill";
 	donpcevent "guardian#bat_b02_a::OnEnable";
 	donpcevent "guardian#bat_b02_b::OnEnable";
-	donpcevent "cell#bat_b02_a::OnRed";
-	donpcevent "cell#bat_b02_b::OnRed";
+	donpcevent "cell#bat_b02_a::Onred";
+	donpcevent "cell#bat_b02_b::Onred";
 	donpcevent "time#bat_b02::OnEnable";
 	disablenpc "Guillaume Vintenar#b02_a";
 	disablenpc "Croix Vintenar#b02_b";
@@ -121,16 +117,16 @@ OnReadyCheck:
 	end;
 
 OnReset:
-	donpcevent "OBJ#bat_b02_a::OnKill";
+	donpcevent "OBJ#bat_b02_a::Onkill";
 	donpcevent "OBJ#bat_b02_a::OnEnable";
-	donpcevent "OBJ#bat_b02_b::OnKill";
+	donpcevent "OBJ#bat_b02_b::Onkill";
 	donpcevent "OBJ#bat_b02_b::OnEnable";
-	donpcevent "guardian#bat_b02_a::OnKill";
-	donpcevent "guardian#bat_b02_b::OnKill";
+	donpcevent "guardian#bat_b02_a::Onkill";
+	donpcevent "guardian#bat_b02_b::Onkill";
 	donpcevent "guardian#bat_b02_a::OnEnable";
 	donpcevent "guardian#bat_b02_b::OnEnable";
-	donpcevent "cell#bat_b02_a::OnRed";
-	donpcevent "cell#bat_b02_b::OnRed";
+	donpcevent "cell#bat_b02_a::Onred";
+	donpcevent "cell#bat_b02_b::Onred";
 	donpcevent "time#bat_b02::OnEnable";
 	disablenpc "Guillaume Vintenar#b02_a";
 	disablenpc "Croix Vintenar#b02_b";
@@ -156,7 +152,7 @@ OnEnable:
 	bg_monster $@FlaviusBG2_id1,"bat_b02",61,150,"Pink Crystal",1915,"OBJ#bat_b02_a::OnMyMobDead";
 	end;
 
-OnKill:
+Onkill:
 	killmonster "bat_b02","OBJ#bat_b02_a::OnMyMobDead";
 	end;
 
@@ -168,12 +164,12 @@ OnMyMobDead:
 			set $@Croix_ScoreBG2,$@Croix_ScoreBG2+1;
 			enablenpc "Guillaume Vintenar#b02_a";
 			enablenpc "Croix Vintenar#b02_b";
-			donpcevent "time#bat_b02::OnStop";
+			donpcevent "time#bat_b02::Onstop";
 		}
 		else {
 			set $@Croix_ScoreBG2,1;
 			donpcevent "time#bat_b02::OnEnable";
-			donpcevent "start#bat_b02::OnReset";
+			donpcevent "start#bat_b02::onReset";
 		}
 		donpcevent "#bat_b02_timer::OnStop";
 		bg_updatescore "bat_b02",$@Guill_ScoreBG2,$@Croix_ScoreBG2;
@@ -189,7 +185,7 @@ OnEnable:
 	bg_monster $@FlaviusBG2_id2,"bat_b02",328,150,"Blue Crystal",1914,"OBJ#bat_b02_b::OnMyMobDead";
 	end;
 
-OnKill:
+Onkill:
 	killmonster "bat_b02","OBJ#bat_b02_b::OnMyMobDead";
 	end;
 
@@ -201,12 +197,12 @@ OnMyMobDead:
 			set $@Guill_ScoreBG2,$@Guill_ScoreBG2+1;
 			enablenpc "Guillaume Vintenar#b02_a";
 			enablenpc "Croix Vintenar#b02_b";
-			donpcevent "time#bat_b02::OnStop";
+			donpcevent "time#bat_b02::Onstop";
 		}
 		else {
 			set $@Guill_ScoreBG2,1;
 			donpcevent "time#bat_b02::OnEnable";
-			donpcevent "start#bat_b02::OnReset";
+			donpcevent "start#bat_b02::onReset";
 		}
 		donpcevent "#bat_b02_timer::OnStop";
 		bg_updatescore "bat_b02",$@Guill_ScoreBG2,$@Croix_ScoreBG2;
@@ -223,13 +219,13 @@ OnEnable:
 	bg_monster $@FlaviusBG2_id1,"bat_b02",108,141,"Guillaume Camp Guardian",1949,"guardian#bat_b02_a::OnMyMobDead";
 	end;
 
-OnKill:
+Onkill:
 	killmonster "bat_b02","guardian#bat_b02_a::OnMyMobDead";
 	end;
 
 OnMyMobDead:
 	if (mobcount("bat_b02","guardian#bat_b02_a::OnMyMobDead") < 1) {
-		donpcevent "cell#bat_b02_a::OnGreen";
+		donpcevent "cell#bat_b02_a::Ongreen";
 		mapannounce "bat_b02", "The Guardian protecting Guillaume's Crystal has been slain.",bc_map,"0xFFCE00";
 	}
 	end;
@@ -241,39 +237,47 @@ OnEnable:
 	bg_monster $@FlaviusBG2_id2,"bat_b02",307,138,"Croix Camp Guardian",1949,"guardian#bat_b02_b::OnMyMobDead";
 	end;
 
-OnKill:
+Onkill:
 	killmonster "bat_b02","guardian#bat_b02_b::OnMyMobDead";
 	end;
 
 OnMyMobDead:
 	if (mobcount("bat_b02","guardian#bat_b02_b::OnMyMobDead") < 1) {
-		donpcevent "cell#bat_b02_b::OnGreen";
+		donpcevent "cell#bat_b02_b::Ongreen";
 		mapannounce "bat_b02", "The Guardian protecting Croix's Crystal has been slain.",bc_map,"0xFFCE00";
 	}
 	end;
 }
 
 bat_b02,1,4,3	script	cell#bat_b02_a	844,{
-OnRed:
-	setcell "bat_b02",62,149,60,151,cell_basilica,1;
-	setcell "bat_b02",62,149,60,151,cell_walkable,0;
+Onred:
+	setwall "bat_b02",60,149,2,6,0,"Guillaume_wall1-1";
+	setwall "bat_b02",62,149,2,0,0,"Guillaume_wall1-2";
+	setwall "bat_b02",62,151,2,2,0,"Guillaume_wall1-3";
+	setwall "bat_b02",60,151,2,4,0,"Guillaume_wall1-4";
 	end;
 
-OnGreen:
-	setcell "bat_b02",62,149,60,151,cell_basilica,0;
-	setcell "bat_b02",62,149,60,151,cell_walkable,1;
+Ongreen:
+	delwall "Guillaume_wall1-1";
+	delwall "Guillaume_wall1-2";
+	delwall "Guillaume_wall1-3";
+	delwall "Guillaume_wall1-4";
 	end;
 }
 
 bat_b02,1,5,3	script	cell#bat_b02_b	844,{
-OnRed:
-	setcell "bat_b02",327,151,329,149,cell_basilica,1;
-	setcell "bat_b02",327,151,329,149,cell_walkable,0;
+Onred:
+	setwall "bat_b02",327,149,2,6,0,"Croix_wall1-1";
+	setwall "bat_b02",329,149,2,0,0,"Croix_wall1-2";
+	setwall "bat_b02",329,151,2,2,0,"Croix_wall1-3";
+	setwall "bat_b02",327,151,2,4,0,"Croix_wall1-4";
 	end;
 
-OnGreen:
-	setcell "bat_b02",327,151,329,149,cell_basilica,0;
-	setcell "bat_b02",327,151,329,149,cell_walkable,1;
+Ongreen:
+	delwall "Croix_wall1-1";
+	delwall "Croix_wall1-2";
+	delwall "Croix_wall1-3";
+	delwall "Croix_wall1-4";
 	end;
 }
 
@@ -283,7 +287,7 @@ OnEnable:
 	donpcevent "Battle Therapist#b02_b::OnEnable";
 	end;
 
-OnStop:
+Onstop:
 	donpcevent "Battle Therapist#b02_a::OnStop";
 	donpcevent "Battle Therapist#b02_b::OnStop";
 	end;
@@ -308,7 +312,7 @@ OnTimer26000:
 
 OnTimer26500:
 	stopnpctimer;
-	donpcevent "Battle Therapist#b02_a::OnEnable";
+	donpcevent "Battle Therapist#b02_a::onEnable";
 	end;
 
 OnEnable:
@@ -316,7 +320,7 @@ OnEnable:
 	enablenpc "Battle Therapist#b02_a";
 	end;
 
-OnStop:
+Onstop:
 	disablenpc "bat_b02_rp1_a_warp";
 	disablenpc "Battle Therapist#b02_a";
 	stopnpctimer;
@@ -361,7 +365,7 @@ OnEnable:
 	enablenpc "Battle Therapist#b02_b";
 	end;
 
-OnStop:
+Onstop:
 	disablenpc "bat_b02_rp1_b_warp";
 	disablenpc "Battle Therapist#b02_b";
 	stopnpctimer;
@@ -395,10 +399,46 @@ OnTouch:
 
 bat_b02,10,294,3	script	Guillaume Vintenar#b02_a	934,{
 	if ($@FlaviusBG2_id1 == getcharid(4)) {
-		if ($@FlaviusBG2_Victory == 1)
-			callfunc "F_BG_Badge",1,"Guillaume","Flavius";
-		else
-			callfunc "F_BG_Badge",0,"Guillaume","Flavius";
+		if ($@FlaviusBG2_Victory == 1) {
+			set .@your_medal,countitem(7829);
+			set .@medal_gap,500 - .@your_medal;
+			if (.@medal_gap > 8) {
+				mes "[Axl Rose]";
+				mes "Blessed Guillaume!";
+				mes "Let's enjoy our glorious victory!";
+				mes ""+strcharinfo(0)+", it's a sign reflecting victory.";
+				close2;
+				getitem 7829,9; //BF_Badge2
+			}
+			else {
+				mes "[Axl Rose]";
+				mes "Blessed Guillaume!";
+				mes "Let's enjoy our glorious victory!";
+				mes ""+strcharinfo(0)+", it's a sign reflecting victory.";
+				close2;
+				getitem 7829,.@medal_gap; //BF_Badge2
+			}
+		}
+		else {
+			set .@your_medal,countitem(7829);
+			set .@medal_gap,500 - .@your_medal;
+			if (.@medal_gap > 2) {
+				mes "[Axl Rose]";
+				mes "You lost, but you're dedicated to this battle.";
+				mes "This is a reward for your great dedication by Guillaume Marollo!";
+				mes "Just take this defeat as a lesson, next time you will definitely win.";
+				close2;
+				getitem 7829,3; //BF_Badge2
+			}
+			else {
+				mes "[Axl Rose]";
+				mes "You lost, but you're dedicated to this battle.";
+				mes "This is a reward for your great dedication by Guillaume Marollo!";
+				mes "Just take this defeat as a lesson, next time you will definitely win.";
+				close2;
+				getitem 7829,.@medal_gap; //BF_Badge2
+			}
+		}
 	}
 	bg_leave;
 	warp "bat_room",154,150;
@@ -411,10 +451,46 @@ OnInit:
 
 bat_b02,389,14,3	script	Croix Vintenar#b02_b	934,{
 	if ($@FlaviusBG2_id2 == getcharid(4)) {
-		if ($@FlaviusBG2_Victory == 2)
-			callfunc "F_BG_Badge",1,"Croix","Flavius";
-		else
-			callfunc "F_BG_Badge",0,"Croix","Flavius";
+		if ($@FlaviusBG2_Victory == 2) {
+			set .@your_medal,countitem(7829);
+			set .@medal_gap,500 - .@your_medal;
+			if (.@medal_gap > 8) {
+				mes "[Swandery]";
+				mes "Blessed Croix!";
+				mes "Let's enjoy our glorious victory!";
+				mes ""+strcharinfo(0)+", it's a sign reflecting victory.";
+				close2;
+				getitem 7829,9; //BF_Badge2
+			}
+			else {
+				mes "[Swandery]";
+				mes "Blessed Croix!";
+				mes "Let's enjoy our glorious victory!";
+				mes ""+strcharinfo(0)+", it's a sign reflecting victory.";
+				close2;
+				getitem 7829,.@medal_gap; //BF_Badge2
+			}
+		}
+		else {
+			set .@your_medal,countitem(7829);
+			set .@medal_gap,500 - .@your_medal;
+			if (.@medal_gap > 2) {
+				mes "[Swandery]";
+				mes "Oh, "+strcharinfo(0)+". Don't be sad.";
+				mes "Even though we didn't win, we did our best.";
+				mes "This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.";
+				close2;
+				getitem 7829,3; //BF_Badge2
+			}
+			else {
+				mes "[Swandery]";
+				mes "Oh, "+strcharinfo(0)+". Don't be sad.";
+				mes "Even though we didn't win, we did our best.";
+				mes "This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.";
+				close2;
+				getitem 7829,.@medal_gap; //BF_Badge2
+			}
+		}
 	}
 	bg_leave;
 	warp "bat_room",154,150;
@@ -435,7 +511,7 @@ OnEnable:
 	initnpctimer;
 	end;
 
-OnStop:
+Onstop:
 	stopnpctimer;
 	end;
 
@@ -468,7 +544,7 @@ OnTimer1825000:
 	end;
 
 OnTimer1830000:
-	donpcevent "time#bat_b02::OnStop";
+	donpcevent "time#bat_b02::Onstop";
 	bg_warp $@FlaviusBG2_id1,"bat_b02",10,290;
 	bg_warp $@FlaviusBG2_id2,"bat_b02",390,10;
 	enablenpc "Vintenar#bat_b02_aover";
@@ -477,7 +553,7 @@ OnTimer1830000:
 
 OnTimer1900000:
 	mapwarp "bat_b02","bat_room",154,150;
-	donpcevent "countdown#bat_b02::OnStop";
+	donpcevent "countdown#bat_b02::Onstop";
 	end;
 }
 
@@ -508,12 +584,66 @@ bat_b02,389,16,3	script	Croix Camp#flag42	974,{ end; }
 bat_b02,10,294,3	script	Vintenar#bat_b02_aover	419,{
 	set .@A_B_gap,$@Guill_ScoreBG2 - $@Croix_ScoreBG2;
 	if ($@FlaviusBG2_id1 == getcharid(4)) {
-		if (.@A_B_gap > 0)
-			callfunc "F_BG_Badge",1,"Guillaume","Flavius";
-		else if (.@A_B_gap == 0)
-			callfunc "F_BG_Badge",0,"Guillaume","Flavius";
-		else
-			callfunc "F_BG_Badge",0,"Guillaume","Flavius";
+		if (.@A_B_gap > 0) {
+			set .@your_medal,countitem(7829);
+			set .@medal_gap,500 - .@your_medal;
+			if (.@medal_gap > 8) {
+				mes "[Axl Rose]";
+				mes "Blessed Guillaume!";
+				mes "Let's enjoy our glorious victory!";
+				mes ""+strcharinfo(0)+", it's a sign reflecting victory.";
+				close2;
+				getitem 7829,9; //BF_Badge2
+			}
+			else {
+				mes "[Axl Rose]";
+				mes "Blessed Guillaume!";
+				mes "Let's enjoy our glorious victory!";
+				mes ""+strcharinfo(0)+", it's a sign reflecting victory.";
+				close2;
+				getitem 7829,.@medal_gap; //BF_Badge2
+			}
+		}
+		else if (.@A_B_gap == 0) {
+			set .@your_medal,countitem(7829);
+			set .@medal_gap,500 - .@your_medal;
+			if (.@medal_gap > 2) {
+				mes "[Axl Rose]";
+				mes "You lost, but you're dedicated to this battle.";
+				mes "This is a reward for your great dedication by Guillaume Marollo!";
+				mes "Just take this defeat as a lesson, next time you will definitely win.";
+				close2;
+				getitem 7829,3; //BF_Badge2
+			}
+			else {
+				mes "[Axl Rose]";
+				mes "You lost, but you're dedicated to this battle.";
+				mes "This is a reward for your great dedication by Guillaume Marollo!";
+				mes "Just take this defeat as a lesson, next time you will definitely win.";
+				close2;
+				getitem 7829,.@medal_gap; //BF_Badge2
+			}
+		}
+		else {
+			set .@your_medal,countitem(7829);
+			set .@medal_gap,500 - .@your_medal;
+			if (.@medal_gap > 2) {
+				mes "[Axl Rose]";
+				mes "You lost, but you're dedicated to this battle.";
+				mes "This is a reward for your great dedication by Guillaume Marollo!";
+				mes "Just take this defeat as a lesson, next time you will definitely win.";
+				close2;
+				getitem 7829,3; //BF_Badge2
+			}
+			else {
+				mes "[Axl Rose]";
+				mes "You lost, but you're dedicated to this battle.";
+				mes "This is a reward for your great dedication by Guillaume Marollo!";
+				mes "Just take this defeat as a lesson, next time you will definitely win.";
+				close2;
+				getitem 7829,.@medal_gap; //BF_Badge2
+			}
+		}
 	}
 	else {
 		mes "[Axl Rose]";
@@ -532,12 +662,66 @@ OnInit:
 bat_b02,389,14,3	script	Vintenar#bat_b02_bover	415,{
 	set .@A_B_gap,$@Guill_ScoreBG2 - $@Croix_ScoreBG2;
 	if ($@FlaviusBG2_id2 == getcharid(4)) {
-		if (.@A_B_gap > 0)
-			callfunc "F_BG_Badge",1,"Croix","Flavius";
-		else if (.@A_B_gap == 0)
-			callfunc "F_BG_Badge",0,"Croix","Flavius";
-		else
-			callfunc "F_BG_Badge",1,"Croix","Flavius";
+		if (.@A_B_gap > 0) {
+			set .@your_medal,countitem(7829);
+			set .@medal_gap,500 - .@your_medal;
+			if (.@medal_gap > 2) {
+				mes "[Swandery]";
+				mes "Oh, "+strcharinfo(0)+". Don't be sad.";
+				mes "Even though we didn't win, we did our best.";
+				mes "This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.";
+				close2;
+				getitem 7829,3; //BF_Badge2
+			}
+			else {
+				mes "[Swandery]";
+				mes "Oh, "+strcharinfo(0)+". Don't be sad.";
+				mes "Even though we didn't win, we did our best.";
+				mes "This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.";
+				close2;
+				getitem 7829,.@medal_gap; //BF_Badge2
+			}
+		}
+		else if (.@A_B_gap == 0) {
+			set .@your_medal,countitem(7829);
+			set .@medal_gap,500 - .@your_medal;
+			if (.@medal_gap > 2) {
+				mes "[Swandery]";
+				mes "Oh, "+strcharinfo(0)+". Don't be sad.";
+				mes "Even though we didn't win, we did our best.";
+				mes "This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.";
+				close2;
+				getitem 7829,3; //BF_Badge2
+			}
+			else {
+				mes "[Swandery]";
+				mes "Oh, "+strcharinfo(0)+". Don't be sad.";
+				mes "Even though we didn't win, we did our best.";
+				mes "This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.";
+				close2;
+				getitem 7829,.@medal_gap; //BF_Badge2
+			}
+		}
+		else {
+			set .@your_medal,countitem(7829);
+			set .@medal_gap,500 - .@your_medal;
+			if (.@medal_gap > 8) {
+				mes "[Swandery]";
+				mes "Blessed Croix!";
+				mes "Let's enjoy our glorious victory!";
+				mes ""+strcharinfo(0)+", it's a sign reflecting victory.";
+				close2;
+				getitem 7829,9; //BF_Badge2
+			}
+			else {
+				mes "[Swandery]";
+				mes "Blessed Croix!";
+				mes "Let's enjoy our glorious victory!";
+				mes ""+strcharinfo(0)+", it's a sign reflecting victory.";
+				close2;
+				getitem 7829,.@medal_gap; //BF_Badge2
+			}
+		}
 	}
 	else {
 		mes "[Swandery]";
@@ -553,14 +737,14 @@ OnInit:
 	end;
 }
 
+/*
 bat_b02,1,10,3	script	Release all#b02	81,{
-	set .@i, callfunc("F_GM_NPC",1854,0);
-	if (.@i == -1) {
+	input .@input,0,2000;
+	if (.@input == 0) {
 		mes "Cancelled.";
 		close;
-	} else if (.@i == 0) {
-		end;
-	} else {
+	}
+	else if (.@input == 1854) {
 		mes "May I help you?";
 		next;
 		switch(select("Release all.:Cancel.")) {
@@ -575,3 +759,4 @@ bat_b02,1,10,3	script	Release all#b02	81,{
 		}
 	}
 }
+*/

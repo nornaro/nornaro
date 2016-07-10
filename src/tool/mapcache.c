@@ -1,6 +1,12 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
+#include "../common/cbasetypes.h"
+#include "../common/grfio.h"
+#include "../common/malloc.h"
+#include "../common/mmo.h"
+#include "../common/showmsg.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,20 +15,11 @@
 #include <unistd.h>
 #endif
 
-#include "../common/cbasetypes.h"
-#include "../common/grfio.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/showmsg.h"
-#include "../common/utils.h"
-
-#include "../config/renewal.h"
-
 #define NO_WATER 1000000
 
 char grf_list_file[256] = "conf/grf-files.txt";
 char map_list_file[256] = "db/map_index.txt";
-char map_cache_file[256];
+char map_cache_file[256] = "db/map_cache.dat";
 int rebuild = 0;
 
 FILE *map_cache_fp;
@@ -51,6 +48,60 @@ struct map_info {
 };
 
 
+/*************************************
+* Big-endian compatibility functions *
+*************************************/
+
+// Converts an int16 from current machine order to little-endian
+int16 MakeShortLE(int16 val)
+{
+	unsigned char buf[2];
+	buf[0] = (unsigned char)( (val & 0x00FF)         );
+	buf[1] = (unsigned char)( (val & 0xFF00) >> 0x08 );
+	return *((int16*)buf);
+}
+
+// Converts an int32 from current machine order to little-endian
+int32 MakeLongLE(int32 val)
+{
+	unsigned char buf[4];
+	buf[0] = (unsigned char)( (val & 0x000000FF)         );
+	buf[1] = (unsigned char)( (val & 0x0000FF00) >> 0x08 );
+	buf[2] = (unsigned char)( (val & 0x00FF0000) >> 0x10 );
+	buf[3] = (unsigned char)( (val & 0xFF000000) >> 0x18 );
+	return *((int32*)buf);
+}
+
+// Reads an uint16 in little-endian from the buffer
+uint16 GetUShort(const unsigned char* buf)
+{
+	return	 ( ((uint16)(buf[0]))         )
+			|( ((uint16)(buf[1])) << 0x08 );
+}
+
+// Reads an uint32 in little-endian from the buffer
+uint32 GetULong(const unsigned char* buf)
+{
+	return	 ( ((uint32)(buf[0]))         )
+			|( ((uint32)(buf[1])) << 0x08 )
+			|( ((uint32)(buf[2])) << 0x10 )
+			|( ((uint32)(buf[3])) << 0x18 );
+}
+
+// Reads an int32 in little-endian from the buffer
+int32 GetLong(const unsigned char* buf)
+{
+	return (int32)GetULong(buf);
+}
+
+// Reads a float (32 bits) from the buffer
+float GetFloat(const unsigned char* buf)
+{
+	uint32 val = GetULong(buf);
+	return *((float*)&val);
+}
+
+
 // Reads a map from GRF's GAT and RSW files
 int read_map(char *name, struct map_data *m)
 {
@@ -72,7 +123,7 @@ int read_map(char *name, struct map_data *m)
 	rsw = (unsigned char *)grfio_read(filename);
 
 	// Read water height
-	if (rsw) {
+	if (rsw) { 
 		water_height = (int)GetFloat(rsw+166);
 		aFree(rsw);
 	} else
@@ -123,8 +174,6 @@ void cache_map(char *name, struct map_data *m)
 	encode_zip(write_buf, &len, m->cells, m->xs*m->ys);
 
 	// Fill the map header
-	if (strlen(name) > MAP_NAME_LENGTH) // It does not hurt to warn that there are maps with name longer than allowed.
-		ShowWarning ("Map name '%s' size '%d' is too long. Truncating to '%d'.\n", name, strlen(name), MAP_NAME_LENGTH);
 	strncpy(info.name, name, MAP_NAME_LENGTH);
 	info.xs = MakeShortLE(m->xs);
 	info.ys = MakeShortLE(m->ys);
@@ -152,7 +201,7 @@ int find_map(char *name)
 	fseek(map_cache_fp, sizeof(struct main_header), SEEK_SET);
 
 	for(i = 0; i < header.map_count; i++) {
-		if(fread(&info, sizeof(info), 1, map_cache_fp) != 1) printf("An error as occured in fread while reading map_cache\n");
+		fread(&info, sizeof(info), 1, map_cache_fp);
 		if(strcmp(name, info.name) == 0) // Map found
 			return 1;
 		else // Map not found, jump to the beginning of the next map info header
@@ -197,21 +246,12 @@ void process_args(int argc, char *argv[])
 
 }
 
-int do_init(int argc, char** argv)
+int do_init(int argc, char *argv[])
 {
 	FILE *list;
 	char line[1024];
 	struct map_data map;
 	char name[MAP_NAME_LENGTH_EXT];
-
-	/* setup pre-defined, #define-dependant */
-	sprintf(map_cache_file,"db/%s/map_cache.dat",
-#ifdef RENEWAL
-			"re"
-#else
-			"pre-re"
-#endif
-			);
 
 	// Process the command-line arguments
 	process_args(argc, argv);
@@ -251,7 +291,7 @@ int do_init(int argc, char** argv)
 		header.file_size = sizeof(struct main_header);
 		header.map_count = 0;
 	} else {
-		if(fread(&header, sizeof(struct main_header), 1, map_cache_fp) != 1){ printf("An error as occured while reading map_cache_fp \n"); }
+		fread(&header, sizeof(struct main_header), 1, map_cache_fp);
 		header.file_size = GetULong((unsigned char *)&(header.file_size));
 		header.map_count = GetUShort((unsigned char *)&(header.map_count));
 	}

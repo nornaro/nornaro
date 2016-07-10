@@ -1,4 +1,4 @@
-//===== rAthena Script =======================================
+//===== eAthena Script =======================================
 //= Jawaii Warp Script
 //===== By: ==================================================
 //= Muad Dib (1.0)
@@ -7,7 +7,7 @@
 //===== Current Version: =====================================
 //= 1.2b
 //===== Compatible With: =====================================
-//= rAthena Project; RO Episode 6+
+//= Any Athena Version; RO Episode 6+
 //===== Description: =========================================
 //= Warp Points for Jawaii
 //===== Additional Comments: =================================

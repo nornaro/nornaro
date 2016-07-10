@@ -7,7 +7,8 @@
 #define SEARCHSTORE_RESULTS_PER_PAGE 10
 
 /// information about the search being performed
-struct s_search_store_search {
+struct s_search_store_search
+{
 	struct map_session_data* search_sd;  // sd of the searching player
 	const unsigned short* itemlist;
 	const unsigned short* cardlist;
@@ -17,18 +18,20 @@ struct s_search_store_search {
 	unsigned int max_price;
 };
 
-struct s_search_store_info_item {
+struct s_search_store_info_item
+{
 	int store_id;
-	uint32 account_id;
+	int account_id;
 	char store_name[MESSAGE_SIZE];
 	unsigned short nameid;
 	unsigned short amount;
 	unsigned int price;
-	unsigned short card[MAX_SLOTS];
+	short card[MAX_SLOTS];
 	unsigned char refine;
 };
 
-struct s_search_store_info {
+struct s_search_store_info
+{
 	unsigned int count;
 	struct s_search_store_info_item* items;
 	unsigned int pages;  // amount of pages already sent to client
@@ -46,9 +49,9 @@ bool searchstore_querynext(struct map_session_data* sd);
 void searchstore_next(struct map_session_data* sd);
 void searchstore_clear(struct map_session_data* sd);
 void searchstore_close(struct map_session_data* sd);
-void searchstore_click(struct map_session_data* sd, uint32 account_id, int store_id, unsigned short nameid);
-bool searchstore_queryremote(struct map_session_data* sd, uint32 account_id);
+void searchstore_click(struct map_session_data* sd, int account_id, int store_id, unsigned short nameid);
+bool searchstore_queryremote(struct map_session_data* sd, int account_id);
 void searchstore_clearremote(struct map_session_data* sd);
-bool searchstore_result(struct map_session_data* sd, int store_id, uint32 account_id, const char* store_name, unsigned short nameid, unsigned short amount, unsigned int price, const unsigned short* card, unsigned char refine);
+bool searchstore_result(struct map_session_data* sd, int store_id, int account_id, const char* store_name, unsigned short nameid, unsigned short amount, unsigned int price, const short* card, unsigned char refine);
 
 #endif  // _SEARCHSTORE_H_

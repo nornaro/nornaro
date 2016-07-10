@@ -1,13 +1,13 @@
-//===== rAthena Script ======================================= 
+//===== eAthena Script ======================================= 
 //= Prontera Town
 //===== By: ================================================== 
 //= kobra_k88
 //===== Current Version: ===================================== 
 //= 2.1
 //===== Compatible With: ===================================== 
-//= rAthena Project
+//= eAthena SVN
 //===== Description: ========================================= 
-//= [Official Conversion]
+//= [Aegis Conversion]
 //= NPCs in Prontera
 //===== Additional Comments: ================================= 
 //= Fully working
@@ -30,9 +30,13 @@ prontera,160,330,0	script	Guard#pront::prtguard	105,{
 	mes "Welcome to Prontera.";
 	close;
 }
+
 prontera,223,99,1	duplicate(prtguard)	Guard#2pront	105
+
 prontera,229,104,5	duplicate(prtguard)	Guard#3pront	105
+
 prontera,47,339,5	duplicate(prtguard)	Guard#4pront	105
+
 
 prontera,101,288,3	script	Shuger#pront	98,{
 	mes "[Shuger]";
@@ -236,7 +240,7 @@ prontera,78,150,3	script	Dairenne#pront	90,{
 // inside Prontera
 //============================================================
 /*
-//This NPC has been disabled officially.
+//This NPC has been disabled officiall.
 prt_in,178,92,0	script	Curator of Library#pront	57,{
 	mes "[Curator Guiss]";
 	mes "Here, in the Western branch of the Prontera Library, ";
@@ -475,7 +479,7 @@ prt_in,177,18,2	script	Marvin#pront	80,{
 	mes "Whether it's schmoozing with a member of the opposite sex, or battling monsters, I gotta say, it's all about ^333399skills^000000.";
 	next;
 	mes "[Marvin]";
-	if (Sex)
+	if (sex)
 		mes "I can't help you much when it comes to the subject of talking to attractive women such as myself, but I can tell you a little more about skills that help in battle.";
 	else
 		mes "I don't really have any advice for skills when it comes to talking to a cute guy, but I can let you in on what I know about skills that help in battle.";

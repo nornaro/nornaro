@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== eAthena Script =======================================
 //= Morroc Sphinx Warp Script
 //===== By: ==================================================
 //= Nana (1.0)
 //===== Current Version: =====================================
 //= 1.0
 //===== Compatible With: =====================================
-//= rAthena Project
+//= Any Athena Version
 //===== Description: =========================================
 //= Warp Points for Sphinx Dungeon
 //===== Additional Comments: =================================

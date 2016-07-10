@@ -6,7 +6,9 @@
 #include "../common/showmsg.h"
 #include "strlib.h"
 
+#include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
 
 
 #define J_MAX_MALLOC_SIZE 65535
@@ -56,7 +58,7 @@ char* jstrescapecpy (char* pt, const char* spt)
 		pt[0] = '\0';
 		return &pt[0];
 	}
-
+	
 	while (spt[i] != '\0') {
 		switch (spt[i]) {
 			case '\'':
@@ -148,28 +150,6 @@ char* trim(char* str)
 	return str;
 }
 
-// Note: This function returns a pointer to a substring of the original string.
-// If the given string was allocated dynamically, the caller must not overwrite
-// that pointer with the returned value, since the original pointer must be
-// deallocated using the same allocator with which it was allocated.  The return
-// value must NOT be deallocated using free() etc.
-char *trim2(char *str,char flag) {
-	if(flag&1) { // Trim leading space
-		while(isspace(*str)) str++;
-		if(*str == 0)  // All spaces?
-			return str;
-	}
-	if(flag&2) { // Trim trailing space
-		char *end;
-
-		end = str + strlen(str) - 1;
-		while(end > str && isspace(*end)) end--;
-		*(end+1) = 0; // Write new null terminator
-	}
-
-	return str;
-}
-
 // Converts one or more consecutive occurences of the delimiters into a single space
 // and removes such occurences from the beginning and end of string
 // NOTE: make sure the string is not const!!
@@ -208,7 +188,7 @@ char* normalize_name(char* str,const char* delims)
 	return str;
 }
 
-//stristr: Case insensitive version of strstr, code taken from
+//stristr: Case insensitive version of strstr, code taken from 
 //http://www.daniweb.com/code/snippet313.html, Dave Sinkula
 //
 const char* stristr(const char* haystack, const char* needle)
@@ -265,7 +245,7 @@ char* _strtok_r(char *s1, const char *s2, char **lasts)
    If no '\0' terminator is found in that many characters, return MAXLEN.  */
 size_t strnlen (const char* string, size_t maxlen)
 {
-  const char* end = (const char*)memchr(string, '\0', maxlen);
+  const char* end = memchr (string, '\0', maxlen);
   return end ? (size_t) (end - string) : maxlen;
 }
 #endif
@@ -351,13 +331,13 @@ int e_mail_check(char* email)
 
 //--------------------------------------------------
 // Return numerical value of a switch configuration
-// on/off, english, franï¿½ais, deutsch, espaï¿½ol, portuguese
+// on/off, english, français, deutsch, español
 //--------------------------------------------------
 int config_switch(const char* str)
 {
-	if (strcmpi(str, "on") == 0 || strcmpi(str, "yes") == 0 || strcmpi(str, "oui") == 0 || strcmpi(str, "ja") == 0 || strcmpi(str, "si") == 0 || strcmpi(str, "sim") == 0)
+	if (strcmpi(str, "on") == 0 || strcmpi(str, "yes") == 0 || strcmpi(str, "oui") == 0 || strcmpi(str, "ja") == 0 || strcmpi(str, "si") == 0)
 		return 1;
-	if (strcmpi(str, "off") == 0 || strcmpi(str, "no") == 0 || strcmpi(str, "non") == 0 || strcmpi(str, "nein") == 0 || strcmpi(str, "nao") == 0)
+	if (strcmpi(str, "off") == 0 || strcmpi(str, "no") == 0 || strcmpi(str, "non") == 0 || strcmpi(str, "nein") == 0)
 		return 0;
 
 	return (int)strtol(str, NULL, 0);
@@ -461,13 +441,30 @@ bool bin2hex(char* output, unsigned char* input, size_t count)
 
 
 /////////////////////////////////////////////////////////////////////
-/// Parses a single field in a delim-separated string.
-/// The delimiter after the field is skipped.
-///
-/// @param sv Parse state
-/// @return 1 if a field was parsed, 0 if already done, -1 on error.
-int sv_parse_next(struct s_svstate* sv)
+/// Parses a delim-separated string.
+/// Starts parsing at startoff and fills the pos array with position pairs.
+/// out_pos[0] and out_pos[1] are the start and end of line.
+/// Other position pairs are the start and end of fields.
+/// Returns the number of fields found or -1 if an error occurs.
+/// 
+/// out_pos can be NULL.
+/// If a line terminator is found, the end position is placed there.
+/// out_pos[2] and out_pos[3] for the first field, out_pos[4] and out_pos[5] 
+/// for the seconds field and so on.
+/// Unfilled positions are set to -1.
+/// 
+/// @param str String to parse
+/// @param len Length of the string
+/// @param startoff Where to start parsing
+/// @param delim Field delimiter
+/// @param out_pos Array of resulting positions
+/// @param npos Size of the pos array
+/// @param opt Options that determine the parsing behaviour
+/// @return Number of fields found in the string or -1 if an error occured
+int sv_parse(const char* str, int len, int startoff, char delim, int* out_pos, int npos, enum e_svopt opt)
 {
+	int i;
+	int count;
 	enum {
 		START_OF_FIELD,
 		PARSING_FIELD,
@@ -476,37 +473,27 @@ int sv_parse_next(struct s_svstate* sv)
 		TERMINATE,
 		END
 	} state;
-	const char* str;
-	int len;
-	enum e_svopt opt;
-	char delim;
-	int i;
 
-	if( sv == NULL )
-		return -1;// error
-
-	str = sv->str;
-	len = sv->len;
-	opt = sv->opt;
-	delim = sv->delim;
+	// check pos/npos
+	if( out_pos == NULL ) npos = 0;
+	for( i = 0; i < npos; ++i )
+		out_pos[i] = -1;
 
 	// check opt
 	if( delim == '\n' && (opt&(SV_TERMINATE_CRLF|SV_TERMINATE_LF)) )
 	{
-		ShowError("sv_parse_next: delimiter '\\n' is not compatible with options SV_TERMINATE_LF or SV_TERMINATE_CRLF.\n");
+		ShowError("sv_parse: delimiter '\\n' is not compatible with options SV_TERMINATE_LF or SV_TERMINATE_CRLF.\n");
 		return -1;// error
 	}
 	if( delim == '\r' && (opt&(SV_TERMINATE_CRLF|SV_TERMINATE_CR)) )
 	{
-		ShowError("sv_parse_next: delimiter '\\r' is not compatible with options SV_TERMINATE_CR or SV_TERMINATE_CRLF.\n");
+		ShowError("sv_parse: delimiter '\\r' is not compatible with options SV_TERMINATE_CR or SV_TERMINATE_CRLF.\n");
 		return -1;// error
 	}
 
-	if( sv->done || str == NULL )
-	{
-		sv->done = true;
+	// check str
+	if( str == NULL )
 		return 0;// nothing to parse
-	}
 
 #define IS_END() ( i >= len )
 #define IS_DELIM() ( str[i] == delim )
@@ -515,13 +502,16 @@ int sv_parse_next(struct s_svstate* sv)
 	((opt&SV_TERMINATE_CR) && str[i] == '\r') || \
 	((opt&SV_TERMINATE_CRLF) && i+1 < len && str[i] == '\r' && str[i+1] == '\n') )
 #define IS_C_ESCAPE() ( (opt&SV_ESCAPE_C) && str[i] == '\\' )
-#define SET_FIELD_START() sv->start = i
-#define SET_FIELD_END() sv->end = i
+#define SET_FIELD_START() if( npos > count*2+2 ) out_pos[count*2+2] = i
+#define SET_FIELD_END() if( npos > count*2+3 ) out_pos[count*2+3] = i; ++count
 
-	i = sv->off;
+	i = startoff;
+	count = 0;
 	state = START_OF_FIELD;
+	if( npos > 0 ) out_pos[0] = startoff;// start
 	while( state != END )
 	{
+		if( npos > 1 ) out_pos[1] = i;// end
 		switch( state )
 		{
 		case START_OF_FIELD:// record start of field and start parsing it
@@ -543,7 +533,7 @@ int sv_parse_next(struct s_svstate* sv)
 				++i;// '\\'
 				if( IS_END() )
 				{
-					ShowError("sv_parse_next: empty escape sequence\n");
+					ShowError("sv_parse: empty escape sequence\n");
 					return -1;
 				}
 				if( str[i] == 'x' )
@@ -551,7 +541,7 @@ int sv_parse_next(struct s_svstate* sv)
 					++i;// 'x'
 					if( IS_END() || !ISXDIGIT(str[i]) )
 					{
-						ShowError("sv_parse_next: \\x with no following hex digits\n");
+						ShowError("sv_parse: \\x with no following hex digits\n");
 						return -1;
 					}
 					do{
@@ -572,22 +562,26 @@ int sv_parse_next(struct s_svstate* sv)
 				}
 				else
 				{
-					ShowError("sv_parse_next: unknown escape sequence \\%c\n", str[i]);
+					ShowError("sv_parse: unknown escape sequence \\%c\n", str[i]);
 					return -1;
 				}
 				state = PARSING_FIELD;
 				break;
 			}
 
-		case END_OF_FIELD:// record end of field and stop
+		case END_OF_FIELD:// record end of field and continue
 			SET_FIELD_END();
-			state = END;
 			if( IS_END() )
-				;// nothing else
+				state = END;
 			else if( IS_DELIM() )
+			{
 				++i;// delim
+				state = START_OF_FIELD;
+			}
 			else if( IS_TERMINATOR() )
 				state = TERMINATE;
+			else
+				state = START_OF_FIELD;
 			break;
 
 		case TERMINATE:
@@ -598,14 +592,10 @@ int sv_parse_next(struct s_svstate* sv)
 			else
 				++i;// CR or LF
 #endif
-			sv->done = true;
 			state = END;
 			break;
 		}
 	}
-	if( IS_END() )
-		sv->done = true;
-	sv->off = i;
 
 #undef IS_END
 #undef IS_DELIM
@@ -614,58 +604,6 @@ int sv_parse_next(struct s_svstate* sv)
 #undef SET_FIELD_START
 #undef SET_FIELD_END
 
-	return 1;
-}
-
-
-/// Parses a delim-separated string.
-/// Starts parsing at startoff and fills the pos array with position pairs.
-/// out_pos[0] and out_pos[1] are the start and end of line.
-/// Other position pairs are the start and end of fields.
-/// Returns the number of fields found or -1 if an error occurs.
-///
-/// out_pos can be NULL.
-/// If a line terminator is found, the end position is placed there.
-/// out_pos[2] and out_pos[3] for the first field, out_pos[4] and out_pos[5]
-/// for the seconds field and so on.
-/// Unfilled positions are set to -1.
-///
-/// @param str String to parse
-/// @param len Length of the string
-/// @param startoff Where to start parsing
-/// @param delim Field delimiter
-/// @param out_pos Array of resulting positions
-/// @param npos Size of the pos array
-/// @param opt Options that determine the parsing behaviour
-/// @return Number of fields found in the string or -1 if an error occured
-int sv_parse(const char* str, int len, int startoff, char delim, int* out_pos, int npos, enum e_svopt opt)
-{
-	struct s_svstate sv;
-	int count;
-
-	// initialize
-	if( out_pos == NULL ) npos = 0;
-	for( count = 0; count < npos; ++count )
-		out_pos[count] = -1;
-	sv.str = str;
-	sv.len = len;
-	sv.off = startoff;
-	sv.opt = opt;
-	sv.delim = delim;
-	sv.done = false;
-
-	// parse
-	count = 0;
-	if( npos > 0 ) out_pos[0] = startoff;
-	while( !sv.done )
-	{
-		++count;
-		if( sv_parse_next(&sv) <= 0 )
-			return -1;// error
-		if( npos > count*2 ) out_pos[count*2] = sv.start;
-		if( npos > count*2+1 ) out_pos[count*2+1] = sv.end;
-	}
-	if( npos > 1 ) out_pos[1] = sv.off;
 	return count;
 }
 
@@ -675,11 +613,11 @@ int sv_parse(const char* str, int len, int startoff, char delim, int* out_pos, i
 /// out_fields[0] is the start of the next line.
 /// Other entries are the start of fields (nul-teminated).
 /// Returns the number of fields found or -1 if an error occurs.
-///
+/// 
 /// out_fields can be NULL.
 /// Fields that don't fit in out_fields are not nul-terminated.
 /// Extra entries in out_fields are filled with the end of the last field (empty string).
-///
+/// 
 /// @param str String to parse
 /// @param len Length of the string
 /// @param startoff Where to start parsing
@@ -967,29 +905,26 @@ const char* skip_escaped_c(const char* p)
 }
 
 
-/**
- * Opens and parses a file containing delim-separated columns, feeding them to the specified callback function row by row.
- * Tracks the progress of the operation (current line number, number of successfully processed rows).
- * Returns 'true' if it was able to process the specified file, or 'false' if it could not be read.
- * @param directory : Directory
- * @param filename : filename File to process
- * @param delim : delim Field delimiter
- * @param mincols : mincols Minimum number of columns of a valid row
- * @param maxcols : maxcols Maximum number of columns of a valid row
- * @param maxrows : maxcols Maximum number of columns of a valid row
- * @param parseproc : parseproc User-supplied row processing function
- * @param silent : should we display error if file not found ?
- * @return true on success, false if file could not be opened
- */
-bool sv_readdb(const char* directory, const char* filename, char delim, int mincols, int maxcols, int maxrows, bool (*parseproc)(char* fields[], int columns, int current), bool silent)
+/// Opens and parses a file containing delim-separated columns, feeding them to the specified callback function row by row.
+/// Tracks the progress of the operation (current line number, number of successfully processed rows).
+/// Returns 'true' if it was able to process the specified file, or 'false' if it could not be read.
+///
+/// @param directory Directory
+/// @param filename File to process
+/// @param delim Field delimiter
+/// @param mincols Minimum number of columns of a valid row
+/// @param maxcols Maximum number of columns of a valid row
+/// @param parseproc User-supplied row processing function
+/// @return true on success, false if file could not be opened
+bool sv_readdb(const char* directory, const char* filename, char delim, int mincols, int maxcols, int maxrows, bool (*parseproc)(char* fields[], int columns, int current))
 {
 	FILE* fp;
 	int lines = 0;
 	int entries = 0;
 	char** fields; // buffer for fields ([0] is reserved)
-	int columns, nb_cols;
-	char path[1024], *line;
-	const short colsize=512;
+	int columns, fields_length;
+	char path[1024], line[1024];
+	char* match;
 
 	snprintf(path, sizeof(path), "%s/%s", directory, filename);
 
@@ -997,19 +932,17 @@ bool sv_readdb(const char* directory, const char* filename, char delim, int minc
 	fp = fopen(path, "r");
 	if( fp == NULL )
 	{
-		if(silent == 0) ShowError("sv_readdb: can't read %s\n", path);
+		ShowError("sv_readdb: can't read %s\n", path);
 		return false;
 	}
 
 	// allocate enough memory for the maximum requested amount of columns plus the reserved one
-	nb_cols = maxcols+1;
-	fields = (char**)aMalloc(nb_cols*sizeof(char*));
-	line = (char*)aMalloc(nb_cols*colsize);
+	fields_length = maxcols+1;
+	fields = aMalloc(fields_length*sizeof(char*));
 
 	// process rows one by one
-	while( fgets(line, maxcols*colsize, fp) )
+	while( fgets(line, sizeof(line), fp) )
 	{
-		char *match;
 		lines++;
 
 		if( ( match = strstr(line, "//") ) != NULL )
@@ -1017,12 +950,11 @@ bool sv_readdb(const char* directory, const char* filename, char delim, int minc
 			match[0] = 0;
 		}
 
-		//trim(line); //TODO: strip trailing whitespace
-		//trim2(line,1); //removing trailing actually break mob_skill_db
+		//TODO: strip trailing whitespace
 		if( line[0] == '\0' || line[0] == '\n' || line[0] == '\r')
 			continue;
 
-		columns = sv_split(line, strlen(line), 0, delim, fields, nb_cols, (e_svopt)(SV_TERMINATE_LF|SV_TERMINATE_CRLF));
+		columns = sv_split(line, strlen(line), 0, delim, fields, fields_length, (e_svopt)(SV_TERMINATE_LF|SV_TERMINATE_CRLF));
 
 		if( columns < mincols )
 		{
@@ -1052,7 +984,6 @@ bool sv_readdb(const char* directory, const char* filename, char delim, int minc
 	}
 
 	aFree(fields);
-	aFree(line);
 	fclose(fp);
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", entries, path);
 
@@ -1066,7 +997,7 @@ bool sv_readdb(const char* directory, const char* filename, char delim, int minc
 // @author MouseJstr (original)
 
 /// Allocates a StringBuf
-StringBuf* StringBuf_Malloc()
+StringBuf* StringBuf_Malloc() 
 {
 	StringBuf* self;
 	CREATE(self, StringBuf, 1);
@@ -1078,7 +1009,7 @@ StringBuf* StringBuf_Malloc()
 void StringBuf_Init(StringBuf* self)
 {
 	self->max_ = 1024;
-	self->ptr_ = self->buf_ = (char*)aMalloc(self->max_ + 1);
+	self->ptr_ = self->buf_ = (char*)aMallocA(self->max_ + 1);
 }
 
 /// Appends the result of printf to the StringBuf
@@ -1097,9 +1028,10 @@ int StringBuf_Printf(StringBuf* self, const char* fmt, ...)
 /// Appends the result of vprintf to the StringBuf
 int StringBuf_Vprintf(StringBuf* self, const char* fmt, va_list ap)
 {
+	int n, size, off;
+
 	for(;;)
 	{
-		int n, size, off;
 		va_list apcopy;
 		/* Try to print in the allocated space. */
 		size = self->max_ - (self->ptr_ - self->buf_);
@@ -1140,7 +1072,7 @@ int StringBuf_Append(StringBuf* self, const StringBuf* sbuf)
 }
 
 // Appends str to the StringBuf
-int StringBuf_AppendStr(StringBuf* self, const char* str)
+int StringBuf_AppendStr(StringBuf* self, const char* str) 
 {
 	int available = self->max_ - (self->ptr_ - self->buf_);
 	int needed = (int)strlen(str);
@@ -1159,20 +1091,20 @@ int StringBuf_AppendStr(StringBuf* self, const char* str)
 }
 
 // Returns the length of the data in the Stringbuf
-int StringBuf_Length(StringBuf* self)
+int StringBuf_Length(StringBuf* self) 
 {
 	return (int)(self->ptr_ - self->buf_);
 }
 
 /// Returns the data in the StringBuf
-char* StringBuf_Value(StringBuf* self)
+char* StringBuf_Value(StringBuf* self) 
 {
 	*self->ptr_ = '\0';
 	return self->buf_;
 }
 
 /// Clears the contents of the StringBuf
-void StringBuf_Clear(StringBuf* self)
+void StringBuf_Clear(StringBuf* self) 
 {
 	self->ptr_ = self->buf_;
 }
@@ -1186,7 +1118,7 @@ void StringBuf_Destroy(StringBuf* self)
 }
 
 // Frees a StringBuf returned by StringBuf_Malloc
-void StringBuf_Free(StringBuf* self)
+void StringBuf_Free(StringBuf* self) 
 {
 	StringBuf_Destroy(self);
 	aFree(self);

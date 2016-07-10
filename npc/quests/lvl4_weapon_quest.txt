@@ -1,18 +1,18 @@
-//===== rAthena Script ======================================= 
+//===== eAthena Script ======================================= 
 //= Grade A and Grade S weapon quests
 //===== By: ================================================== 
 //= Vicious_Pucca, Reddozen & MasterOfMuppets
 //===== Current Version: ===================================== 
 //= 1.6
 //===== Compatible With: ===================================== 
-//= rAthena Project; SVN 3422+
+//= eAthena SVN 3422+(Requires jA Script System)
 //===== Description: ========================================= 
-//= [Official Conversion]
+//= [Aegis Conversion]
 //= Grade A and Grade S weapon quests
 //===== Additional Comments: ================================= 
 //= 1.0 First Version, Credits goes to Vicious_Pucca for converting [MasterOfMuppets]
 //=     the quest from aegis format to eA format. Also thanks to 
-//=     reddozen for fixing bugs.
+//=	reddozen for fixing bugs.
 //= 1.1 Many fixes to spelling, grammar, and sentence order. [Silent]
 //= 1.2 A small fix, thanks to vicious_pucca [MasterOfMuppets]
 //= 1.21 Fixing MoM's typos (Citrin -> Citrine) [erKURITA]
@@ -1162,7 +1162,7 @@ um_in,156,77,5	script	Tabezthan#lv4	788,{
 			if ((countitem(7290) > 29) && (countitem(7289) > 29) && (countitem(7293) > 29)) {
 				mes "[Tabezthan]";
 				mes "Ah, you've brought all three. However, we can only use one kind of ore at a time, so please choose just one.";
-				next;
+				next;	
 				switch(select("Phlogopite:Peridot:Rose Quartz")) {
 				case 1:
 					set .@itemreq,7290; //Phlogopite
@@ -1786,7 +1786,7 @@ niflheim,240,193,3	script	Kayron#lv4	794,{
 			if (lv4_weapon == 29) {
 				mes "this... Guillotine!";
 				getitem 1369,1; //Guillotine
-			}
+			}		
 			else {
 				mes "this... Brionac!";
 				getitem 1470,1; //Brionac
@@ -1960,7 +1960,7 @@ niflheim,240,193,3	script	Kayron#lv4	794,{
 		if (.@shobu > 1) {
 			mes "[Kayron]";
 			mes "Let's see...";
-			mes "You won " + .@shobu + " times.";
+			mes "You won " + shobu + " times.";
 			mes "You must be really";
 			mes "Without a doubt, you've";
 			mes "got some pretty good luck~";
@@ -2139,7 +2139,8 @@ niflheim,240,193,3	script	Kayron#lv4	794,{
 }
 
 niflheim,99,268,5	script	Reyghema#lv4	794,{
-	if (MaxWeight - Weight < 3000) {
+	set .@now_weight,MaxWeight-Weight;
+	if (.@now_weight < 3000) {
 		mes "^3355FFWait a second! Right now, you're carrying too many items with you. Please come back after putting some of your things into Kafra Storage.^000000";
 		close;
 	}

@@ -9,17 +9,13 @@
 #include "sql.h"
 
 #ifdef WIN32
-#include "../common/winapi.h"
+#include <winsock2.h>
 #endif
 #include <mysql.h>
+#include <string.h>// strlen/strnlen/memcpy/memset
 #include <stdlib.h>// strtoul
 
-#define SQL_CONF_NAME "conf/inter_athena.conf"
 
-void ra_mysql_error_handler(unsigned int ecode);
-
-int mysql_reconnect_type;
-unsigned int mysql_reconnect_count;
 
 /// Sql handle
 struct Sql
@@ -78,7 +74,7 @@ Sql* Sql_Malloc(void)
 	self->lengths = NULL;
 	self->result = NULL;
 	self->keepalive = INVALID_TIMER;
-	self->handle.reconnect = 1;
+
 	return self;
 }
 
@@ -86,16 +82,7 @@ Sql* Sql_Malloc(void)
 
 static int Sql_P_Keepalive(Sql* self);
 
-/**
- * Establishes a connection to schema
- * @param self : sql handle
- * @param user : username to access
- * @param passwd : password
- * @param host : hostname
- * @param port : port
- * @param db : schema name
- * @return 
- */
+/// Establishes a connection.
 int Sql_Connect(Sql* self, const char* user, const char* passwd, const char* host, uint16 port, const char* db)
 {
 	if( self == NULL )
@@ -175,7 +162,7 @@ int Sql_GetColumnNames(Sql* self, const char* table, char* out_buf, size_t buf_l
 /// Changes the encoding of the connection.
 int Sql_SetEncoding(Sql* self, const char* encoding)
 {
-	if( self && Sql_Query(self, "SET NAMES %s", encoding) == 0 )
+	if( self && mysql_set_character_set(&self->handle, encoding) == 0 )
 		return SQL_SUCCESS;
 	return SQL_ERROR;
 }
@@ -195,7 +182,7 @@ int Sql_Ping(Sql* self)
 /// Wrapper function for Sql_Ping.
 ///
 /// @private
-static int Sql_P_KeepaliveTimer(int tid, unsigned int tick, int id, intptr_t data)
+static int Sql_P_KeepaliveTimer(int tid, unsigned int tick, int id, intptr data)
 {
 	Sql* self = (Sql*)data;
 	ShowInfo("Pinging SQL server to keep connection alive...\n");
@@ -225,7 +212,7 @@ static int Sql_P_Keepalive(Sql* self)
 	// establish keepalive
 	ping_interval = timeout - 30; // 30-second reserve
 	//add_timer_func_list(Sql_P_KeepaliveTimer, "Sql_P_KeepaliveTimer");
-	return add_timer_interval(gettick() + ping_interval*1000, Sql_P_KeepaliveTimer, 0, (intptr_t)self, ping_interval*1000);
+	return add_timer_interval(gettick() + ping_interval*1000, Sql_P_KeepaliveTimer, 0, (intptr)self, ping_interval*1000);
 }
 
 
@@ -279,14 +266,12 @@ int Sql_QueryV(Sql* self, const char* query, va_list args)
 	if( mysql_real_query(&self->handle, StringBuf_Value(&self->buf), (unsigned long)StringBuf_Length(&self->buf)) )
 	{
 		ShowSQL("DB error - %s\n", mysql_error(&self->handle));
-		ra_mysql_error_handler(mysql_errno(&self->handle));
 		return SQL_ERROR;
 	}
 	self->result = mysql_store_result(&self->handle);
 	if( mysql_errno(&self->handle) != 0 )
 	{
 		ShowSQL("DB error - %s\n", mysql_error(&self->handle));
-		ra_mysql_error_handler(mysql_errno(&self->handle));
 		return SQL_ERROR;
 	}
 	return SQL_SUCCESS;
@@ -306,14 +291,12 @@ int Sql_QueryStr(Sql* self, const char* query)
 	if( mysql_real_query(&self->handle, StringBuf_Value(&self->buf), (unsigned long)StringBuf_Length(&self->buf)) )
 	{
 		ShowSQL("DB error - %s\n", mysql_error(&self->handle));
-		ra_mysql_error_handler(mysql_errno(&self->handle));
 		return SQL_ERROR;
 	}
 	self->result = mysql_store_result(&self->handle);
 	if( mysql_errno(&self->handle) != 0 )
 	{
 		ShowSQL("DB error - %s\n", mysql_error(&self->handle));
-		ra_mysql_error_handler(mysql_errno(&self->handle));
 		return SQL_ERROR;
 	}
 	return SQL_SUCCESS;
@@ -422,7 +405,7 @@ void Sql_ShowDebug_(Sql* self, const char* debug_file, const unsigned long debug
 
 
 /// Frees a Sql handle returned by Sql_Malloc.
-void Sql_Free(Sql* self)
+void Sql_Free(Sql* self) 
 {
 	if( self )
 	{
@@ -569,7 +552,7 @@ static void Sql_P_ShowDebugMysqlFieldInfo(const char* prefix, enum enum_field_ty
 	SHOW_DEBUG_OF(MYSQL_TYPE_NULL);
 #undef SHOW_DEBUG_TYPE_OF
 	}
-	ShowDebug("%stype=%s%s, length=%d%s\n", prefix, sign, type_string, length, length_postfix);
+	ShowDebug("%stype=%s%s, length=%d%s\n", prefix, sign, type_string, length, length_postfix); 
 }
 
 
@@ -656,7 +639,6 @@ int SqlStmt_PrepareV(SqlStmt* self, const char* query, va_list args)
 	if( mysql_stmt_prepare(self->stmt, StringBuf_Value(&self->buf), (unsigned long)StringBuf_Length(&self->buf)) )
 	{
 		ShowSQL("DB error - %s\n", mysql_stmt_error(self->stmt));
-		ra_mysql_error_handler(mysql_stmt_errno(self->stmt));
 		return SQL_ERROR;
 	}
 	self->bind_params = false;
@@ -678,7 +660,6 @@ int SqlStmt_PrepareStr(SqlStmt* self, const char* query)
 	if( mysql_stmt_prepare(self->stmt, StringBuf_Value(&self->buf), (unsigned long)StringBuf_Length(&self->buf)) )
 	{
 		ShowSQL("DB error - %s\n", mysql_stmt_error(self->stmt));
-		ra_mysql_error_handler(mysql_stmt_errno(self->stmt));
 		return SQL_ERROR;
 	}
 	self->bind_params = false;
@@ -740,14 +721,12 @@ int SqlStmt_Execute(SqlStmt* self)
 		mysql_stmt_execute(self->stmt) )
 	{
 		ShowSQL("DB error - %s\n", mysql_stmt_error(self->stmt));
-		ra_mysql_error_handler(mysql_stmt_errno(self->stmt));
 		return SQL_ERROR;
 	}
 	self->bind_columns = false;
 	if( mysql_stmt_store_result(self->stmt) )// store all the data
 	{
 		ShowSQL("DB error - %s\n", mysql_stmt_error(self->stmt));
-		ra_mysql_error_handler(mysql_stmt_errno(self->stmt));
 		return SQL_ERROR;
 	}
 
@@ -841,6 +820,8 @@ int SqlStmt_NextRow(SqlStmt* self)
 	int err;
 	size_t i;
 	size_t cols;
+	MYSQL_BIND* column;
+	unsigned long length;
 
 	if( self == NULL )
 		return SQL_ERROR;
@@ -870,7 +851,7 @@ int SqlStmt_NextRow(SqlStmt* self)
 		cols = SqlStmt_NumColumns(self);
 		for( i = 0; i < cols; ++i )
 		{
-			MYSQL_BIND* column = &self->columns[i];
+			column = &self->columns[i];
 			column->error = &truncated;
 			mysql_stmt_fetch_column(self->stmt, column, (unsigned int)i, 0);
 			column->error = NULL;
@@ -887,7 +868,6 @@ int SqlStmt_NextRow(SqlStmt* self)
 	if( err )
 	{
 		ShowSQL("DB error - %s\n", mysql_stmt_error(self->stmt));
-		ra_mysql_error_handler(mysql_stmt_errno(self->stmt));
 		return SQL_ERROR;
 	}
 
@@ -895,8 +875,8 @@ int SqlStmt_NextRow(SqlStmt* self)
 	cols = SqlStmt_NumColumns(self);
 	for( i = 0; i < cols; ++i )
 	{
-		unsigned long length = self->column_lengths[i].length;
-		MYSQL_BIND* column = &self->columns[i];
+		length = self->column_lengths[i].length;
+		column = &self->columns[i];
 #if !defined(MYSQL_DATA_TRUNCATED)
 		// MySQL 4.1/(below?) returns success even if data is truncated, so we test truncation manually [FlavioJS]
 		if( column->buffer_length < length )
@@ -965,67 +945,4 @@ void SqlStmt_Free(SqlStmt* self)
 		}
 		aFree(self);
 	}
-}
-
-
-
-/// Receives MySQL error codes during runtime (not on first-time-connects).
-void ra_mysql_error_handler(unsigned int ecode) {
-	switch( ecode ) {
-		case 2003:// Can't connect to MySQL (this error only happens here when failing to reconnect)
-			if( mysql_reconnect_type == 1 ) {
-				static unsigned int retry = 1;
-				if( ++retry > mysql_reconnect_count ) {
-					ShowFatalError("MySQL has been unreachable for too long, %d reconnects were attempted. Shutting Down\n", retry);
-					exit(EXIT_FAILURE);
-				}
-			}
-			break;
-	}
-}
-
-void Sql_inter_server_read(const char* cfgName, bool first) {
-	char line[1024], w1[1024], w2[1024];
-	FILE* fp;
-
-	fp = fopen(cfgName, "r");
-	if(fp == NULL) {
-		if( first ) {
-			ShowFatalError("File not found: %s\n", cfgName);
-			exit(EXIT_FAILURE);
-		} else
-			ShowError("File not found: %s\n", cfgName);
-		return;
-	}
-
-	while(fgets(line, sizeof(line), fp)) {
-		int i = sscanf(line, "%1023[^:]: %1023[^\r\n]", w1, w2);
-		if(i != 2)
-			continue;
-
-		if(!strcmpi(w1,"mysql_reconnect_type")) {
-			mysql_reconnect_type = atoi(w2);
-			switch( mysql_reconnect_type ) {
-				case 1:
-				case 2:
-					break;
-				default:
-					ShowError("%s::mysql_reconnect_type is set to %d which is not valid, defaulting to 1...\n", cfgName, mysql_reconnect_type);
-					mysql_reconnect_type = 1;
-					break;
-			}
-		} else if(!strcmpi(w1,"mysql_reconnect_count")) {
-			mysql_reconnect_count = atoi(w2);
-			if( mysql_reconnect_count < 1 )
-				mysql_reconnect_count = 1;
-		} else if(!strcmpi(w1,"import"))
-			Sql_inter_server_read(w2,false);
-	}
-	fclose(fp);
-
-	return;
-}
-
-void Sql_Init(void) {
-	Sql_inter_server_read(SQL_CONF_NAME,true);
 }

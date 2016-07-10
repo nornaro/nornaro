@@ -1,15 +1,15 @@
-//===== rAthena Script ======================================= 
+//===== eAthena Script ======================================= 
 //= Valkyrie Realm
 //===== By: ==================================================
 //= Nana, fixes by Poki
 //= finished, optimized and tested by Lupus
 //= L0ne_W0lf
 //===== Current Version: ===================================== 
-//= 3.1
+//= 3.0
 //===== Compatible With: ===================================== 
-//= rAthena Project
+//= eAthena SVN
 //===== Description: ========================================= 
-//= [Official Conversion]
+//= [Aegis Conversion]
 //= Quest to become a Tranceded Class. (Advanced/Rebirthed)
 //===== Additional Comments: ================================= 
 //= 1.1 Made all into functions,additional checks,quest skills,now Valhallana can return you back. She also makes reborn process only when you got no Zeny/items (as in kRO) [Lupus]
@@ -28,16 +28,15 @@
 //= 2.5 Fixed a stuck bug [Lupus]
 //= 2.6a Adding proper dialogues [Lupus]
 //= 2.7 Rescripted to Aegis 10.3 standards. [L0ne_W0;f]
-//=     Removed all functions as they are no longer required.
-//=     Correct job level requirements for 1-1 -> 2-x.
+//=	Removed all functions as they are no longer required.
+//=	Correct job level requirements for 1-1 -> 2-x.
 //= 2.7a Added Function "F_BlockHigh" back in until rewriteing of the 2-x [L0ne_W0lf]
-//=     scripts are comepleted.
+//=	scripts are comepleted.
 //= 2.7b Removed function "F_BlockHigh" as it's no longer used. [L0ne_W0lf]
 //= 2.8 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
 //= 2.9 Corrected Valkyrie case spicifying where to warp after rebirthing. [L0ne_W0lf]
 //= 2.9b Fixed Verdandi typo, fixed resetting vars [Lupus]
 //= 3.0 Added quest log commands. [L0ne_W0lf]
-//= 3.1 Added Izlude Renewal coordinates.
 //============================================================ 
 
 valkyrie,48,86,4	script	Valkyrie#	811,{
@@ -54,7 +53,7 @@ valkyrie,48,86,4	script	Valkyrie#	811,{
 		mes "Honor to the warriors!";
 		close;
 	}
-	else if (BaseLevel > 98 && JobLevel > 49 && Class >= Job_Knight && Class <= Job_Crusader2) {
+	else if (Baselevel > 98 && JobLevel > 49 && Class >= Job_Knight && Class <= Job_Crusader2) {
 		mes "[Valkyrie]";
 		mes "Welcome";
 		mes "to Valhalla,";
@@ -151,8 +150,8 @@ valkyrie,48,86,4	script	Valkyrie#	811,{
 			jobchange Job_Novice_High;
 			resetlvl(1);
 			set MISC_QUEST,MISC_QUEST | 1024; //<-reset Skill Reset Event
-			skill "NV_FIRSTAID",1,0;
-			skill "NV_TRICKDEAD",1,0;
+			skill 142,1,0;
+			skill 143,1,0;
 			completequest 1000;
 			next;
 			mes "[Valkyrie]";
@@ -173,9 +172,7 @@ valkyrie,48,86,4	script	Valkyrie#	811,{
 			switch (ADVJOB) {
 			case 4008:
 			case 4015:
-				if (checkre(0)) warp "izlude",129,97;
-				else warp "izlude",94,103;
-				break;
+				warp "izlude",94,134; break;
 			case 4009:
 			case 4016:
 				warp "prontera",273,354; break;
@@ -213,7 +210,7 @@ valkyrie,48,86,4	script	Valkyrie#	811,{
 }
 
 yuno_in02,88,164,5	script	Metheus Sylphe#Library	742,{
-	if (BaseLevel > 98 && JobLevel > 49 && Class >= Job_Knight && Class <= Job_Crusader2) {
+	if (Baselevel > 98 && JobLevel > 49 && Class >= Job_Knight && Class <= Job_Crusader2) {
 		if (valkyrie_Q == 0) {
 			mes "[Metheus Sylphe]";
 			mes "Welcome to the Library of the Schweicherbil Magic Academy.";
@@ -233,7 +230,7 @@ yuno_in02,88,164,5	script	Metheus Sylphe#Library	742,{
 			next;
 			if (select("Donate.:Cancel.") == 1) {
 				if (Zeny >= 1285000) {
-					set Zeny, Zeny-1285000;
+					set zeny,zeny-1285000;
 					set valkyrie_Q,1;
 					mes "[Metheus Sylphe]";
 					mes "Thank you, your donation will be used for a good cause. You may";
@@ -278,7 +275,7 @@ yuno_in02,93,207,1	script	Book of Ymir	111,{
 		warp "valkyrie",48,8;
 		end;
 	}
-	else if (BaseLevel > 98 && JobLevel > 49 && Class >= Job_Knight && Class <= Job_Crusader2) {
+	else if (Baselevel > 98 && JobLevel > 49 && Class >= Job_Knight && Class <= Job_Crusader2) {
 		if (valkyrie_Q != 0) {
 			mes "[The Book of Ymir]";
 			mes "...Therefore, ancient heroes were";
@@ -346,7 +343,7 @@ yuno_in02,93,207,1	script	Book of Ymir	111,{
 }
 
 yuno_in05,49,43,1	script	Heart of Ymir	111,{
-	if (BaseLevel > 98 && JobLevel > 49 && Class >= Job_Knight && Class <= Job_Crusader2) {
+	if (Baselevel > 98 && JobLevel > 49 && Class >= Job_Knight && Class <= Job_Crusader2) {
 		if (valkyrie_Q == 2) warp "valkyrie",48,8;
 	}
 	end;
@@ -379,9 +376,7 @@ valkyrie,44,33,5	script	Teleporter	124,{
 		case 3: callsub S_Warpchar,"payon",69,100;
 		case 4: callsub S_Warpchar,"geffen",120,39;
 		case 5: callsub S_Warpchar,"alberta",117,56;
-		case 6:
-			if (checkre(0)) callsub S_Warpchar,"izlude",129,97;
-			else callsub S_Warpchar,"izlude",94,103;
+		case 6: callsub S_Warpchar,"izlude",94,134;
 		case 7: callsub S_Warpchar,"aldebaran",91,105;
 		case 8: callsub S_Warpchar,"comodo",209,143;
 		case 9: callsub S_Warpchar,"yuno",328,101;

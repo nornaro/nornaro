@@ -1,13 +1,13 @@
-//===== rAthena Script =======================================
+//===== eAthena Script =======================================
 //= Spirit Liquor trader.
 //===== By: ==================================================
-//= rAthena Dev Team
+//= eAthena dev team
 //===== Current Version: =====================================
 //= 1.0
 //===== Compatible With: =====================================
-//= rAthena Project
+//= eAthena SVN
 //===== Description: =========================================
-//= [Official Conversion]
+//= [Aegis Conversion]
 //= Trade Broken Liquor Jars and alcohol for wanderer
 //= pet food, 'Spirit Liquor'
 //===== Additional Comments: =================================
@@ -20,7 +20,7 @@ prontera,218,218,3	script	Pet Enthusiast	96,{
 	mes "Are you a lover of animals like I am?";
 	next;
 	mes "[Pet Enthusiast Jenny]";
-	mes "I know that it's really hard to keep your cute pets happy.";
+	mes "I now that it's really hard to keep your cute pets happy.";
 	mes "All it takes is the right kind of food.";
 	next;
 	mes "[Pet Enthusiast Jenny]";

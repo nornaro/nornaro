@@ -1,4 +1,4 @@
-//===== rAthena Script =======================================
+//===== eAthena Script =======================================
 //= Umbala Warp Script
 //===== By: ==================================================
 //= Darkchild (1.0v A) 
@@ -8,9 +8,9 @@
 //===== Current Version: =====================================
 //= 1.2 
 //===== Compatible With: =====================================
-//= rAthena Project; RO Episode 6+
+//= Any Athena Version; RO Episode 6+
 //===== Description: =========================================
-//= [Official Conversion]
+//= [Aegis COnversion]
 //= Warp Points for Umbala
 //===== Additional Comments: =================================
 //= 1.3 Rescripted to Aegis 10.3 Standards. [L0nE_W0lf]

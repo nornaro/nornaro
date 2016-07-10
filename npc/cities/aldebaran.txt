@@ -1,17 +1,17 @@
-//===== rAthena Script ======================================= 
+//===== eAthena Script ======================================= 
 //= Al De Baran Town
 //===== By: ================================================== 
-//= rAthena Dev Team; L0ne_W0lf
+//= eAthena dev team; L0ne_W0lf
 //===== Current Version: ===================================== 
 //= 2.3
 //===== Compatible With: ===================================== 
-//= rAthena Project
+//= eAthena SVN
 //===== Description: ========================================= 
-//= [Official Conversion]
+//= [Aegis Conversion]
 //= Al De Baran Town NPCs
 //===== Additional Comments: ================================= 
-//= 1.1 Added RS125 NPC.  Added another Kafra Reserve points agent.
-//=     The 2nd reserve points agent is not complete yet.
+//= v1.1 Added RS125 NPC.  Added another Kafra Reserve points agent.
+//= The 2nd reserve points agent is not complete yet.
 //= 1.2 Lottery input number fix [Lupus], 1.2a - label typo fixed
 //= 1.3 Gatekeeper's bug fixed (wrong check and wrong item ID 
 //=     for underground), fixed some typos [Lupus]
@@ -23,8 +23,8 @@
 //= 1.7 Fixed exploits [Lupus] 1.8 Removed Duplicates [Silent]
 //= 1.9 Fixed a bunch of typos with information from Crono/Hollengrhen [Evera]
 //= 1.9a Now Pavianne doesn't sell Kafra Passes. She refunds them [Lupus]
-//= 2.0 Re-made all the dialog-only NPCs with official dialogs.
-//=     Kafra and Clock Tower NPCs pending remake. [DZeroX]
+//= 2.0	Re-made all the dialog-only NPCs with official dialogs.
+//=		Kafra and Clock Tower NPCs pending remake. [DZeroX]
 //= 2.01 removed all .GATs [Lupus]
 //= 2.1 Rescripted most NPCs to Aegis 10.3 standards. [L0ne_W0lf]
 //= 2.2 Corrected NPC names to fall within proper resctrictions. [L0ne_W0lf]
@@ -687,7 +687,7 @@ aldeba_in,156,179,4	script	Master#alde	61,{
 	mes "Who's your";
 	mes "favorite Kafra girl?";
 	next;
-	if (Sex == 0) {
+	if (sex == 0) {
 		mes "[Master]";
 		mes "Oh, and don't worry. I know that girls have some kind of opinion about how pretty other girls are.";
 		next;
@@ -1062,9 +1062,9 @@ aldeba_in,79,161,6	script	Kafra#04	115,{
 	mes "The amount of special reserve points that you have is: ^FF0000"+RESRVPTS+"^000000 pts.  Please make a choice based on your point total.";
 M_Menu:
 	next;
-	menu 	"100- Potato 7 ea",M_1a, "200- Potato 15 ea",M_1b, "300- Potato 25 ea",M_1c, "400- Potato 35 ea",M_1d,
-		"500- Potato 50 ea",M_1e, "600- Potato 60 ea",M_1f, "700- Potato 75 ea",M_1g, "800- Potato 85 ea",M_1h,
-		"900- Potato 100 ea",M_1i, "1000- 1st Lottery Chance!",M_1j, "Next items",M_2, "Cancel",M_End;
+	menu 	"100- Sweet Potato 7 ea",M_1a, "200- Sweet Potato 15 ea",M_1b, "300- Sweet Potato 25 ea",M_1c, "400- Sweet Potato 35 ea",M_1d,
+		"500- Sweet Potato 50 ea",M_1e, "600- Sweet Potato 60 ea",M_1f, "700- Sweet Potato 75 ea",M_1g, "800- Sweet Potato 85 ea",M_1h,
+		"900- Sweet Potato 100 ea",M_1i, "1000- 1st Lottery Chance!",M_1j, "Next items",M_2, "Cancel",M_End;
 
 	M_1a:
 		if(RESRVPTS < 100) goto sL_LowPts1;
@@ -1488,3 +1488,4 @@ function	script	F_ClockTowerGate	{
 		close;
 	}
 }
+

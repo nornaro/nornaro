@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== eAthena Script =======================================
 //= Niflheim Warp Script
 //===== By: ==================================================
 //= PKGINGO (1.0)
 //===== Current Version: =====================================
 //= 1.2
 //===== Compatible With: =====================================
-//= rAthena Project; RO Episode 6+
+//= Any Athena Version; RO Episode 6+
 //===== Description: =========================================
 //= Warp Points for Niflheim
 //===== Additional Comments: =================================

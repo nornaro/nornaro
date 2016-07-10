@@ -16,12 +16,12 @@
  *  released.                                                                *
  *                                                                           *
  *  TODO:                                                                    *
+ *  - create an enum for the data (with int, unsigned int and void *)        *
  *  - create a custom database allocator                                     *
  *  - see what functions need or should be added to the database interface   *
  *                                                                           *
  *  HISTORY:                                                                 *
- *    2012/03/09 - Added enum for data types (int, uint, void*)              *
- *    2007/11/09 - Added an iterator to the database.                        *
+ *    2007/11/09 - Added an iterator to the database.
  *    2.1 (Athena build #???#) - Portability fix                             *
  *      - Fixed the portability of casting to union and added the functions  *
  *        {@link DBMap#ensure(DBMap,DBKey,DBCreateData,...)} and             *
@@ -46,13 +46,13 @@
 
 /*****************************************************************************\
  *  (1) Section with public typedefs, enums, unions, structures and defines. *
+ *  DB_MANUAL_CAST_TO_UNION - Define when the compiler doesn't allow casting *
+ *           to unions.                                                      *
  *  DBRelease    - Enumeration of release options.                           *
  *  DBType       - Enumeration of database types.                            *
  *  DBOptions    - Bitfield enumeration of database options.                 *
  *  DBKey        - Union of used key types.                                  *
- *  DBDataType   - Enumeration of data types.                                *
- *  DBData       - Struct for used data types.                               *
- *  DBApply      - Format of functions applied to the databases.             *
+ *  DBApply      - Format of functions applyed to the databases.             *
  *  DBMatcher    - Format of matchers used in DBMap::getall.                 *
  *  DBComparator - Format of the comparators used by the databases.          *
  *  DBHasher     - Format of the hashers used by the databases.              *
@@ -60,6 +60,19 @@
  *  DBIterator   - Database iterator.                                        *
  *  DBMap        - Database interface.                                       *
 \*****************************************************************************/
+
+/**
+ * Define this to enable the functions that cast to unions.
+ * Required when the compiler doesn't support casting to unions.
+ * NOTE: It is recommened that the conditional tests to determine if this 
+ * should be defined be located in the configure script or a header file 
+ * specific for compatibility and portability issues.
+ * @public
+ * @see #db_i2key(int)
+ * @see #db_ui2key(unsigned int)
+ * @see #db_str2key(unsigned char *)
+ */
+//#define DB_MANUAL_CAST_TO_UNION
 
 /**
  * Bitfield with what should be released by the releaser function (if the
@@ -148,65 +161,33 @@ typedef union DBKey {
 } DBKey;
 
 /**
- * Supported types of database data.
- * @param DB_DATA_INT Uses ints for data.
- * @param DB_DATA_UINT Uses unsigned ints for data.
- * @param DB_DATA_PTR Uses void pointers for data.
- * @public
- * @see #DBData
- */
-typedef enum DBDataType {
-	DB_DATA_INT,
-	DB_DATA_UINT,
-	DB_DATA_PTR
-} DBDataType;
-
-/**
- * Struct for data types used by the database.
- * @param type Type of data
- * @param u Union of available data types
- * @param u.i Data of int type
- * @param u.ui Data of unsigned int type
- * @param u.ptr Data of void* type
- * @public
- */
-typedef struct DBData {
-	DBDataType type;
-	union {
-		int i;
-		unsigned int ui;
-		void *ptr;
-	} u;
-} DBData;
-
-/**
- * Format of functions that create the data for the key when the entry doesn't 
+ * Format of funtions that create the data for the key when the entry doesn't 
  * exist in the database yet.
  * @param key Key of the database entry
- * @param args Extra arguments of the function
+ * @param args Extra arguments of the funtion
  * @return Data identified by the key to be put in the database
  * @public
  * @see DBMap#vensure
  * @see DBMap#ensure
  */
-typedef DBData (*DBCreateData)(DBKey key, va_list args);
+typedef void* (*DBCreateData)(DBKey key, va_list args);
 
 /**
- * Format of functions to be applied to an unspecified quantity of entries of 
+ * Format of functions to be applyed to an unspecified quantity of entries of 
  * a database.
  * Any function that applies this function to the database will return the sum 
  * of values returned by this function.
  * @param key Key of the database entry
  * @param data Data of the database entry
- * @param args Extra arguments of the function
- * @return Value to be added up by the function that is applying this
+ * @param args Extra arguments of the funtion
+ * @return Value to be added up by the funtion that is applying this
  * @public
  * @see DBMap#vforeach
  * @see DBMap#foreach
  * @see DBMap#vdestroy
  * @see DBMap#destroy
  */
-typedef int (*DBApply)(DBKey key, DBData *data, va_list args);
+typedef int (*DBApply)(DBKey key, void* data, va_list args);
 
 /**
  * Format of functions that match database entries.
@@ -219,11 +200,13 @@ typedef int (*DBApply)(DBKey key, DBData *data, va_list args);
  * @public
  * @see DBMap#getall
  */
-typedef int (*DBMatcher)(DBKey key, DBData data, va_list args);
+typedef int (*DBMatcher)(DBKey key, void* data, va_list args);
 
 /**
  * Format of the comparators used internally by the database system.
  * Compares key1 to key2.
+ * <code>maxlen</code> is the maximum number of character used in DB_STRING and 
+ * DB_ISTRING databases. If 0, the maximum number of maxlen is used (64K).
  * Returns 0 is equal, negative if lower and positive is higher.
  * @param key1 Key being compared
  * @param key2 Key we are comparing to
@@ -238,6 +221,8 @@ typedef int (*DBComparator)(DBKey key1, DBKey key2, unsigned short maxlen);
 /**
  * Format of the hashers used internally by the database system.
  * Creates the hash of the key.
+ * <code>maxlen</code> is the maximum number of character used in DB_STRING and 
+ * DB_ISTRING databases. If 0, the maximum number of maxlen is used (64K).
  * @param key Key being hashed
  * @param maxlen Maximum number of characters used in DB_STRING and DB_ISTRING
  *          databases.
@@ -259,7 +244,7 @@ typedef unsigned int (*DBHasher)(DBKey key, unsigned short maxlen);
  * @see #db_default_releaser(DBType,DBOptions)
  * @see #db_custom_release(DBRelease)
  */
-typedef void (*DBReleaser)(DBKey key, DBData data, DBRelease which);
+typedef void (*DBReleaser)(DBKey key, void* data, DBRelease which);
 
 
 
@@ -289,7 +274,7 @@ struct DBIterator
 	 * @return Data of the entry
 	 * @protected
 	 */
-	DBData* (*first)(DBIterator* self, DBKey* out_key);
+	void* (*first)(DBIterator* self, DBKey* out_key);
 
 	/**
 	 * Fetches the last entry in the database.
@@ -300,7 +285,7 @@ struct DBIterator
 	 * @return Data of the entry
 	 * @protected
 	 */
-	DBData* (*last)(DBIterator* self, DBKey* out_key);
+	void* (*last)(DBIterator* self, DBKey* out_key);
 
 	/**
 	 * Fetches the next entry in the database.
@@ -311,7 +296,7 @@ struct DBIterator
 	 * @return Data of the entry
 	 * @protected
 	 */
-	DBData* (*next)(DBIterator* self, DBKey* out_key);
+	void* (*next)(DBIterator* self, DBKey* out_key);
 
 	/**
 	 * Fetches the previous entry in the database.
@@ -322,7 +307,7 @@ struct DBIterator
 	 * @return Data of the entry
 	 * @protected
 	 */
-	DBData* (*prev)(DBIterator* self, DBKey* out_key);
+	void* (*prev)(DBIterator* self, DBKey* out_key);
 
 	/**
 	 * Returns true if the fetched entry exists.
@@ -337,15 +322,14 @@ struct DBIterator
 	/**
 	 * Removes the current entry from the database.
 	 * NOTE: {@link DBIterator#exists} will return false until another entry 
-	 *       is fetched
-	 * Puts data of the removed entry in out_data, if out_data is not NULL.
+	 *       is fethed
+	 * Returns the data of the entry.
 	 * @param self Iterator
-	 * @param out_data Data of the removed entry.
-	 * @return 1 if entry was removed, 0 otherwise
+	 * @return The data of the entry or NULL if not found
 	 * @protected
 	 * @see DBMap#remove
 	 */
-	int (*remove)(DBIterator* self, DBData *out_data);
+	void* (*remove)(DBIterator* self);
 
 	/**
 	 * Destroys this iterator and unlocks the database.
@@ -376,22 +360,13 @@ struct DBMap {
 	DBIterator* (*iterator)(DBMap* self);
 
 	/**
-	 * Returns true if the entry exists.
-	 * @param self Database
-	 * @param key Key that identifies the entry
-	 * @return true is the entry exists
-	 * @protected
-	 */
-	bool (*exists)(DBMap* self, DBKey key);
-
-	/**
-	 * Get the data of the entry identified by the key.
+	 * Get the data of the entry identifid by the key.
 	 * @param self Database
 	 * @param key Key that identifies the entry
 	 * @return Data of the entry or NULL if not found
 	 * @protected
 	 */
-	DBData* (*get)(DBMap* self, DBKey key);
+	void* (*get)(DBMap* self, DBKey key);
 
 	/**
 	 * Just calls {@link DBMap#vgetall}.
@@ -410,7 +385,7 @@ struct DBMap {
 	 * @protected
 	 * @see DBMap#vgetall(DBMap*,void **,unsigned int,DBMatcher,va_list)
 	 */
-	unsigned int (*getall)(DBMap* self, DBData** buf, unsigned int max, DBMatcher match, ...);
+	unsigned int (*getall)(DBMap* self, void** buf, unsigned int max, DBMatcher match, ...);
 
 	/**
 	 * Get the data of the entries matched by <code>match</code>.
@@ -428,7 +403,7 @@ struct DBMap {
 	 * @protected
 	 * @see DBMap#getall(DBMap*,void **,unsigned int,DBMatcher,...)
 	 */
-	unsigned int (*vgetall)(DBMap* self, DBData** buf, unsigned int max, DBMatcher match, va_list args);
+	unsigned int (*vgetall)(DBMap* self, void** buf, unsigned int max, DBMatcher match, va_list args);
 
 	/**
 	 * Just calls {@link DBMap#vensure}.
@@ -443,7 +418,7 @@ struct DBMap {
 	 * @protected
 	 * @see DBMap#vensure(DBMap*,DBKey,DBCreateData,va_list)
 	 */
-	DBData* (*ensure)(DBMap* self, DBKey key, DBCreateData create, ...);
+	void* (*ensure)(DBMap* self, DBKey key, DBCreateData create, ...);
 
 	/**
 	 * Get the data of the entry identified by the key.
@@ -457,39 +432,37 @@ struct DBMap {
 	 * @protected
 	 * @see DBMap#ensure(DBMap*,DBKey,DBCreateData,...)
 	 */
-	DBData* (*vensure)(DBMap* self, DBKey key, DBCreateData create, va_list args);
+	void* (*vensure)(DBMap* self, DBKey key, DBCreateData create, va_list args);
 
 	/**
 	 * Put the data identified by the key in the database.
-	 * Puts the previous data in out_data, if out_data is not NULL.
+	 * Returns the previous data if the entry exists or NULL.
 	 * NOTE: Uses the new key, the old one is released.
 	 * @param self Database
 	 * @param key Key that identifies the data
 	 * @param data Data to be put in the database
-	 * @param out_data Previous data if the entry exists
-	 * @return 1 if if the entry already exists, 0 otherwise
+	 * @return The previous data if the entry exists or NULL
 	 * @protected
 	 */
-	int (*put)(DBMap* self, DBKey key, DBData data, DBData *out_data);
+	void* (*put)(DBMap* self, DBKey key, void* data);
 
 	/**
 	 * Remove an entry from the database.
-	 * Puts the previous data in out_data, if out_data is not NULL.
+	 * Returns the data of the entry.
 	 * NOTE: The key (of the database) is released.
 	 * @param self Database
 	 * @param key Key that identifies the entry
-	 * @param out_data Previous data if the entry exists
-	 * @return 1 if if the entry already exists, 0 otherwise
+	 * @return The data of the entry or NULL if not found
 	 * @protected
 	 */
-	int (*remove)(DBMap* self, DBKey key, DBData *out_data);
+	void* (*remove)(DBMap* self, DBKey key);
 
 	/**
 	 * Just calls {@link DBMap#vforeach}.
 	 * Apply <code>func</code> to every entry in the database.
 	 * Returns the sum of values returned by func.
 	 * @param self Database
-	 * @param func Function to be applied
+	 * @param func Function to be applyed
 	 * @param ... Extra arguments for func
 	 * @return Sum of the values returned by func
 	 * @protected
@@ -501,7 +474,7 @@ struct DBMap {
 	 * Apply <code>func</code> to every entry in the database.
 	 * Returns the sum of values returned by func.
 	 * @param self Database
-	 * @param func Function to be applied
+	 * @param func Function to be applyed
 	 * @param args Extra arguments for func
 	 * @return Sum of the values returned by func
 	 * @protected
@@ -512,11 +485,11 @@ struct DBMap {
 	/**
 	 * Just calls {@link DBMap#vclear}.
 	 * Removes all entries from the database.
-	 * Before deleting an entry, func is applied to it.
+	 * Before deleting an entry, func is applyed to it.
 	 * Releases the key and the data.
 	 * Returns the sum of values returned by func, if it exists.
 	 * @param self Database
-	 * @param func Function to be applied to every entry before deleting
+	 * @param func Function to be applyed to every entry before deleting
 	 * @param ... Extra arguments for func
 	 * @return Sum of values returned by func
 	 * @protected
@@ -526,11 +499,11 @@ struct DBMap {
 
 	/**
 	 * Removes all entries from the database.
-	 * Before deleting an entry, func is applied to it.
+	 * Before deleting an entry, func is applyed to it.
 	 * Releases the key and the data.
 	 * Returns the sum of values returned by func, if it exists.
 	 * @param self Database
-	 * @param func Function to be applied to every entry before deleting
+	 * @param func Function to be applyed to every entry before deleting
 	 * @param args Extra arguments for func
 	 * @return Sum of values returned by func
 	 * @protected
@@ -541,13 +514,13 @@ struct DBMap {
 	/**
 	 * Just calls {@link DBMap#vdestroy}.
 	 * Finalize the database, feeing all the memory it uses.
-	 * Before deleting an entry, func is applied to it.
+	 * Before deleting an entry, func is applyed to it.
 	 * Releases the key and the data.
 	 * Returns the sum of values returned by func, if it exists.
 	 * NOTE: This locks the database globally. Any attempt to insert or remove 
 	 * a database entry will give an error and be aborted (except for clearing).
 	 * @param self Database
-	 * @param func Function to be applied to every entry before deleting
+	 * @param func Function to be applyed to every entry before deleting
 	 * @param ... Extra arguments for func
 	 * @return Sum of values returned by func
 	 * @protected
@@ -557,12 +530,12 @@ struct DBMap {
 
 	/**
 	 * Finalize the database, feeing all the memory it uses.
-	 * Before deleting an entry, func is applied to it.
+	 * Before deleting an entry, func is applyed to it.
 	 * Returns the sum of values returned by func, if it exists.
 	 * NOTE: This locks the database globally. Any attempt to insert or remove 
 	 * a database entry will give an error and be aborted (except for clearing).
 	 * @param self Database
-	 * @param func Function to be applied to every entry before deleting
+	 * @param func Function to be applyed to every entry before deleting
 	 * @param args Extra arguments for func
 	 * @return Sum of values returned by func
 	 * @protected
@@ -596,61 +569,38 @@ struct DBMap {
 
 };
 
-// For easy access to the common functions.
+//For easy access to the common functions.
+#ifdef DB_MANUAL_CAST_TO_UNION
+#	define i2key   db_i2key
+#	define ui2key  db_ui2key
+#	define str2key db_str2key
+#else /* not DB_MANUAL_CAST_TO_UNION */
+#	define i2key(k)   ((DBKey)(int)(k))
+#	define ui2key(k)  ((DBKey)(unsigned int)(k))
+#	define str2key(k) ((DBKey)(const char *)(k))
+#endif /* not DB_MANUAL_CAST_TO_UNION */
 
-#define db_exists(db,k)    ( (db)->exists((db),(k)) )
-#define idb_exists(db,k)   ( (db)->exists((db),db_i2key(k)) )
-#define uidb_exists(db,k)  ( (db)->exists((db),db_ui2key(k)) )
-#define strdb_exists(db,k) ( (db)->exists((db),db_str2key(k)) )
+#define db_get(db,k)    ( (db)->get((db),(k)) )
+#define idb_get(db,k)   ( (db)->get((db),i2key(k)) )
+#define uidb_get(db,k)  ( (db)->get((db),ui2key(k)) )
+#define strdb_get(db,k) ( (db)->get((db),str2key(k)) )
 
-// Get pointer-type data from DBMaps of various key types
-#define db_get(db,k)    ( db_data2ptr((db)->get((db),(k))) )
-#define idb_get(db,k)   ( db_data2ptr((db)->get((db),db_i2key(k))) )
-#define uidb_get(db,k)  ( db_data2ptr((db)->get((db),db_ui2key(k))) )
-#define strdb_get(db,k) ( db_data2ptr((db)->get((db),db_str2key(k))) )
+#define db_put(db,k,d)    ( (db)->put((db),(k),(d)) )
+#define idb_put(db,k,d)   ( (db)->put((db),i2key(k),(d)) )
+#define uidb_put(db,k,d)  ( (db)->put((db),ui2key(k),(d)) )
+#define strdb_put(db,k,d) ( (db)->put((db),str2key(k),(d)) )
 
-// Get int-type data from DBMaps of various key types
-#define db_iget(db,k)    ( db_data2i((db)->get((db),(k))) )
-#define idb_iget(db,k)   ( db_data2i((db)->get((db),db_i2key(k))) )
-#define uidb_iget(db,k)  ( db_data2i((db)->get((db),db_ui2key(k))) )
-#define strdb_iget(db,k) ( db_data2i((db)->get((db),db_str2key(k))) )
-
-// Get uint-type data from DBMaps of various key types
-#define db_uiget(db,k)    ( db_data2ui((db)->get((db),(k))) )
-#define idb_uiget(db,k)   ( db_data2ui((db)->get((db),db_i2key(k))) )
-#define uidb_uiget(db,k)  ( db_data2ui((db)->get((db),db_ui2key(k))) )
-#define strdb_uiget(db,k) ( db_data2ui((db)->get((db),db_str2key(k))) )
-
-// Put pointer-type data into DBMaps of various key types
-#define db_put(db,k,d)    ( (db)->put((db),(k),db_ptr2data(d),NULL) )
-#define idb_put(db,k,d)   ( (db)->put((db),db_i2key(k),db_ptr2data(d),NULL) )
-#define uidb_put(db,k,d)  ( (db)->put((db),db_ui2key(k),db_ptr2data(d),NULL) )
-#define strdb_put(db,k,d) ( (db)->put((db),db_str2key(k),db_ptr2data(d),NULL) )
-
-// Put int-type data into DBMaps of various key types
-#define db_iput(db,k,d)    ( (db)->put((db),(k),db_i2data(d),NULL) )
-#define idb_iput(db,k,d)   ( (db)->put((db),db_i2key(k),db_i2data(d),NULL) )
-#define uidb_iput(db,k,d)  ( (db)->put((db),db_ui2key(k),db_i2data(d),NULL) )
-#define strdb_iput(db,k,d) ( (db)->put((db),db_str2key(k),db_i2data(d),NULL) )
-
-// Put uint-type data into DBMaps of various key types
-#define db_uiput(db,k,d)    ( (db)->put((db),(k),db_ui2data(d),NULL) )
-#define idb_uiput(db,k,d)   ( (db)->put((db),db_i2key(k),db_ui2data(d),NULL) )
-#define uidb_uiput(db,k,d)  ( (db)->put((db),db_ui2key(k),db_ui2data(d),NULL) )
-#define strdb_uiput(db,k,d) ( (db)->put((db),db_str2key(k),db_ui2data(d),NULL) )
-
-// Remove entry from DBMaps of various key types
-#define db_remove(db,k)    ( (db)->remove((db),(k),NULL) )
-#define idb_remove(db,k)   ( (db)->remove((db),db_i2key(k),NULL) )
-#define uidb_remove(db,k)  ( (db)->remove((db),db_ui2key(k),NULL) )
-#define strdb_remove(db,k) ( (db)->remove((db),db_str2key(k),NULL) )
+#define db_remove(db,k)    ( (db)->remove((db),(k)) )
+#define idb_remove(db,k)   ( (db)->remove((db),i2key(k)) )
+#define uidb_remove(db,k)  ( (db)->remove((db),ui2key(k)) )
+#define strdb_remove(db,k) ( (db)->remove((db),str2key(k)) )
 
 //These are discarding the possible vargs you could send to the function, so those
 //that require vargs must not use these defines.
-#define db_ensure(db,k,f)    ( db_data2ptr((db)->ensure((db),(k),(f))) )
-#define idb_ensure(db,k,f)   ( db_data2ptr((db)->ensure((db),db_i2key(k),(f))) )
-#define uidb_ensure(db,k,f)  ( db_data2ptr((db)->ensure((db),db_ui2key(k),(f))) )
-#define strdb_ensure(db,k,f) ( db_data2ptr((db)->ensure((db),db_str2key(k),(f))) )
+#define db_ensure(db,k,f)    ( (db)->ensure((db),(k),(f)) )
+#define idb_ensure(db,k,f)   ( (db)->ensure((db),i2key(k),(f)) )
+#define uidb_ensure(db,k,f)  ( (db)->ensure((db),ui2key(k),(f)) )
+#define strdb_ensure(db,k,f) ( (db)->ensure((db),str2key(k),(f)) )
 
 // Database creation and destruction macros
 #define idb_alloc(opt)            db_alloc(__FILE__,__LINE__,DB_INT,(opt),sizeof(int))
@@ -660,13 +610,11 @@ struct DBMap {
 #define db_destroy(db)            ( (db)->destroy((db),NULL) )
 // Other macros
 #define db_clear(db)        ( (db)->clear(db,NULL) )
-#define db_size(db)         ( (db)->size(db) )
 #define db_iterator(db)     ( (db)->iterator(db) )
-#define dbi_first(dbi)      ( db_data2ptr((dbi)->first(dbi,NULL)) )
-#define dbi_last(dbi)       ( db_data2ptr((dbi)->last(dbi,NULL)) )
-#define dbi_next(dbi)       ( db_data2ptr((dbi)->next(dbi,NULL)) )
-#define dbi_prev(dbi)       ( db_data2ptr((dbi)->prev(dbi,NULL)) )
-#define dbi_remove(dbi)     ( (dbi)->remove(dbi,NULL) )
+#define dbi_first(dbi)      ( (dbi)->first(dbi,NULL) )
+#define dbi_last(dbi)       ( (dbi)->last(dbi,NULL) )
+#define dbi_next(dbi)       ( (dbi)->next(dbi,NULL) )
+#define dbi_prev(dbi)       ( (dbi)->prev(dbi,NULL) )
 #define dbi_exists(dbi)     ( (dbi)->exists(dbi) )
 #define dbi_destroy(dbi)    ( (dbi)->destroy(dbi) )
 
@@ -682,14 +630,8 @@ struct DBMap {
  *  db_i2key           - Manual cast from 'int' to 'DBKey'.                  *
  *  db_ui2key          - Manual cast from 'unsigned int' to 'DBKey'.         *
  *  db_str2key         - Manual cast from 'unsigned char *' to 'DBKey'.      *
- *  db_i2data          - Manual cast from 'int' to 'DBData'.                 *
- *  db_ui2data         - Manual cast from 'unsigned int' to 'DBData'.        *
- *  db_ptr2data        - Manual cast from 'void*' to 'DBData'.               *
- *  db_data2i          - Gets 'int' value from 'DBData'.                     *
- *  db_data2ui         - Gets 'unsigned int' value from 'DBData'.            *
- *  db_data2ptr        - Gets 'void*' value from 'DBData'.                   *
- *  db_init            - Initializes the database system.                    *
- *  db_final           - Finalizes the database system.                      *
+ *  db_init            - Initialise the database system.                     *
+ *  db_final           - Finalise the database system.                       *
 \*****************************************************************************/
 
 /**
@@ -765,7 +707,7 @@ DBReleaser db_custom_release(DBRelease which);
  * @param type Type of database
  * @param options Options of the database
  * @param maxlen Maximum length of the string to be used as key in string 
- *          databases. If 0, the maximum number of maxlen is used (64K).
+ *          databases
  * @return The interface of the database
  * @public
  * @see #DBType
@@ -777,80 +719,37 @@ DBReleaser db_custom_release(DBRelease which);
  */
 DBMap* db_alloc(const char *file, int line, DBType type, DBOptions options, unsigned short maxlen);
 
+#ifdef DB_MANUAL_CAST_TO_UNION
 /**
  * Manual cast from 'int' to the union DBKey.
+ * Created for compilers that don't support casting to unions.
  * @param key Key to be casted
  * @return The key as a DBKey union
  * @public
+ * @see #DB_MANUAL_CAST_TO_UNION
  */
 DBKey db_i2key(int key);
 
 /**
  * Manual cast from 'unsigned int' to the union DBKey.
+ * Created for compilers that don't support casting to unions.
  * @param key Key to be casted
  * @return The key as a DBKey union
  * @public
+ * @see #DB_MANUAL_CAST_TO_UNION
  */
 DBKey db_ui2key(unsigned int key);
 
 /**
  * Manual cast from 'unsigned char *' to the union DBKey.
+ * Created for compilers that don't support casting to unions.
  * @param key Key to be casted
  * @return The key as a DBKey union
  * @public
+ * @see #DB_MANUAL_CAST_TO_UNION
  */
 DBKey db_str2key(const char *key);
-
-/**
- * Manual cast from 'int' to the struct DBData.
- * @param data Data to be casted
- * @return The data as a DBData struct
- * @public
- */
-DBData db_i2data(int data);
-
-/**
- * Manual cast from 'unsigned int' to the struct DBData.
- * @param data Data to be casted
- * @return The data as a DBData struct
- * @public
- */
-DBData db_ui2data(unsigned int data);
-
-/**
- * Manual cast from 'void *' to the struct DBData.
- * @param data Data to be casted
- * @return The data as a DBData struct
- * @public
- */
-DBData db_ptr2data(void *data);
-
-/**
- * Gets int type data from struct DBData.
- * If data is not int type, returns 0.
- * @param data Data
- * @return Integer value of the data.
- * @public
- */
-int db_data2i(DBData *data);
-
-/**
- * Gets unsigned int type data from struct DBData.
- * If data is not unsigned int type, returns 0.
- * @param data Data
- * @return Unsigned int value of the data.
- * @public
- */
-unsigned int db_data2ui(DBData *data);
-
-/**
- * Gets void* type data from struct DBData.
- * If data is not void* type, returns NULL.
- * @param data Data
- * @return Void* value of the data.
- * @public
- */
-void* db_data2ptr(DBData *data);
+#endif /* DB_MANUAL_CAST_TO_UNION */
 
 /**
  * Initialize the database system.
@@ -1085,8 +984,8 @@ void  linkdb_foreach( struct linkdb_node** head, LinkDBFunc func, ...  );
 	do{ \
 		if( (__n) > VECTOR_CAPACITY(__vec) ) \
 		{ /* increase size */ \
-			if( VECTOR_CAPACITY(__vec) == 0 ) SET_POINTER(VECTOR_DATA(__vec), aMalloc((__n)*sizeof(VECTOR_FIRST(__vec)))); /* allocate new */ \
-			else SET_POINTER(VECTOR_DATA(__vec), aRealloc(VECTOR_DATA(__vec),(__n)*sizeof(VECTOR_FIRST(__vec)))); /* reallocate */ \
+			if( VECTOR_CAPACITY(__vec) == 0 ) VECTOR_DATA(__vec) = aMalloc((__n)*sizeof(VECTOR_FIRST(__vec))); /* allocate new */ \
+			else VECTOR_DATA(__vec) = aRealloc(VECTOR_DATA(__vec),(__n)*sizeof(VECTOR_FIRST(__vec))); /* reallocate */ \
 			memset(VECTOR_DATA(__vec)+VECTOR_LENGTH(__vec), 0, (VECTOR_CAPACITY(__vec)-VECTOR_LENGTH(__vec))*sizeof(VECTOR_FIRST(__vec))); /* clear new data */ \
 			VECTOR_CAPACITY(__vec) = (__n); /* update capacity */ \
 		} \
@@ -1098,7 +997,7 @@ void  linkdb_foreach( struct linkdb_node** head, LinkDBFunc func, ...  );
 		} \
 		else if( (__n) < VECTOR_CAPACITY(__vec) ) \
 		{ /* reduce size */ \
-			SET_POINTER(VECTOR_DATA(__vec), aRealloc(VECTOR_DATA(__vec),(__n)*sizeof(VECTOR_FIRST(__vec)))); /* reallocate */ \
+			VECTOR_DATA(__vec) = aRealloc(VECTOR_DATA(__vec),(__n)*sizeof(VECTOR_FIRST(__vec))); /* reallocate */ \
 			VECTOR_CAPACITY(__vec) = (__n); /* update capacity */ \
 			if( VECTOR_LENGTH(__vec) > (__n) ) VECTOR_LENGTH(__vec) = (__n); /* update length */ \
 		} \
@@ -1292,7 +1191,6 @@ void  linkdb_foreach( struct linkdb_node** head, LinkDBFunc func, ...  );
 /////////////////////////////////////////////////////////////////////
 // Binary heap library based on defines. (uses the vector defines above)
 // uses aMalloc, aRealloc, aFree
-// WARNING: BHEAP implementation details affect behaviour of A* pathfinding
 
 
 
@@ -1388,8 +1286,7 @@ void  linkdb_foreach( struct linkdb_node** head, LinkDBFunc func, ...  );
 /// @param __heap Binary heap
 /// @param __val Value
 /// @param __topcmp Comparator
-/// @param __swp Swapper
-#define BHEAP_PUSH(__heap,__val,__topcmp,__swp) \
+#define BHEAP_PUSH(__heap,__val,__topcmp) \
 	do{ \
 		size_t _i_ = VECTOR_LENGTH(__heap); \
 		VECTOR_PUSH(__heap,__val); /* insert at end */ \
@@ -1398,24 +1295,9 @@ void  linkdb_foreach( struct linkdb_node** head, LinkDBFunc func, ...  );
 			size_t _parent_ = (_i_-1)/2; \
 			if( __topcmp(VECTOR_INDEX(__heap,_parent_),VECTOR_INDEX(__heap,_i_)) < 0 ) \
 				break; /* done */ \
-			__swp(VECTOR_INDEX(__heap,_parent_),VECTOR_INDEX(__heap,_i_)); \
+			swap(VECTOR_INDEX(__heap,_parent_),VECTOR_INDEX(__heap,_i_)); \
 			_i_ = _parent_; \
 		} \
-	}while(0)
-
-
-
-/// See BHEAP_PUSH. Version used by A* implementation, matching client bheap.
-///
-/// @param __heap Binary heap
-/// @param __val Value
-/// @param __topcmp Comparator
-/// @param __swp Swapper
-#define BHEAP_PUSH2(__heap,__val,__topcmp,__swp) \
-	do{ \
-		size_t _i_ = VECTOR_LENGTH(__heap); \
-		VECTOR_PUSH(__heap,__val); /* insert at end */ \
-		BHEAP_SIFTDOWN(__heap,0,_i_,__topcmp,__swp); \
 	}while(0)
 
 
@@ -1430,23 +1312,7 @@ void  linkdb_foreach( struct linkdb_node** head, LinkDBFunc func, ...  );
 ///
 /// @param __heap Binary heap
 /// @param __topcmp Comparator
-/// @param __swp Swapper
-#define BHEAP_POP(__heap,__topcmp,__swp) BHEAP_POPINDEX(__heap,0,__topcmp,__swp)
-
-
-
-/// See BHEAP_POP. Version used by A* implementation, matching client bheap.
-///
-/// @param __heap Binary heap
-/// @param __topcmp Comparator
-/// @param __swp Swapper
-#define BHEAP_POP2(__heap,__topcmp,__swp) \
-	do{ \
-		VECTOR_INDEX(__heap,0) = VECTOR_POP(__heap); /* put last at index */ \
-		if( !VECTOR_LENGTH(__heap) ) /* removed last, nothing to do */ \
-			break; \
-		BHEAP_SIFTUP(__heap,0,__topcmp,__swp);	\
-	}while(0)
+#define BHEAP_POP(__heap,__topcmp) BHEAP_POPINDEX(__heap,0,__topcmp)
 
 
 
@@ -1461,19 +1327,16 @@ void  linkdb_foreach( struct linkdb_node** head, LinkDBFunc func, ...  );
 /// @param __heap Binary heap
 /// @param __idx Index
 /// @param __topcmp Comparator
-/// @param __swp Swapper
-#define BHEAP_POPINDEX(__heap,__idx,__topcmp,__swp) \
+#define BHEAP_POPINDEX(__heap,__idx,__topcmp) \
 	do{ \
 		size_t _i_ = __idx; \
 		VECTOR_INDEX(__heap,__idx) = VECTOR_POP(__heap); /* put last at index */ \
-		if( _i_ >= VECTOR_LENGTH(__heap)) /* removed last, nothing to do */ \
-			break; \
 		while( _i_ ) \
 		{ /* restore heap property in parents */ \
 			size_t _parent_ = (_i_-1)/2; \
 			if( __topcmp(VECTOR_INDEX(__heap,_parent_),VECTOR_INDEX(__heap,_i_)) < 0 ) \
 				break; /* done */ \
-			__swp(VECTOR_INDEX(__heap,_parent_),VECTOR_INDEX(__heap,_i_)); \
+			swap(VECTOR_INDEX(__heap,_parent_),VECTOR_INDEX(__heap,_i_)); \
 			_i_ = _parent_; \
 		} \
 		while( _i_ < VECTOR_LENGTH(__heap) ) \
@@ -1485,83 +1348,15 @@ void  linkdb_foreach( struct linkdb_node** head, LinkDBFunc func, ...  );
 				break; /* done */ \
 			else if( _rchild_ >= VECTOR_LENGTH(__heap) || __topcmp(VECTOR_INDEX(__heap,_lchild_),VECTOR_INDEX(__heap,_rchild_)) <= 0 ) \
 			{ /* left child */ \
-				__swp(VECTOR_INDEX(__heap,_i_),VECTOR_INDEX(__heap,_lchild_)); \
+				swap(VECTOR_INDEX(__heap,_i_),VECTOR_INDEX(__heap,_lchild_)); \
 				_i_ = _lchild_; \
 			} \
 			else \
 			{ /* right child */ \
-				__swp(VECTOR_INDEX(__heap,_i_),VECTOR_INDEX(__heap,_rchild_)); \
+				swap(VECTOR_INDEX(__heap,_i_),VECTOR_INDEX(__heap,_rchild_)); \
 				_i_ = _rchild_; \
 			} \
 		} \
-	}while(0)
-
-
-
-/// Follow path up towards (but not all the way to) the root, swapping nodes until finding
-/// a place where the new item that was placed at __idx fits.
-/// Only goes as high as __startidx (usually 0).
-///
-/// @param __heap Binary heap
-/// @param __startidx Index of an ancestor of __idx
-/// @param __idx Index of an inserted element
-/// @param __topcmp Comparator
-/// @param __swp Swapper
-#define BHEAP_SIFTDOWN(__heap,__startidx,__idx,__topcmp,__swp)	\
-	do{ \
-		size_t _i2_ = __idx; \
-		while( _i2_ > __startidx ) \
-		{ /* restore heap property in parents */ \
-			size_t _parent_ = (_i2_-1)/2; \
-			if( __topcmp(VECTOR_INDEX(__heap,_parent_),VECTOR_INDEX(__heap,_i2_)) <= 0 ) \
-				break; /* done */ \
-			__swp(VECTOR_INDEX(__heap,_parent_),VECTOR_INDEX(__heap,_i2_)); \
-			_i2_ = _parent_; \
-		} \
-	}while(0)
-
-
-
-/// Repeatedly swap the smaller child with parent, after placing a new item at __idx.
-///
-/// @param __heap Binary heap
-/// @param __idx Index of an inserted element
-/// @param __topcmp Comparator
-/// @param __swp Swapper
-#define BHEAP_SIFTUP(__heap,__idx,__topcmp,__swp) \
-	do{ \
-		size_t _i_ = __idx; \
-		size_t _lchild_ = _i_*2 + 1; \
-		while( _lchild_ < VECTOR_LENGTH(__heap) ) \
-		{ /* restore heap property in childs */ \
-			size_t _rchild_ = _i_*2 + 2; \
-			if( _rchild_ >= VECTOR_LENGTH(__heap) || __topcmp(VECTOR_INDEX(__heap,_lchild_),VECTOR_INDEX(__heap,_rchild_)) < 0 ) \
-			{ /* left child */ \
-				__swp(VECTOR_INDEX(__heap,_i_),VECTOR_INDEX(__heap,_lchild_)); \
-				_i_ = _lchild_; \
-			} \
-			else \
-			{ /* right child */ \
-				__swp(VECTOR_INDEX(__heap,_i_),VECTOR_INDEX(__heap,_rchild_)); \
-				_i_ = _rchild_; \
-			} \
-			_lchild_ = _i_*2 + 1; \
-		} \
-		BHEAP_SIFTDOWN(__heap,__idx,_i_,__topcmp,__swp); \
-	}while(0)
-
-
-
-/// Call this after modifying the item at __idx__ to restore the heap
-///
-/// @param __heap Binary heap
-/// @param __idx Index
-/// @param __topcmp Comparator
-/// @param __swp Swapper
-#define BHEAP_UPDATE(__heap,__idx,__topcmp,__swp) \
-	do{ \
-		BHEAP_SIFTDOWN(__heap,0,__idx,__topcmp,__swp); \
-		BHEAP_SIFTUP(__heap,__idx,__topcmp,__swp); \
 	}while(0)
 
 

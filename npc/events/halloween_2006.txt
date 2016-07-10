@@ -1,13 +1,13 @@
-//===== rAthena Script =======================================
+//===== eAthena Script =======================================
 //= 2006 Halloween Event
 //===== By: ==================================================
 //= Brainstorm
 //===== Current Version: =====================================
 //= 1.4
 //===== Compatible With: =====================================
-//= rAthena Project
+//= eAthena SVN
 //===== Description: =========================================
-//= [Official Conversion]
+//= [Aegis Conversion]
 //= Event 1: Redeem "Pumpkin Mojo" for pumpkin headgear.
 //= Event 2: Create "Pumpkin Pie" item.
 //===== Additional Comments: =================================
@@ -21,7 +21,6 @@
 //============================================================
 
 // Pumpkin Mojo quest (Event 1)
-//============================================================
 prontera,162,69,5	script	Gloomy Jack#06_hw	1130,2,2,{
 	end;
 
@@ -42,7 +41,8 @@ OnEffect2:
 }
 
 prontera,164,69,3	script	Cool Devi#06_hw	738,{
-	if (MaxWeight - Weight < 2000 || checkweight(1201,1) == 0) {
+	set .@now_weight,MaxWeight-Weight;
+	if (.@now_weight < 2000 || checkweight(1201,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many things with you.";
@@ -238,7 +238,8 @@ prontera,164,69,3	script	Cool Devi#06_hw	738,{
 
 
 geffen,145,132,3	script	Hoirin#06_hw	729,{
-	if (MaxWeight - Weight < 2000 || checkweight(1201,1) == 0) {
+	set .@now_weight,MaxWeight-Weight;
+	if (.@now_weight < 2000 || checkweight(1201,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many things with you.";
@@ -393,7 +394,8 @@ OnTouch:
 }
 
 nif_in,19,32,3	script	Deviruchi#06_hw	738,{
-	if (MaxWeight - Weight < 2000 || checkweight(1201,1) == 0) {
+	set .@now_weight,MaxWeight-Weight;
+	if (.@now_weight < 2000 || checkweight(1201,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many things with you.";
@@ -483,9 +485,9 @@ nif_in,19,32,3	script	Deviruchi#06_hw	738,{
 }
 
 // Creation of Pumpkin Pie (Event 2)
-//============================================================
 nif_fild01,165,115,3	script	Chicken Masta#06_hw	794,{
-	if (MaxWeight - Weight < 2000 || checkweight(1201,1) == 0) {
+	set .@now_weight,MaxWeight-Weight;
+	if (.@now_weight < 2000 || checkweight(1201,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many things with you.";
@@ -653,8 +655,8 @@ nif_fild01,167,113,3	script	Masta's chicken#06_hw01	800,{
 		mes "Oh, this must be Chicken Masta's chicken.";
 		mes "I should insert the magic word.";
 		next;
-		input .@inputstr$;
-		if( .@inputstr$ == "Return" ) {
+		input @inputstr$;
+		if( @inputstr$ == "Return" ) {
 			emotion e_omg;
 			specialeffect EF_TELEPORTATION;
 			mes "The magic spell has been casted.";
@@ -907,7 +909,6 @@ pay_dun03,157,131,3	duplicate(HwChicken2)	Chicken#06_hw_p40	800
 pay_dun03,158,131,3	duplicate(HwChicken3)	Chicken#06_hw_p41	800
 
 // Payon Field chickens
-//============================================================
 pay_fild08,1,1,0	script	#06_hw_timer02	-1,{
 OnInit:
 	disablenpc "Chicken#06_hw_pf01";
@@ -1067,7 +1068,7 @@ prontera,155,285,3	script	Familiar#06_hw01::HWFamiDup	799,{
 		mes "Ok.";
 		mes "Actually, it's useless to have a special ticket to Nifflheim.";
 		close;
-	}
+	}		
 	mes "[Familiar]";
 	mes "Ok.";
 	mes "If you want to ask something, give a piece of pumpkin pie to Loli Ruri.";
@@ -1079,8 +1080,7 @@ morocc,159,143,3	duplicate(HWFamiDup)	Familiar#06_hw03	799
 geffen,120,188,3	duplicate(HWFamiDup)	Familiar#06_hw04	799
 alberta,80,171,3	duplicate(HWFamiDup)	Familiar#06_hw05	799
 
-// Event Lude Monster Spawns
-//============================================================
+//Event Lude Monster Spawns
 ra_fild01,0,0,0,0	monster	Lude	1812,3,0,0,0
 ra_fild02,0,0,0,0	monster	Lude	1812,3,0,0,0
 ra_fild03,0,0,0,0	monster	Lude	1812,3,0,0,0

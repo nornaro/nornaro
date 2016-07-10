@@ -1,19 +1,26 @@
-//===== rAthena Script =======================================
-//= Treasure Hunter Quests
-//===== By: ==================================================
+//===== eAthena Script =======================================
+//= Treasure Hunter Script
+//===== Converted By =========================================
 //= Fredzilla
-//===== Current Version: =====================================
+//= Original
+//////////////////////////////////////////////////////////////
+//                  Treasure Hunter Quests                  //
+//                       By: Ezekial                        //
+//             for the use on nRO run by Newbe5             //
+//                    revised By Warlock                    //
+//////////////////////////////////////////////////////////////
+//===== Version ==============================================
 //= 1.1
-//===== Compatible With: =====================================
-//= rAthena Project
-//===== Description: =========================================
+//===== Compatible With ======================================
+//= eAthena 1.0
+//===== Description ==========================================
 //= Start for Treasure hunter quests
-//===== Additional Comments: =================================
+//===== Comments =============================================
 //= Event_THQS - Used to check if you have already registered
 //= #Treasure_Token - used to keep track of tokens
-//= 1.0 - Straight conversion of Aegis NPC file
-//= 1.1 - balanced some prices, fixed 1 missing label
-//=       removed Executioner&Mysteltain swords [Lupus]
+//= v1.0 - Straight conversion of Aegis NPC file
+//= v1.1 - balanced some prices, fixed 1 missing label
+//= 	removed Executioner&Mysteltain swords [Lupus]
 //============================================================
 
 prt_in,159,172,0	warp	thqwrp	3,3,yuno_in01,123,155
@@ -53,7 +60,7 @@ N_Shop:
 	close;
 N_GetZeny1k:
 	set #Treasure_Token,#Treasure_Token-1;
-	set Zeny, Zeny+1000;
+	set zeny,zeny+1000;
 	close;
 N_10T:
 	if (#Treasure_Token > 9) goto N_GetZeny10k;
@@ -61,7 +68,7 @@ N_10T:
 	close;
 N_GetZeny10k:
 	set #Treasure_Token,#Treasure_Token-10;
-	set Zeny, Zeny+10000;
+	set zeny,zeny+10000;
 	close;
 N_100T:
 	if (#Treasure_Token > 99) goto N_GetZeny100k;
@@ -69,7 +76,7 @@ N_100T:
 	close;
 N_GetZeny100k:
 	set #Treasure_Token,#Treasure_Token-100;
-	set Zeny, Zeny+100000;
+	set zeny,zeny+100000;
 	close;
 
 N_BuyWeps:

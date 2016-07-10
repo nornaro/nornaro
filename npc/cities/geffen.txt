@@ -1,17 +1,17 @@
-//===== rAthena Script =======================================
+//===== eAthena Script ======================================= 
 //= Geffen Town
-//===== By: ==================================================
+//===== By: ================================================== 
 //= Everybody mentioned in the comments
-//===== Current Version: =====================================
-//= 2.0
-//===== Compatible With: =====================================
-//= rAthena Project
-//===== Description: =========================================
-//= [Official Conversion]
+//===== Current Version: ===================================== 
+//= 1.9
+//===== Compatible With: ===================================== 
+//= eAthena SVN
+//===== Description: ========================================= 
+//= [Aegis Conversion]
 //= Geffen Town NPCs
-//===== Additional Comments: =================================
+//===== Additional Comments: ================================= 
 //= Fully working
-//= 1.1 Spell Checked [massdriller]
+//= 1.1 - Spell Checked [massdriller]
 //= 1.2 Fixed more typos [Nexon]
 //= 1.3 added a Level 4 weapon quest related NPC [MasterOfMuppets]
 //= 1.4 Removed Duplicates [Silent]
@@ -22,7 +22,6 @@
 //= 1.7 Fixed bad NPC header data to comply with rev. 11603. [L0ne_W0lf]
 //= 1.8 Fixed character's name and swapped gender dialogues [Lupus]
 //= 1.9 Replaced effect numerics with constants. [Samuray22]
-//= 2.0 Bug fixes (bugreport:7928) [DeadlySilence]
 //============================================================
 
 geffen,59,143,0	script	Meera	91,{
@@ -102,7 +101,7 @@ geffen,147,26,0	script	Ralphie	97,{
 	mes "With that, anyone could be as strong as Hercules... Even a weakling like me! Hahahahahah,";
 	mes "I must have it!";
 	next;
-	emotion e_gasp;
+	Emotion e_gasp;
 	mes "[Ralphie]";
 	mes "...Good Heavens!";
 	mes "Since when were";
@@ -125,13 +124,13 @@ geffen,147,26,0	script	Ralphie	97,{
 }
 
 geffen,111,48,0	script	Stacey	101,{
-	if (getequipid(EQI_HEAD_TOP) == 2299) {
+	if (getequipid(1) == 2299) {
 		mes "[Stacey]";
 		mes "Oh...!";
 		mes "Is that an Orc Helm you're wearing?! That's so cool! Wow...";
 		next;
 		mes "[Stacey]";
-		if (Sex) {
+		if (sex) {
 			mes "You look so...";
 			mes "Rugged and manly~";
 		}
@@ -141,7 +140,7 @@ geffen,111,48,0	script	Stacey	101,{
 		}
 		close;
 	}
-	else if (getequipid(EQI_HEAD_TOP) == 5094) {
+	else if (getequipid(1) == 5094) {
 		mes "[Stacey]";
 		mes "Oh...";
 		mes "Wow...";
@@ -152,11 +151,11 @@ geffen,111,48,0	script	Stacey	101,{
 		mes "of Orc Hero!";
 		next;
 		mes "[Stacey]";
-		if (Sex) {
+		if (sex) {
 			mes "It's...";
 			mes "It's like you're surrounded by this incredibly masculine aura! Oooh~! You must be irresistable to all the girls!";
 			next;
-			emotion e_lv;
+			Emotion e_lv;
 			mes "[Stacey]";
 			mes "And I'm no exception.";
 		}
@@ -226,7 +225,7 @@ OnTouch:
 	mes "You wanna get your hands on some great stuff? Come on over!^000000";
 	next;
 	mes "[Suspicious Guy]";
-	if (Sex)
+	if (sex)
 		mes "Hey there tough guy. You look smart enough to recognize a bargain when it's right in front of your eyes.";
 	else
 		mes "Well, well, well. Aren't you a pretty girl. Today just happens to be your lucky day!";
@@ -261,7 +260,7 @@ OnTouch:
 			input .@input;
 			if (.@input == 0) {
 				mes "[Suspicious Guy]";
-				if (Sex)
+				if (sex)
 					mes "Ah duuuuuude~ You're breakin' my heart! I mean, at these prices, I'm practically performing charity!";
 				else
 					mes "W-waaaait! You didn't let me tell you the part about how Red Potions help you lose and gain weight in all the right places! Waaaaait!";
@@ -288,12 +287,12 @@ OnTouch:
 			mes "^333333Now I gotta find some other sucker to dump this junk on!^000000 *Ahem* I mean, come again!";
 			close;
 		}
-		set Zeny, Zeny-.@Red_potion_hap;
+		set zeny,zeny-.@Red_potion_hap;
 		getitem 501,.@input; //Red_Potion
 		break;
 	case 2:
 		mes "[Suspicious Guy]";
-		if (Sex) {
+		if (sex) {
 			mes "What would a strong guy like you want a knife for? Those will just break under the force of your incredibly powerful swings!";
 			next;
 			mes "[Suspicious Guy]";
@@ -347,18 +346,18 @@ OnTouch:
 				break;
 		}
 		set .@Main_gauche_hap,.@input * 9400;
-		if (Zeny < .@Main_gauche_hap) {
-			mes "[Suspicious Guy]";
+		if (Zeny < .@Main_gauche_hap) {	
+			mes "[Suspicious Guy]";	
 			mes "Short on zeny?";
 			mes "When the greatest deal in your life is right before your eyes?! Tragic, truly tragic...";
 			close;
 		}
-		set Zeny, Zeny-.@Main_gauche_hap;
+		set zeny,zeny-.@Main_gauche_hap;
 		getitem 1207,.@input; //Main_Gauche
 		break;
 	case 3:
 		mes "[Suspicious Guy]";
-		if (Sex)
+		if (sex)
 			mes "A Manteau? That's old news! You know what's the latest in protective armors?";
 		else
 			mes "Now why would such a beautiful woman wear something out of style? You know what would make you look even better?";
@@ -399,13 +398,13 @@ OnTouch:
 				break;
 		}
 		set .@Hood__hap,.@input * 930;
-		if (Zeny < .@Hood__hap) {
+		if (zeny < .@Hood__hap) {
 			mes "[Suspicious Guy]";
 			mes "Oh nuts...";
 			mes "Short on zeny, eh?";
 			close;
 		}
-		set Zeny, Zeny-.@Hood__hap;
+		set zeny,zeny-.@Hood__hap;
 		getitem 2501,.@input; //Hood
 		break;
 	case 4:
@@ -460,7 +459,7 @@ geffen_in,22,125,1	script	Crumpler	52,{
 			mes "[Crumpler]";
 			mes "Ooooooooh";
 			mes "crraaaap!";
-			emotion e_gasp;
+			Emotion e_gasp;
 			next;
 			mes "[Crumpler]";
 			mes "Help meeeee!";
@@ -498,7 +497,7 @@ geffen_in,22,125,1	script	Crumpler	52,{
 		mes "[Crumpler]";
 		mes "A...";
 		mes "Sage?";
-		emotion e_what;
+		Emotion e_What;
 		next;
 		mes "[Crumpler]";
 		mes "I don't know what that is. But I guess it can't be half as bad as a Mage.";
@@ -612,7 +611,7 @@ geffen_in,27,134,5	script	Waitress#elen	91,{
 		mes "I hear there's this person somewhere in Rune-Midgard...";
 		next;
 		mes "[Elenore]";
-		if (Sex)
+		if (sex)
 			mes "Tell me, have you ever heard of "+strcharinfo(0)+"? He's supposed to be the suavest hero around!";
 		else
 			mes "Have you ever heard of "+strcharinfo(0)+"? People say she's one of the prettiest girls in all of Rune-Midgard!";
@@ -652,7 +651,7 @@ geffen_in,27,134,5	script	Waitress#elen	91,{
 			mes "^990000Hey you sex crazed bastard!! Stop looking at my daughter like that before I rip out your eyes, and eat them with pasta!^000000";
 			next;
 			mes "["+strcharinfo(0)+"]";
-			if (Sex) {
+			if (sex) {
 				mes "Huh...?";
 				mes "C-come again?";
 				next;
@@ -768,7 +767,7 @@ geffen_in,70,67,3	script	Waitress#elise	90,{
 			mes "^990000Stay away from my daughter, or I'll beat your brains out, punk! Elisa's gonna marry a doctor! Or a lawyer!^000000";
 			next;
 			mes "["+strcharinfo(0)+"]";
-			if (Sex) {
+			if (sex) {
 				mes "Y-y-y-yes, sir!";
 				next;
 				mes "^3355FFThat was scary...!";
@@ -1039,7 +1038,7 @@ geffen_in,39,127,2	script	Psychic Advisor	704,{
 			break;
 		case 3:
 			mes "Um...";
-			if (Sex)
+			if (sex)
 				mes "The girl that you";
 			else
 				mes "The boy that you";
@@ -1056,8 +1055,8 @@ geffen_in,39,127,2	script	Psychic Advisor	704,{
 				mes "[Psychic Advisor]";
 				mes "You didn't let me finish my sentence. What I meant to say was...";
 				next;
-				mes "[Psychic Advisor]";
-				if (Sex)
+				mes "[Psychic Advisor]"				;
+				if (sex)
 					mes "The girl that you";
 				else
 					mes "The boy that you";
@@ -1076,7 +1075,7 @@ geffen_in,39,127,2	script	Psychic Advisor	704,{
 				mes "Sometimes, I get the future and the present mixed up. You know, since I'm always looking into the future...?";
 				next;
 				mes "[Psychic Advisor]";
-				if (Sex) {
+				if (sex) {
 					mes "What I meant to say was";
 					mes "^3355FFyou and the perfect woman will soon fall in love^000000. Yes, that's what I meant!";
 				}
@@ -1205,7 +1204,6 @@ geffen_in,39,127,2	script	Psychic Advisor	704,{
 		mes "Well, in any case, concentrating on your studies is tough, but it can be rewarding. I hope you do well in whatever you choose to do~";
 		close;
 	case 5:
-		mes "[Psychic Advisor]";
 		mes "The future? I thought it was implied that any fortune I tell you is about the future in the specific field that you choose.";
 		next;
 		mes "[Psychic Advisor]";
@@ -1267,7 +1265,6 @@ geffen_in,39,127,2	script	Psychic Advisor	704,{
 		mes "That's my prediction. Can you really argue with the wisdom of the spirit world?";
 		close;
 	case 6:
-		mes "[Psychic Advisor]";
 		mes "Fashion...?";
 		mes "What does that have to do with matters of the supernatural? Well, um, let me contact the spirits. Ah! Here we go...";
 		next;
@@ -1350,7 +1347,7 @@ geffen_in,109,72,2	script	Monster Scholar	90,{
 		mes "[Estheres]";
 		mes "Still, if you want to seek out strong monsters, you can cross the bridge to the West and fight Kobolds.";
 		next;
-		mes "[Estheres]";
+		mes "[Estheres]";		
 		if (BaseLevel > 40)
 			mes "You look strong enough for that kind of challenge. But if you see anyone more reckless cross the Western bridge, you might want to give them a warning.";
 		else 

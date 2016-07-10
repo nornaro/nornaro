@@ -4,8 +4,6 @@
 #ifndef _SHOWMSG_H_
 #define _SHOWMSG_H_
 
-#include "../../3rdparty/libconfig/libconfig.h"
-
 // for help with the console colors look here:
 // http://www.edoceo.com/liberum/?doc=printf-with-color
 // some code explanation (used here):
@@ -69,7 +67,6 @@
 
 extern int stdout_with_ansisequence; //If the color ansi sequences are to be used. [flaviojs]
 extern int msg_silent; //Specifies how silent the console is. [Skotlex]
-extern int console_msg_log; //Specifies what error messages to log. [Ind]
 extern char timestamp_format[20]; //For displaying Timestamps [Skotlex]
 
 enum msg_type {
@@ -85,15 +82,14 @@ enum msg_type {
 };
 
 extern void ClearScreen(void);
-extern void ShowMessage(const char *, ...);
-extern void ShowStatus(const char *, ...);
-extern void ShowSQL(const char *, ...);
-extern void ShowInfo(const char *, ...);
-extern void ShowNotice(const char *, ...);
-extern void ShowWarning(const char *, ...);
-extern void ShowDebug(const char *, ...);
-extern void ShowError(const char *, ...);
-extern void ShowFatalError(const char *, ...);
-extern void ShowConfigWarning(config_setting_t *config, const char *string, ...);
+extern int ShowMessage(const char *, ...);
+extern int ShowStatus(const char *, ...);
+extern int ShowSQL(const char *, ...);
+extern int ShowInfo(const char *, ...);
+extern int ShowNotice(const char *, ...);
+extern int ShowWarning(const char *, ...);
+extern int ShowDebug(const char *, ...);
+extern int ShowError(const char *, ...);
+extern int ShowFatalError(const char *, ...);
 
 #endif /* _SHOWMSG_H_ */

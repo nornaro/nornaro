@@ -1,13 +1,13 @@
-//===== rAthena Script ======================================= 
+//===== eAthena Script ======================================= 
 //= Cooking Quest
 //===== By: ================================================== 
 //= Reddozen; L0ne_W0lf
 //===== Current Version: ===================================== 
-//= 1.8a
+//= 1.8
 //===== Compatible With: ===================================== 
-//= rAthena Project
+//= eAthena SVN
 //===== Description: ========================================= 
-//= [Official Conversion]
+//= [Aegis Conversion]
 //= Official Cooking Quest (10.3)
 //===== Additional Comments: ================================= 
 //= 1.1 Fixed wrong item ID, added missing ";, optimized [Lupus]
@@ -15,22 +15,22 @@
 //= 1.2 Fixed exploit, some typos [Lupus]
 //= 1.3 Fixed wrong label [Lupus] 1.3a updated to Reddozen's changes
 //= 1.3b Fixed wrong id, fixed Puch quest, added more Pouch Quest
-//=     dialogues [Lupus]
+//= dialogues [Lupus]
 //= 1.4 Fixed spelling, added some dialoguesm optimized
-//=     fixed bugs. Tested, fully working [Lupus]
+//= fixed bugs. Tested, fully working [Lupus]
 //= 1.5 More fixes [Lupus]
 //= 1.6 Quest is now up to iRO 10.3 standards. [L0ne_W0lf]
 //= - Not sure what the EnableItemMove is for, as there is no 
-//=   command to disable being able to move items.
+//= command to disable being able to move items.
 //= 1.6a Corrected a bad cutin, a Typo error ";;" and a bad delitem (bugreport:911) [Samuray22]
 //= 1.6b Corrected a "donpcevent" missing a ":". (bugreport:962) [Samuray22]
 //= 1.7 Replaced effect numerics with constants. [L0ne_W0lf]
 //= 1.8 Renamed the variable cooking to cooking_q [ultramage]
-//= 1.8a Minor cleaning. [Euphy]
 //============================================================ 
 
 prt_castle,43,30,3	script	Charles Orleans#cook	878,{
-	if (MaxWeight - Weight < 2000) {
+	set .@now_weight,MaxWeight-Weight;
+	if (.@now_weight < 2000) {
 		mes "[Charles Orleans]";
 		mes "Just one second.";
 		mes "You're carrying too";
@@ -43,7 +43,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	878,{
 		end;
 	}
 	if (BaseJob == Job_Novice) {
-		if (Sex) {
+		if (sex) {
 			cutin "orleans_5",0;
 			mes "[Charles Orleans]";
 			mes "Excuse me, monsieur?";
@@ -79,8 +79,8 @@ prt_castle,43,30,3	script	Charles Orleans#cook	878,{
 		mes "the stairs for me, alright?";
 		goto L_End;
 	}
-	else if (getequipid(EQI_HEAD_TOP) != 5026) {
-		if (Sex) {
+	else if (getequipid(1) != 5026) {
+		if (sex) {
 			cutin "orleans_5",0;
 			emotion e_an;
 			mes "[Charles Orleans]";
@@ -1156,59 +1156,109 @@ prt_castle,43,30,3	script	Charles Orleans#cook	878,{
 				goto L_End;
 			}
 			else {
-				if (countitem(7471+.@old_book) < 1) {
+				if (.@old_book == 1) {
+					if (countitem(7472) < 1) {
+						mes "[Charles Orleans]";
+						mes "Wait, wait...";
+						mes "Why don't you have";
+						mes "the book that you said";
+						mes "that you'd return to me?";
+						mes "Find it first, and then I can";
+						mes "lend another cookbook to you.";
+						goto L_End;
+					}
+					cutin "orleans_2",0;
 					mes "[Charles Orleans]";
-					mes "Wait, wait...";
-					mes "Why don't you have";
-					mes "the book that you said";
-					mes "that you'd return to me?";
-					mes "Find it first, and then I can";
-					mes "lend another cookbook to you.";
-					goto L_End;
-				}
-				cutin "orleans_2",0;
-				mes "[Charles Orleans]";
-				switch(.@old_book) {
-				case 1:
 					mes "Ah, so you're done";
 					mes "with the Level 1 Cookbook.";
 					mes "That's good, that means you're";
 					mes "ready to graduate from the most";
 					mes "basic of basics. From now on,";
 					mes "the recipes will be harder...";
-					break;
-				case 2:
+					next;
+				}
+				else if (.@old_book == 2) {
+					if (countitem(7473) < 1) {
+						mes "[Charles Orleans]";
+						mes "Wait, wait...";
+						mes "Why don't you have";
+						mes "the book that you said";
+						mes "that you'd return to me?";
+						mes "Find it first, and then I can";
+						mes "lend another cookbook to you.";
+						goto L_End;
+					}
+					cutin "orleans_2",0;
+					mes "[Charles Orleans]";
 					mes "Ah, so what did you";
 					mes "think of the recipes in";
 					mes "the Level 2 Cookbook?";
 					mes "Homestyle cooking may be";
 					mes "simple, but it should never";
 					mes "be neglected by chefs.";
-					break;
-				case 3:
+					next;
+				}
+				else if (.@old_book == 3) {
+					if (countitem(7474) < 1) {
+						mes "[Charles Orleans]";
+						mes "Wait, wait...";
+						mes "Why don't you have";
+						mes "the book that you said";
+						mes "that you'd return to me?";
+						mes "Find it first, and then I can";
+						mes "lend another cookbook to you.";
+						goto L_End;
+					}
+					cutin "orleans_2",0;
+					mes "[Charles Orleans]";
 					mes "Ah, done with the Level 3";
 					mes "Cookbook already? The recipes";
 					mes "in there are really good when you're cooking romantic dinners.";
 					mes "They'll come in handy someday,";
 					mes "if you know what I mean.";
-					break;
-				case 4:
+					next;
+				}
+				else if (.@old_book == 4) {
+					if (countitem(7475) < 1) {
+						mes "[Charles Orleans]";
+						mes "Wait, wait...";
+						mes "Why don't you have";
+						mes "the book that you said";
+						mes "that you'd return to me?";
+						mes "Find it first, and then I can";
+						mes "lend another cookbook to you.";
+						goto L_End;
+					}
+					cutin "orleans_2",0;
+					mes "[Charles Orleans]";
 					mes "So you've finished the";
 					mes "Level 4 Cookbook. That's";
 					mes "no small feat! You've got to";
 					mes "use very strange ingredients";
 					mes "to create delicious cuisine!";
-					break;
-				case 5:
+					next;
+				}
+				else if (.@old_book == 5) {
+					if (countitem(7476) < 1) {
+						mes "[Charles Orleans]";
+						mes "Wait, wait...";
+						mes "Why don't you have";
+						mes "the book that you said";
+						mes "that you'd return to me?";
+						mes "Find it first, and then I can";
+						mes "lend another cookbook to you.";
+						goto L_End;
+					}
+					cutin "orleans_2",0;
+					mes "[Charles Orleans]";
 					mes "You're done with the";
 					mes "Level 5 Cookbook? Good";
 					mes "work: most beginners don't";
 					mes "even get this far. I suppose";
 					mes "you'll want to review some";
 					mes "of the easier recipes now~";
-					break;
+					next;
 				}
-				next;
 			}
 			cutin "orleans_1",0;
 			mes "[Charles Orleans]";
@@ -1481,7 +1531,8 @@ L_End:
 }
 
 prt_castle,45,35,5	script	Madeleine Chu#cook	886,{
-	if (MaxWeight - Weight < 2000) {
+	set .@now_weight,MaxWeight-Weight;
+	if (.@now_weight < 2000) {
 		mes "[Madeleine Chu]";
 		mes "I'm sorry, but right now";
 		mes "you're carrying too many";
@@ -2093,7 +2144,7 @@ S_SellSets:
 	}
 	set .@total_cost,.@sell * .@item_cost;
 	set .@total_weight,.@sell * .@item_weight;
-	if (Zeny < .@total_cost) {
+	if (zeny < .@total_cost) {
 		mes "[Madeleine Chu]";
 		mes "Oh, I'm sorry, but you";
 		mes "can't afford this many";
@@ -2110,7 +2161,7 @@ S_SellSets:
 		mes getitemname(getarg(0))+"...";
 		close;
 	}
-	set Zeny, Zeny-.@total_cost;
+	set zeny,zeny-.@total_cost;
 	getitem getarg(0),.@sell;
 	mes "[Madeleine Chu]";
 	mes "Here you are~";
@@ -2189,7 +2240,7 @@ payon,209,127,3	script	Servant	88,{
 		next;
 		switch(select("Sure, I'll buy one!:No, thanks.:Actually, Madeleine sent me...")) {
 		case 1:
-			if (Zeny < 200) {
+			if (zeny < 200) {
 				mes "[Chulsoo]";
 				mes "Oh, I'm sorry, but";
 				mes "you don't have enough";
@@ -2198,7 +2249,7 @@ payon,209,127,3	script	Servant	88,{
 				mes "raise 200 zeny, right?";
 				close;
 			}
-			set Zeny, Zeny-200;
+			set zeny,zeny-200;
 			getitem 555,1; //Rice_Cake
 			mes "[Chulsoo]";
 			mes "Thank you very";
@@ -2360,7 +2411,7 @@ payon,209,127,3	script	Servant	88,{
 		mes "it's oh-so-delicious~";
 		next;
 		if (select("Sure, I'll buy one!:No, thanks.") == 1) {
-			if (Zeny < 200) {
+			if (zeny < 200) {
 				mes "[Chulsoo]";
 				mes "Oh, I'm sorry, but";
 				mes "you don't have enough";
@@ -2369,7 +2420,7 @@ payon,209,127,3	script	Servant	88,{
 				mes "raise 200 zeny, right?";
 				close;
 			}
-			set Zeny, Zeny-200;
+			set zeny,zeny-200;
 			getitem 555,1; //Rice_Cake
 			mes "[Chulsoo]";
 			mes "Thank you very";

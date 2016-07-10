@@ -1,35 +1,26 @@
-//===== rAthena Script =======================================
-//= Sample: Functions
-//===== By: ==================================================
-//= rAthena Dev Team
-//===== Last Updated: ========================================
-//= 20120901
-//===== Description: ========================================= 
-//= Demonstrates use of functions.
-//============================================================
 
-// Define the function func001
+// 値を返さない関数
 function	script	func001	{
-	mes "Hello there!";
+	mes "ユーザー定義関数";
 	next;
-	return;	// Return to script
+	return;		// 省略できない
 }
 
-// Define the function func002
+// 値を返す関数
 function	script	func002	{
-	return "I'm a function";
+	return "ユーザー定義関数２";
 }
 
-// Uses 3 different methods of displaying dialogue from both internal and external sources.
-prontera,168,189,1	script	Functions	112,{
-	callfunc "func001";		// Calls func001 and displays "Hello there!"
-	mes callfunc("func002");	// Calls func002 and displays "I'm a function"
+// 関数の呼び出しとサブルーティンのテスト
+prontera,168,189,1	script	関数テスト	112,{
+	callfunc "func001";		// ユーザー定義関数は文字列で指定
+	mes callfunc("func002");
 	next;
-	callsub L_SUB001;		// Calls the label L_SUB001 and displays "I'm a label"
+	callsub L_SUB001;	// サブルーティンはラベルを直接指定
 	close;
 	end;
 
 L_SUB001:
-	mes "I'm a label";
-	return;
+	mes "サブルーティン";
+	return;		// 省略できない
 }

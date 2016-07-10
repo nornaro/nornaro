@@ -1,4 +1,4 @@
-//===== rAthena Script ======================================= 
+//===== eAthena Script ======================================= 
 //= Counteragent and Mixture Quest(Morgenstein)
 //===== By: ================================================== 
 //= kobra_k88
@@ -6,9 +6,9 @@
 //===== Current Version: ===================================== 
 //= 2.2b
 //===== Compatible With: ===================================== 
-//= rAthena Project
+//= eAthena SVN
 //===== Description: ========================================= 
-//= [Official Conversion]
+//= [Aegis COnversion]
 //= Counteragent and Mixtures for making dyes & Alchemist Job Quest
 //===== Additional Comments: ================================= 
 //= 2.2 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
@@ -471,7 +471,7 @@ geffen_in,141,140,3	script	Molgenstein#cm	121,{
 					delitem 970,1; //Alchol
 					delitem 971,1; //Detrimindexta
 					delitem 713,1; //Empty_Bottle
-					set Zeny, Zeny-3000;
+					set zeny,zeny-3000;
 					getitem 973,1; //Counteragent
 					mes "[Chemist Molgenstein]";
 					mes "Hee hee hee...";
@@ -515,7 +515,7 @@ geffen_in,141,140,3	script	Molgenstein#cm	121,{
 					delitem 970,1; //Alchol
 					delitem 972,1; //Karvodailnirol
 					delitem 713,1; //Empty_Bottle
-					set Zeny, Zeny-4000;
+					set zeny,zeny-4000;
 					getitem 974,1; //Mixture
 					mes "[Chemist Molgenstein]";
 					mes "Hee hee hee...";

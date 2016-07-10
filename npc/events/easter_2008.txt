@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== eAthena Script =======================================
 //= Easter Event (2008)
 //===== By: ==================================================
 //= Kisuka
 //===== Current Version: =====================================
 //= 1.1
 //===== Compatible With: =====================================
-//= rAthena Project
+//= eAthena SVN
 //===== Description: =========================================
 //= iRO Easter Event. (2008)
 //= Create Holy Eggs
@@ -93,7 +93,7 @@ prontera,111,99,5	script	Egg Salesman#prt::EggVendor	98,{
 				}
 				else {
 					set .@egg_zeny,.@input*500;
-					if (Zeny < .@egg_zeny) {
+					if (zeny < .@egg_zeny) {
 						mes "[Egg Salesman]";
 						mes "You don't have enough Zeny.";
 						next;
@@ -120,7 +120,7 @@ prontera,111,99,5	script	Egg Salesman#prt::EggVendor	98,{
 							mes "them, but I don't know anything";
 							mes "about that. Well, have a good";
 							mes "time, and I'll see you again!";
-							set Zeny, Zeny-.@egg_zeny;
+							set zeny,zeny-.@egg_zeny;
 							getitem 7605,.@input; //Chicken_Egg
 							close;
 						}

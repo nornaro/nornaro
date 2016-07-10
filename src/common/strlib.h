@@ -4,7 +4,9 @@
 #ifndef _STRLIB_H_
 #define _STRLIB_H_
 
+#ifndef _CBASETYPES_H_
 #include "../common/cbasetypes.h"
+#endif
 #include <stdarg.h>
 
 #define __USE_GNU  // required to enable strnlen on some platforms
@@ -76,27 +78,6 @@ typedef enum e_svopt
 /// Other escape sequences supported by the C compiler.
 #define SV_ESCAPE_C_SUPPORTED "abtnvfr\?\"'\\"
 
-/// Parse state.
-/// The field is [start,end[
-struct s_svstate
-{
-	const char* str; //< string to parse
-	int len; //< string length
-	int off; //< current offset in the string
-	int start; //< where the field starts
-	int end; //< where the field ends
-	enum e_svopt opt; //< parse options
-	char delim; //< field delimiter
-	bool done; //< if all the text has been parsed
-};
-
-/// Parses a single field in a delim-separated string.
-/// The delimiter after the field is skipped.
-///
-/// @param sv Parse state
-/// @return 1 if a field was parsed, 0 if done, -1 on error.
-int sv_parse_next(struct s_svstate* sv);
-
 /// Parses a delim-separated string.
 /// Starts parsing at startoff and fills the pos array with position pairs.
 /// out_pos[0] and out_pos[1] are the start and end of line.
@@ -128,7 +109,7 @@ const char* skip_escaped_c(const char* p);
 /// Opens and parses a file containing delim-separated columns, feeding them to the specified callback function row by row.
 /// Tracks the progress of the operation (current line number, number of successfully processed rows).
 /// Returns 'true' if it was able to process the specified file, or 'false' if it could not be read.
-bool sv_readdb(const char* directory, const char* filename, char delim, int mincols, int maxcols, int maxrows, bool (*parseproc)(char* fields[], int columns, int current), bool silent);
+bool sv_readdb(const char* directory, const char* filename, char delim, int mincols, int maxcols, int maxrows, bool (*parseproc)(char* fields[], int columns, int current));
 
 
 /// StringBuf - dynamic string

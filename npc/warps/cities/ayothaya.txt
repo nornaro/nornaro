@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== eAthena Script =======================================
 //= Ayothaya Town Warps Script
 //===== By: ==================================================
 //= Muad_Dib, L0ne_W0lf (1.0)
 //===== Current Version: =====================================
 //= 1.5a
 //===== Compatible With: =====================================
-//= rAthena Project; RO Episode 8+
+//= Any Athena Version; RO Episode 8+
 //===== Description: =========================================
 //= Warp Points for Ayothaya
 //===== Additional Comments: =================================

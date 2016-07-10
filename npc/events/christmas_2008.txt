@@ -1,25 +1,25 @@
-//===== rAthena Script =======================================
+//===== eAthena Script =======================================
 //= iRO 2008 Christmas Event
 //===== By: ==================================================
 //= Kisuka
 //===== Current Version: =====================================
 //= 1.1
 //===== Compatible With: =====================================
-//= rAthena Project
+//= eAthena SVN
 //===== Description: =========================================
 //= iRO Christmas Event. (2008)
 //= Create Music Box and Cake.
 //= Play card game with Santa.
 //= Create Santa Suits.
-//=
-//= NOTE: Must enable X-mas08 mobs in mob_db2.
+//==========================================
+//= Must enable X-mas08 mobs in mob_db2.
 //===== Additional Comments: =================================
 //= 1.0 First version. [Kisuka]
 //= 1.1 Fixed some issues, revamped the whole script. [Kisuka]
 //============================================================
 
-// Caroller - Music Box
-//============================================================
+// ============== Caroller - Music Box ================
+// =====================================================
 prontera,226,306,4	script	Caroller#iROxmas08	79,{
 	if (iROxmas08carol < 1 || iROxmas08carol == 3) {
 		if (iROxmas08carol == 3) {
@@ -31,7 +31,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	79,{
 			mes "Merry Christmas!";
 			mes "Hey! You! What comes to mind when you think about Christmas?";
 			next;
-		} else {
+		}else{
 			mes "[Caroller]";
 			mes "Jingle Bells! Jingle Bells! Jingle all the way!";
 			next;
@@ -43,8 +43,8 @@ prontera,226,306,4	script	Caroller#iROxmas08	79,{
 			mes "Merry Christmas!";
 			if (Sex) {
 				mes "Hey, boy! What comes to mind when";
-			} else {
-				mes "Hey, girl! What comes to mind when";
+			}else{
+				mes "Hey, girl! What comes to mind when";	
 			}
 			mes "you think about Christmas?";
 			next;
@@ -69,7 +69,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	79,{
 				mes "[Caroller]";
 				mes "If you win over Santa, you can get a gift. Would you go for it?";
 				next;
-				emotion e_heh;
+				emotion 18;
 				mes "[Caroller]";
 				mes "Caroller's hot news! Ha!";
 				mes "Isn't that big news?";
@@ -87,7 +87,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	79,{
 				mes "[Caroller]";
 				mes "Furthermore, he has put bad magic on the gifts so that they become monsters!";
 				next;
-				emotion e_heh;
+				emotion 18;
 				mes "[Caroller]";
 				mes "Caroller's hot news! Ha!";
 				mes "Isn't it amazing?";
@@ -115,7 +115,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	79,{
 						mes "[Caroller]";
 						mes "If you can get ^0000FFSinging Crystal Pieces^000000, give them to me please?";
 						close;
-					} else {
+					}else{
 						mes "[Caroller]";
 						mes "Wow, you have them.";
 						next;
@@ -133,13 +133,13 @@ prontera,226,306,4	script	Caroller#iROxmas08	79,{
 							mes "[Caroller]";
 							mes "If you can get ^0000FFSinging Crystal Pieces^000000, give them to me please?";
 							next;
-							emotion e_heh;
+							emotion 18;
 							delitem 6092,6;
 							getnameditem 12354,"+strcharinfo(0)+";
 							mes "[Caroller]";
 							mes "Let's care about others around you on this Christmas season!";
 							close;
-						} else {
+						}else{
 							mes "[Caroller]";
 							mes "Oh!";
 							mes "Shyness!";
@@ -154,7 +154,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	79,{
 							mes "[Caroller]";
 							mes "If you can get ^0000FFSinging Crystal Pieces^000000, give them to me please?";
 							next;
-							emotion e_heh;
+							emotion 18;
 							delitem 6092,6;
 							getitem 12354,1;
 							mes "[Caroller]";
@@ -232,7 +232,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	79,{
 					mes "Please, for our children's hope!!!?";
 					mes "Please bring me 6 Singing Crystal Pieces from ^0000FFViolent Gift Boxes^000000!";
 					next;
-					emotion e_ok;
+					emotion 33;
 					mes "[Caroller]";
 					mes "They're definitely as harsh as their name.";
 					mes "Go on please!";
@@ -254,7 +254,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	79,{
 				mes "Are there some spcial abilities within them?";
 				mes "There's still the designer in the Christmas village... How about asking her to make that costume?";
 				next;
-				emotion e_heh;
+				emotion 18;
 				mes "[Caroller]";
 				mes "Caroller's hot news! Ha!";
 				mes "It's hot, huh?";
@@ -272,7 +272,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	79,{
 				mes "[Caroller]";
 				mes "And he isn't alone anymore... is what I heard...";
 				next;
-				emotion e_heh;
+				emotion 18;
 				mes "[Caroller]";
 				mes "Caroller's hot news! Ha!";
 				mes "Hotness, right?";
@@ -295,13 +295,13 @@ prontera,226,306,4	script	Caroller#iROxmas08	79,{
 			mes "For all of the children of this world!!!";
 			mes "Please bring me ^0000FFSinging Crystal Pieces^000000 from ^0000FFViolent Gift Boxes^000000!";
 			next;
-			emotion e_ok;
+			emotion 33;
 			mes "[Caroller]";
 			mes "Be careful!";
 			mes "They're definitely as harsh as their name.";
 			mes "Take care!!!";
 			close;
-		} else {
+		}else{
 			specialeffect EF_GLORIA;
 			mes "[Caroller]";
 			mes "Don't cry, don't cry!";
@@ -337,7 +337,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	79,{
 			mes "^0000FF10 Trunk, 1 Hammer Of Blacksmith, 1 Jubilee, 10 Sticky Mucus, 3carat Diamond^000000!";
 			next;
 			delitem 6092,6;
-			emotion e_ok;
+			emotion 33;
 			set iROxmas08carol,2;
 			mes "[Caroller]";
 			mes "Those are all needed.";
@@ -356,12 +356,12 @@ prontera,226,306,4	script	Caroller#iROxmas08	79,{
 			mes "So, we need more of some materials.";
 			mes "^0000FF10 Trunk, 1 Hammer Of Blacksmith, 1 Jubilee, 10 Sticky Mucus, 3carat Diamond^000000!";
 			next;
-			emotion e_ok;
+			emotion 33;
 			mes "[Caroller]";
 			mes "That's all we need.";
 			mes "Isn't that easy?";
 			close;
-		} else {
+		}else{
 			specialeffect EF_GLORIA;
 			mes "[Caroller]";
 			mes "Jingle bells, jingle bells,";
@@ -416,7 +416,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	79,{
 			mes "[Caroller]";
 			mes "Don't worry, it tastes good.";
 			next;
-			emotion e_ok;
+			emotion 33;
 			getitem 2784,1;
 			getnameditem 12354,"+strcharinfo(0)+";
 			delitem 1019,10;
@@ -434,8 +434,8 @@ prontera,226,306,4	script	Caroller#iROxmas08	79,{
 	}
 }
 
-// Santa Claus - Card Game
-//============================================================
+// ============= Santa Claus - Card Game ===============
+// =====================================================
 -	script	Santa Claus#iROxmas08::08santa	718,{
 	mes "[Santa Claus]";
 	mes "Wow! Were you naughty or nice this year?";
@@ -456,8 +456,8 @@ prontera,226,306,4	script	Caroller#iROxmas08	79,{
 		mes "[Santa Claus]";
 		if (Sex) {
 			mes "Ho ho ho! What a good boy!";
-		} else {
-			mes "Ho ho ho! What a good girl!";
+		}else{
+			mes "Ho ho ho! What a good girl!";	
 		}
 		next;
 		mes "[Santa Claus]";
@@ -528,7 +528,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	79,{
 		mes "Let's get started!";
 		next;
 		while(.@SantaCardTurn != 5) {
-			emotion e_loud;
+			emotion 56;
 			mes "[Santa Claus]";
 			mes "First let me shuffle up these cards... Ok!!!";
 			next;
@@ -583,28 +583,28 @@ prontera,226,306,4	script	Caroller#iROxmas08	79,{
 			mes "Let's see!!";
 			mes "One! Two! Three!";
 			if (.@SantaCardNpc == 1) {
-				cutin "포링카드",4; // Poring Card
+				cutin "포링카드",4;
 			}
 			else if (.@SantaCardNpc == 2) {
-				cutin "엔젤링카드",4; // Angeling Card
+				cutin "엔젤링카드",4;
 			}
 			else if (.@SantaCardNpc == 3) {
-				cutin "고스트링카드",4; // Ghostring Card
-			}
+				cutin "고스트링카드",4;
+			}		
 			next;
 			set .@SantaCardTurn,.@SantaCardTurn+1;
 			if (.@SantaCardP == .@SantaCardNpc) {
 				set .@SantaCardWins,.@SantaCardWins+1;
-				emotion e_gasp;
-				emotion e_ic,1;
+				emotion 0;
+				emotion 5,1;
 				cutin "",255;
 				mes "[Santa Claus]";
 				mes "You're lucky.";
 				mes "Can you guess the right card the next time around?";
 				next;
-			} else {
-				emotion e_gasp;
-				emotion e_omg,1;
+			}else{
+				emotion 0;
+				emotion 23,1;
 				cutin "",255;
 				mes "[Santa Claus]";
 				mes "Aww maybe next time...";
@@ -619,7 +619,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	79,{
 			mes "[Santa Claus]";
 			mes "Whenever you want.";
 			close;
-		} else {
+		}else{
 			mes "[Santa Claus]";
 			mes "You're so good!";
 			next;
@@ -635,10 +635,10 @@ prontera,226,306,4	script	Caroller#iROxmas08	79,{
 				getitem 595,3;
 			}
 			else if (.@SantaCardPrize == 3) {
-				getitem 593,3;
+				getitem 593,3;							
 			}
 			else if (.@SantaCardPrize == 4) {
-				getitem 12236,3;
+				getitem 12236,3;			
 			}
 			else if (.@SantaCardPrize == 5) {
 				getitem 538,10;
@@ -689,16 +689,16 @@ prontera,226,306,4	script	Caroller#iROxmas08	79,{
 		mes "........................";
 		if (Sex) {
 			mes "Oh! Poor boy...";
-		} else {
-			mes "Oh! Poor girl...";
+		}else{
+			mes "Oh! Poor girl...";	
 		}
 		next;
 		mes "[Santa Claus]";
 		mes "........................";
 		if (Sex) {
 			mes "Oh! Poor boy...";
-		} else {
-			mes "Oh! Poor girl...";
+		}else{
+			mes "Oh! Poor girl...";	
 		}
 		mes "...";
 		next;
@@ -715,8 +715,9 @@ alberta,117,66,4	duplicate(08santa)	Santa Claus#0803	718
 geffen,119,70,4	duplicate(08santa)	Santa Claus#0804	718
 morocc,158,104,4	duplicate(08santa)	Santa Claus#0805	718
 
-// Louise Kim - Santa Suit
-//============================================================
+
+// ============= Louise Kim - Santa Suit ===============
+// =====================================================
 xmas_in,89,92,4	script	Louise Kim#iROxmas08	714,{
 	mes "[Louise Kim]";
 	mes "I always thought about how boring Santa Claus is wearing a too boring costume.";
@@ -730,7 +731,7 @@ xmas_in,89,92,4	script	Louise Kim#iROxmas08	714,{
 	mes "The reason catching up to him is so hard, is that his clothes have been given strong power!";
 	mes "I blessed them with good luck!";
 	next;
-	emotion e_lv;
+	emotion 3;
 	mes "[Louise Kim]";
 	mes "Preta Porter!!";
 	mes "Which is quite luxurious but sold at good price ~";
@@ -747,7 +748,7 @@ xmas_in,89,92,4	script	Louise Kim#iROxmas08	714,{
 		mes "Ah!";
 		mes "You're silly! You lost your big chance!";
 		next;
-		emotion e_heh;
+		emotion 18;
 		mes "[Louise Kim]";
 		mes "Come to me later if you want to get the mission.";
 		mes "I, Louise Kim, am generous enough to accept you next time.";
@@ -765,7 +766,7 @@ xmas_in,89,92,4	script	Louise Kim#iROxmas08	714,{
 	mes "Anyway, can you bring me some stuff?";
 	next;
 	if (select("Why not? What do you need?:Sorry, no time.") == 2) {
-		emotion e_heh;
+		emotion 18;
 		mes "[Louise Kim]";
 		mes "What?";
 		mes "You will definitely regret it.";
@@ -779,17 +780,17 @@ xmas_in,89,92,4	script	Louise Kim#iROxmas08	714,{
 	mes "[Louise Kim]";
 	mes "If you bring me all that stuff, I can make you a glamorous Santa costume.";
 	next;
-	if (countitem(2301) < 1 || countitem(501) < 3 || countitem(523) < 1 || countitem(7175) < 4 || countitem(7174) < 1) {
+	if (countitem(2301) < 1 || countitem(501) < 3 || countitem(523) < 1 || countitem(7175) < 4 || countitem(7174) < 1) {		
 			mes "[Louise Kim]";
 			mes "If you were to bring me all the stuff, I would make you a wonderful costume, for free...";
 			next;
-			emotion e_lv;
+			emotion 3;
 			mes "[Louise Kim]";
 			mes "Please see me again if you are interested.";
 			close;
-	} else {
+	}else{
 		select("Here you are.");
-		emotion e_ok;
+		emotion 33;
 		mes "[Louise Kim]";
 		mes "Oh! Good!";
 		mes "Let's not delay.";
@@ -801,7 +802,7 @@ xmas_in,89,92,4	script	Louise Kim#iROxmas08	714,{
 		mes "-and many blessings she sings.-";
 		next;
 		specialeffect EF_BLESSING;
-		emotion e_ho;
+		emotion 2;
 		mes "[Louise Kim]";
 		mes "By artist, Louise Kim!";
 		mes "All over the world will be blessed tonight!";
@@ -815,7 +816,7 @@ xmas_in,89,92,4	script	Louise Kim#iROxmas08	714,{
 		mes "-Count your blessings and sing!-";
 		next;
 		specialeffect EF_GLORIA;
-		emotion e_ho;
+		emotion 2;
 		mes "[Louise Kim]";
 		mes "By artist, Louise Kim!";
 		mes "All over the world will be blessed tonight!";
@@ -827,7 +828,7 @@ xmas_in,89,92,4	script	Louise Kim#iROxmas08	714,{
 		mes "-cheer and goodwill!-";
 		next;
 		specialeffect EF_BENEDICTIO;
-		emotion e_lv;
+		emotion 3;
 		mes "[Louise Kim]";
 		mes "This is miraculous!";
 		mes "I am a genius of the world.";
@@ -839,7 +840,7 @@ xmas_in,89,92,4	script	Louise Kim#iROxmas08	714,{
 		mes "My fashion is radiant.";
 		mes "I ain't envious of Designer Pierre.";
 		next;
-		emotion e_heh;
+		emotion 18;
 		mes "[Louise Kim]";
 		mes "I am supposed to get paid well, however I will just let it be free, since this is Christmas!";
 		next;
@@ -855,8 +856,7 @@ xmas_in,89,92,4	script	Louise Kim#iROxmas08	714,{
 	}
 }
 
-// Monsters
-//============================================================
+//XMAS MOBS
 prt_fild00,0,0,0,0	monster	Christmas Jakk	1244,5,0,0,0
 prt_fild00,0,0,0,0	monster	Christmas Goblin	1245,5,0,0,0
 prt_fild00,0,0,0,0	monster	Christmas Cookie	1246,5,0,0,0

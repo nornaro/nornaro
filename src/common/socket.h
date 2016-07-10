@@ -4,10 +4,13 @@
 #ifndef	_SOCKET_H_
 #define _SOCKET_H_
 
+#ifndef _CBASETYPES_H_
 #include "../common/cbasetypes.h"
+#endif
 
 #ifdef WIN32
-	#include "../common/winapi.h"
+	#define WIN32_LEAN_AND_MEAN  // otherwise winsock2.h includes full windows.h
+	#include <winsock2.h>
 	typedef long in_addr_t;
 #else
 	#include <sys/types.h>
@@ -76,7 +79,6 @@ struct socket_data
 	struct {
 		unsigned char eof : 1;
 		unsigned char server : 1;
-		unsigned char ping : 2;
 	} flag;
 
 	uint32 client_addr; // remote client address
@@ -113,7 +115,7 @@ extern bool session_isActive(int fd);
 // Function prototype declaration
 
 int make_listen_bind(uint32 ip, uint16 port);
-int make_connection(uint32 ip, uint16 port, bool silent, int timeout);
+int make_connection(uint32 ip, uint16 port);
 int realloc_fifo(int fd, unsigned int rfifo_size, unsigned int wfifo_size);
 int realloc_writefifo(int fd, size_t addition);
 int WFIFOSET(int fd, size_t len);
@@ -145,7 +147,7 @@ extern int naddr_;   // # of ip addresses
 
 void set_eof(int fd);
 
-/// Use a shortlist of sockets instead of iterating all sessions for sockets
+/// Use a shortlist of sockets instead of iterating all sessions for sockets 
 /// that have data to send or need eof handling.
 /// Adapted to use a static array instead of a linked list.
 ///

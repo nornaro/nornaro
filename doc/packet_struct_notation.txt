@@ -1,12 +1,15 @@
-//===== rAthena Documentation ================================
+//===== Athena Doc ========================================
 //= Packet Structure Notation
-//===== By: ==================================================
+//===== By ================================================
 //= Ai4rei
-//===== Last Updated: ========================================
-//= 20120810
-//===== Description: =========================================
+//===== Version ===========================================
+//= 1.1
+//=========================================================
+//= 1.0 - Initial version.
+//= 1.1 - Added examples.
+//===== Description =======================================
 //= Explanation how packets are and should be documented.
-//============================================================
+//=========================================================
 
 This document specifies how packets are and should be documented, to
 keep packet structure comments consistent in the entire codebase. It
@@ -29,7 +32,7 @@ The first line contains a brief description of what the packet does,
 or what it is good for, followed by it's AEGIS name in parentheses;
 first two letters of the AEGIS name specify origin (first letter)
 and destination (second letter) of the packet. If the packet's name
-is not known or is not applicable (rAthena server-server packets),
+is not known or is not applicable (eAthena server-server packets),
 specify at least these two letters to indicate the direction of the
 packet. Do not use S(end)/R(ecv) for this, as it is inaccurate and
 location dependent (if the description is copied to different server

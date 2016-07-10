@@ -1,13 +1,4 @@
-//===== rAthena Script =======================================
-//= Sample: Array Test
-//===== By: ==================================================
-//= rAthena Dev Team
-//===== Last Updated: ========================================
-//= 20090206
-//===== Description: ========================================= 
-//= Demonstrates array commands.
-//============================================================
-
+// Array Test
 prontera,164,190,1	script	Array Test	112,{
 	set @hoge[0],1;
 	set @hoge[1],5;
@@ -39,5 +30,6 @@ prontera,164,190,1	script	Array Test	112,{
 	mes "hoge[1]=> " + @hoge[1];
 	mes "hoge[2]=> " + @hoge[2];
 	mes "hoge[3]=> " + @hoge[3];
+
 	close;
 }

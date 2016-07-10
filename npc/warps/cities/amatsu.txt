@@ -1,4 +1,4 @@
-//===== rAthena Script =======================================
+//===== eAthena Script =======================================
 //= Amatsu Warps Script
 //===== By: ==================================================
 //= Athena (1.0)
@@ -6,13 +6,13 @@
 //===== Current Version: =====================================
 //= 1.7
 //===== Compatible With: =====================================
-//= rAthena Project; RO Episode 6+
+//= Any Athena Version; RO Episode 6+
 //===== Description: =========================================
-//= [Official Conversion]
+//= [Aegis COnversion]
 //= Warp Points for Amatsu
 //===== Additional Comments: =================================
 //= 1.7 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//=     Renamed warps for ease-of-reading.
+//=	Renamed warps for ease-of-reading.
 //============================================================
 
 amatsu,177,138,0	warp	ama_house1-1	1,1,ama_in01,28,176

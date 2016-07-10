@@ -6,12 +6,13 @@
 #include <string.h>
 #include "nullpo.h"
 #include "../common/showmsg.h"
+// #include "logs.h" // 布石してみる
 
-static void nullpo_info_core(const char *file, int line, const char *func, const char *fmt, va_list ap);
-static void nullpo_info_core_(const char *file, int line, const char *func);
+static void nullpo_info_core(const char *file, int line, const char *func, 
+                             const char *fmt, va_list ap);
 
 /*======================================
- * Null Information output and check
+ * Nullチェック 及び 情報出力
  *--------------------------------------*/
 int nullpo_chk_f(const char *file, int line, const char *func, const void *target,
                  const char *fmt, ...)
@@ -29,15 +30,16 @@ int nullpo_chk_f(const char *file, int line, const char *func, const void *targe
 
 int nullpo_chk(const char *file, int line, const char *func, const void *target)
 {
- 	if (target != NULL)
+	if (target != NULL)
 		return 0;
-	nullpo_info_core_(file, line, func);
+	
+	nullpo_info_core(file, line, func, NULL, NULL);
 	return 1;
 }
 
 
 /*======================================
- * nullpo Information output (external call)
+ * nullpo情報出力(外部呼出し向けラッパ)
  *--------------------------------------*/
 void nullpo_info_f(const char *file, int line, const char *func, 
                  const char *fmt, ...)
@@ -51,10 +53,16 @@ void nullpo_info_f(const char *file, int line, const char *func,
 
 void nullpo_info(const char *file, int line, const char *func)
 {
-	nullpo_info_core_(file, line, func);
+	nullpo_info_core(file, line, func, NULL, NULL);
 }
 
-static void nullpo_info_core_(const char *file, int line, const char *func){
+
+/*======================================
+ * nullpo情報出力(Main)
+ *--------------------------------------*/
+static void nullpo_info_core(const char *file, int line, const char *func, 
+                             const char *fmt, va_list ap)
+{
 	if (file == NULL)
 		file = "??";
 	
@@ -65,25 +73,19 @@ static void nullpo_info_core_(const char *file, int line, const char *func){
 	
 	ShowMessage("--- nullpo info --------------------------------------------\n");
 	ShowMessage("%s:%d: in func `%s'\n", file, line, func);
-}
-
-/*======================================
- * nullpo intelligence Output (Main)
- *--------------------------------------*/
-static void nullpo_info_core(const char *file, int line, const char *func, 
-                             const char *fmt, va_list ap)
-{
-	nullpo_info_core_(file,line,func);
 	if (fmt != NULL)
 	{
 		if (fmt[0] != '\0')
 		{
 			vprintf(fmt, ap);
 			
-			// Check whether the new line at the end
+			// 最後に改行したか確認
 			if (fmt[strlen(fmt)-1] != '\n')
 				ShowMessage("\n");
 		}
 	}
 	ShowMessage("--- end nullpo info ----------------------------------------\n");
+	
+	// ここらでnullpoログをファイルに書き出せたら
+	// まとめて提出できるなと思っていたり。
 }

@@ -1,22 +1,21 @@
-//===== rAthena Script ======================================= 
+//===== eAthena Script ======================================= 
 //= Moscovia Town
 //===== By: ================================================== 
 //= Kisuka
 //===== Current Version: ===================================== 
-//= 1.2
+//= 1.1
 //===== Compatible With: ===================================== 
-//= rAthena Project
+//= eAthena SVN
 //===== Description: ========================================= 
 //= Moscovia Town Script
 //===== Additional Comments: ================================= 
 //= 1.0 First Version. [Kisuka]
 //= 1.1 Removed villagers (they are part of a quest). [Kisuka]
-//= 1.2 Moved Alberta NPC to pre-re/re paths. [Euphy]
 //============================================================
 
-// Moscovia Transportation :: mosk_trans
-//============================================================
--	script	::PR_Officer_moscovia	-1,{
+// Moscovia Transportation
+//============================================================ 
+alberta,245,66,4	script	Moscovia P.R. Officer#1	960,{
 	mes "[Moscovia P.R. Officer]";
 	mes "Moscovia! Do you know Moscovia?";
 	mes "the paradise spreading on the endless seas...";
@@ -75,7 +74,7 @@
 				mes "to go to Moscovia";
 				mes "Thank you.";
 				close;
-			} else {
+			}else{
 				mes "[Moscovia P.R. Officer]";
 				mes "Ok then, we're leaving now.";
 				close2;
@@ -109,16 +108,12 @@ moscovia,166,53,4	script	Moscovia P.R. Officer#2	960,{
 	mes "Please come and visit soon.";
 	mes "Ok then, Let's get going.";
 	close2;
-	if (checkre(0))
-		warp "alberta",244,52;
-	else
-		warp "alberta",243,67;
+	warp "alberta",243,67;
 	end;
 }
 
-
-// Moscovia Palace :: mos_swan
-//============================================================
+// Generic Moscovia NPCs
+//============================================================ 
 moscovia,253,166,4	script	Soldier#mosk1	966,{
 	mes "[Soldier]";
 	mes "Our dear Csar Alexsay III is in the palace.";
@@ -127,11 +122,14 @@ moscovia,253,166,4	script	Soldier#mosk1	966,{
 	close;
 }
 
+// Moscovia Palace
+//============================================================ 
 -	script	Soldier#mosk::MoscSoldier	966,{
 	mes "[Soldier]";
 	mes "Please be silent or the Csar will be angry.";
 	close;
 }
+
 mosk_in,118,66,5	duplicate(MoscSoldier)	Soldier#mosk02	966
 mosk_in,133,110,3	duplicate(MoscSoldier)	Soldier#mosk03	966
 mosk_in,133,73,3	duplicate(MoscSoldier)	Soldier#mosk04	966

@@ -1,13 +1,13 @@
-//===== rAthena Script =======================================
+//===== eAthena Script =======================================
 //= Comodo Dungeon Warp
 //===== By: ==================================================
 //= Nana (1.0)
 //===== Current Version: =====================================
 //= 1.1
 //===== Compatible With: =====================================
-//= rAthena Project
+//= Any Athena Version
 //===== Description: =========================================
-//= [Official Conversion]
+//= [Aegis Conversion]
 //= Comodo Beach Dungeon warp script
 //===== Additional Comments: =================================
 //= 1.1 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]

@@ -1,13 +1,13 @@
-//===== rAthena Script =======================================
+//===== eAthena Script =======================================
 //= Manuk warp points.
 //===== By: ==================================================
 //= L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.0
 //===== Compatible With: =====================================
-//= rAthena Project; RO Episode 13.2+
+//= Any Athena Version; RO Episode 13.2+
 //===== Description: =========================================
-//= [Official Conversion]
+//= [Aegis Conversion]
 //= Warp Points for Manuk
 //===== Additional Comments: =================================
 //= First version.

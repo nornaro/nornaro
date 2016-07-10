@@ -1,13 +1,13 @@
-//===== rAthena Script =======================================
+//===== eAthena Script =======================================
 //= Amatsu Field Warp's
 //===== By: ==================================================
 //= Nana (1.0)
 //===== Current Version: =====================================
 //= 1.1
 //===== Compatible With: =====================================
-//= rAthena Project
+//= Any Athena Version
 //===== Description: =========================================
-//= [Official Conversion]
+//= [Aegis COnversion]
 //= Warp Points for Amatsu Field
 //===== Additional Comments: =================================
 //= 1.1 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]

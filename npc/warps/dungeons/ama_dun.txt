@@ -1,13 +1,13 @@
-//===== rAthena Script =======================================
+//===== eAthena Script =======================================
 //= Amatsu Dungeon Script
 //===== By: ==================================================
 //= Nana (1.0)
 //===== Current Version: =====================================
 //= 1.2
 //===== Compatible With: =====================================
-//= rAthena Project; RO Episode 6+
+//= Any Athena Version; RO Episode 6+
 //===== Description: =========================================
-//= [Official Conversion]
+//= [Aegis Conversion]
 //= Warp Points for Amatsu Dungeon
 //===== Additional Comments: =================================
 //= 1.2 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]

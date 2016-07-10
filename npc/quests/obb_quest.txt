@@ -1,13 +1,13 @@
-//===== rAthena Script =======================================
+//===== eAthena Script =======================================
 //= Old Blue Box Quest
 //===== By ===================================================
 //= Celesta, Lupus
 //===== Version ==============================================
 //= 2.0
 //===== Compatible With: ===================================== 
-//= rAthena Project
+//= eAthena SVN
 //===== Description: ========================================= 
-// [Official Conversion]
+// [Aegis COnversion]
 //= Old Blue Box quest (?)
 //= Officially this quest gave an OBB in exhange for a the
 //= required items unlimitedly, however this was changed by
@@ -457,7 +457,8 @@ alberta,43,244,0	script	Tourist#thai	99,{
 			next;
 			mes "[Tourist]";
 			mes "Hopefully, it'll be useful.";
-			if (MaxWeight - Weight < 500) {
+			set .@now_weight,MaxWeight-Weight;
+			if (.@now_weight < 500) {
 				mes "Umm...it seems you're carrying too much stuff with you.";
 				mes "Doncha want me to help you?";
 				close;

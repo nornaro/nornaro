@@ -1,18 +1,19 @@
-//===== rAthena Script =======================================
-//= Ninja Equipment Quests
+//===== eAthena Script =======================================
+//= Ninja quests
 //===== By: ==================================================
 //= Playtester
 //===== Current Version: =====================================
-//= 1.2a
+//= 1.2
 //===== Compatible With: =====================================
-//= rAthena Project
+//= SVN eA
 //===== Description: =========================================
-//= Quests for Ninja weapons and armor.
+//= Ninja quests
 //===== Additional Comments: =================================
 //= 1.0 Ninja Arm Guards only yet [Playtester]
 //= 1.1 Added Kaibara [Playtester]
 //= 1.2 Added Tetsu [Playtester]
-//= 1.2a Kagerou/Oboro support (BaseJob -> BaseClass) [Euphy]
+//  (original NPC Taitsu was made by Auron)
+//= 1.3 Updated to work with Kagerou and Oboro jobs. [Rytech]
 //============================================================
 
 que_ng,28,50,3	script	Boshuu	709,{
@@ -257,7 +258,7 @@ que_ng,28,50,3	script	Boshuu	709,{
 			}
 		}
 	}
-	else{
+	else{	
 		set ninbo,0;
 		mes "[Boshuu]";
 		mes "Oh~ You~!";
@@ -356,7 +357,7 @@ que_ng,28,50,3	script	Boshuu	709,{
 				set Zeny,Zeny-10000;
 				set MISC_QUEST,MISC_QUEST | 2048;
 				getitem 2118,1;
-				close;
+				close;					
 			}
 		}
 	}

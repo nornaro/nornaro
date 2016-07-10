@@ -5,15 +5,9 @@
 #define _CHAT_H_
 
 #include "map.h" // struct block_list, CHATROOM_TITLE_SIZE
-
-#ifdef	__cplusplus
-extern "C" {
-#endif
-
 struct map_session_data;
 struct chat_data;
 
-#define MAX_CHAT_USERS 20
 
 struct chat_data {
 	struct block_list bl;            // data for this map object
@@ -26,11 +20,11 @@ struct chat_data {
 	uint32 zeny;						 // required zeny to join
 	uint32 minLvl;					 // minimum base level to join
 	uint32 maxLvl;					 // maximum base level allowed to join
-	struct map_session_data* usersd[MAX_CHAT_USERS];
+	struct map_session_data* usersd[20];
 	struct block_list* owner;
-	char npc_event[EVENT_NAME_LENGTH];
-	DBMap* kick_list;				//DBMap of users who were kicked from this chat
+	char npc_event[50];
 };
+
 
 int chat_createpcchat(struct map_session_data* sd, const char* title, const char* pass, int limit, bool pub);
 int chat_joinchat(struct map_session_data* sd, int chatid, const char* pass);
@@ -44,9 +38,5 @@ int chat_deletenpcchat(struct npc_data* nd);
 int chat_enableevent(struct chat_data* cd);
 int chat_disableevent(struct chat_data* cd);
 int chat_npckickall(struct chat_data* cd);
-
-#ifdef	__cplusplus
-}
-#endif
 
 #endif /* _CHAT_H_ */

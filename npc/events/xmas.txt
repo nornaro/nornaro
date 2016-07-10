@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== eAthena Script =======================================
 //= X-mas Event
 //===== By: ==================================================
-//= rAthena Dev Team
+//= eAthena Dev Team
 //===== Current Version: =====================================
 //= 1.4
 //===== Compatible With: =====================================
-//= rAthena Project
+//= Any version of eAthena
 //===== Description: =========================================
 //= Beat up Antonios and grab his socks.  Get at least 3 and
 //= give them to Santa Claus Claus in exchange for a present.
@@ -22,9 +22,12 @@
 //= 1.4 Added a fix to make Lutie & Bard quests passable during this event [Lupus]
 //============================================================
 
+
 xmas_in,100,96,4	script	Father Christmas::Santa2	718,{
 	mes "[Santa Claus]";
-	if(xmas_npc==0) set xmas_npc, 1; // For Lutie & Bard quest
+//For Lutie & Bard quest
+	if(xmas_npc==0) set xmas_npc, 1;
+//
 	if(#event_xmas > 0 && #event_xmas < 30 ) goto L_Start;
 	mes "Merry Christmas!";
 	if(Class==0 || #event_xmas>=30 ) close; //anti exploit protection
@@ -110,14 +113,19 @@ OnInit:
 	end;
 }
 
-// Xmas Goblin Spawns
-//============================================================
+
+//========================================================================================
+// - Xmas Goblin Spawns
+//========================================================================================
+
 prt_fild11,0,0,0,0	monster	Christmas Goblin	1245,5,0,0,0
 gef_fild11,0,0,0,0	monster	Christmas Goblin	1245,5,0,0,0
 yuno_fild09,0,0,0,0	monster	Christmas Goblin	1245,5,0,0,0
 
-// Santa Poring Spawns
-//============================================================
+//========================================================================================
+// - Santa Poring Spawns
+//========================================================================================
+
 ein_fild03,0,0,0,0	monster	Santa Poring	1062,15,0,0,0
 ein_fild04,0,0,0,0	monster	Santa Poring	1062,15,0,0,0
 ein_fild06,0,0,0,0	monster	Santa Poring	1062,15,0,0,0
@@ -231,8 +239,10 @@ hu_fild04,0,0,0,0	monster	Santa Poring	1062,15,0,0,0
 hu_fild05,0,0,0,0	monster	Santa Poring	1062,15,0,0,0
 hu_fild07,0,0,0,0	monster	Santa Poring	1062,15,0,0,0
 
-// Antonio Spawns
-//============================================================
+//========================================================================================
+// - Antonio Spawns
+//========================================================================================
+
 ein_fild03,0,0,0,0	monster	Antonio	1247,1,0,0,0
 ein_fild04,0,0,0,0	monster	Antonio	1247,1,0,0,0
 ein_fild06,0,0,0,0	monster	Antonio	1247,1,0,0,0
@@ -346,13 +356,17 @@ hu_fild04,0,0,0,0	monster	Antonio	1247,1,0,0,0
 hu_fild05,0,0,0,0	monster	Antonio	1247,1,0,0,0
 hu_fild07,0,0,0,0	monster	Antonio	1247,1,0,0,0
 
-// Xmas Jakk Spawns
-//============================================================
+//========================================================================================
+// - Xmas Jakk
+//========================================================================================
+
 gef_dun01,0,0,0,0	monster	Xmas Jakk	1244,5,0,0,0
 //gefenia02,0,0,0,0	monster	Xmas Jakk	1244,5,0,0,0
 
-// Xmas Orc Spawns
-//============================================================
+//========================================================================================
+// - Xmas Orc
+//========================================================================================
+
 gef_fild02,0,0,0,0	monster	Christmas Orc	1588,5,0,0,0
 gef_fild03,0,0,0,0	monster	Christmas Orc	1588,5,0,0,0
 gef_fild10,0,0,0,0	monster	Christmas Orc	1588,5,0,0,0

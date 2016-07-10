@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== eAthena Script =======================================
 //= Kiel Warp Script (Kiel Buildings)
 //===== By: ==================================================
 //= Playtester; L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.6
 //===== Compatible With: =====================================
-//= rAthena Project; RO Episode 8+
+//= Any Athena Version; RO Episode 8+
 //===== Description: =========================================
 //= Warp Points for all Kiel Buildings
 //===== Additional Comments: =================================

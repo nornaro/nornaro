@@ -1,24 +1,22 @@
-//===== rAthena Script ======================================= 
+//===== eAthena Script ======================================= 
 //= Ayotaya Town
 //===== By: ================================================== 
 //= MasterOfMuppets
 //===== Current Version: =====================================
-//= 1.9
+//= 1.7
 //===== Compatible With: ===================================== 
-//= rAthena Project
+//= eAthena SVN
 //===== Description: ========================================= 
-//= [Official Conversion]
+//= [Aegis Conversion]
 //= Ayotaya Town Script
 //===== Additional Comments: ================================= 
 //= 1.6 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
 //= 1.7 Fixed character's anme bugs [Lupus]
-//= 1.8 Moved Alberta NPC to pre-re/re paths. [Euphy]
-//= 1.9 Updated Renewal warp coordinates.
 //============================================================ 
 
-// Ayothaya Transportation
-//============================================================
--	script	::Aibakthing_ayothaya	-1,{
+// Ayothaya Transportation NPC
+//============================================================ 
+alberta,247,42,3	script	Aibakthing#ayo	843,{
 	mes "[Aibakthing]";
 	mes "Hoo! Hah! Hoo! Hah!";
 	mes "Let me take you away to";
@@ -58,7 +56,7 @@
 				mes "Let us be off! Back to my";
 				mes "beautiful Ayotaya!";
 				close2;
-				set Zeny, Zeny-10000;
+				set zeny,zeny-10000;
 				warp "ayothaya",149,71;
 				end;
 			}
@@ -93,10 +91,7 @@ ayothaya,152,68,1	script	Aibakthing#ayo2	843,{
 		mes "[Aibakthing]";
 		mes "You will be welcome to come back whenever you please. I hope that we will see each other again sometime soon. Thank you~";
 		close2;
-		if (checkre(0))
-			warp "alberta",235,45;
-		else
-			warp "alberta",238,22;
+		warp "alberta",235,45;
 		end;
 	}
 	mes "[Aibakthing]";
@@ -106,7 +101,7 @@ ayothaya,152,68,1	script	Aibakthing#ayo2	843,{
 }
 
 // Generic Ayothaya NPCs
-//============================================================
+//============================================================ 
 ayothaya,189,120,3	script	Young Man#Thang	843,{
 	mes "[Thang]";
 	mes "There's an ancient,";
@@ -304,8 +299,8 @@ ayothaya,241,264,5	script	Young Man#5ayothaya2	843,{
 //= 0.1 Added a Sailor NPC to get back to Alberta [ZoDIaC]
 //= 0.2 fixed coords, dialogues
 //= 0.3 Fixed Warp name, ayotaya doesn't exist, even though iRO 
-//=     decided to call it Ayotaya, it really is Ayothaya, like 
-//=     that Yuno/Juno thing
+//= 	decided to call it Ayotaya, it really is Ayothaya, like 
+//=	that Yuno/Juno thing
 //= 0.4 Added the official warp npc for Ayothaya. [MasterOfMuppets]
 //= 1.0 Added most of the official npcs. The following quests were added: [MasterOfMuppets]
 //=     Tom Yum Goong quest, Holy Threads quest and Holier threads quest.

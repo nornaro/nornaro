@@ -1,24 +1,24 @@
-//===== rAthena Script ======================================= 
+//===== eAthena Script ======================================= 
 //= Quest NPCs related to Izlude
 //===== By: ================================================== 
-//= Evera and The rAthena Dev Team
+//= Evera and The eAthena Dev Team
 //= L0ne_W0lf
 //===== Current Version: ===================================== 
 //= 1.1
 //===== Compatible With: ===================================== 
-//= rAthena Project
+//= eAthena SVN
 //===== Description: ========================================= 
 //= Edgar's Offer:
-//= - [Official Conversion]
+//= - [Aegis conversion]
 //= - Variables in use: MISC_QUEST (Bit 16)
 //===== Additional Comments: ================================= 
 //= 1.0 Initial release [Evera]
 //= 1.1 Updated to 10.3 standard. [L0ne_W0lf]
 //============================================================
 
-// Edgar's Offer :: iz_npc
+// Edgar's Offer
 //============================================================
--	script	::Edgar_izlude	-1,{
+izlude,182,214,2	script	Edgar#izlude	49,{
 	if (MISC_QUEST & 16) {
 		mes "[Edgar]";
 		mes "So are you heading to Alberta again? Let me give you the same discount and only charge 250 Zeny, just like the last time.";
@@ -34,7 +34,7 @@
 				mes "get some more cash?";
 				close ;
 			}
-			set Zeny, Zeny-250;
+			set zeny,zeny-250;
 			warp "alberta",195,164;
 			end;
 		}
@@ -43,7 +43,7 @@
 		close;
 	}
 	mes "[Edgar]";
-	mes "My town, Izlude, is connected to Alberta by the harbor in the West. There is so much traffic between us, I almost become an Albertian.  Hehehe~";
+	mes "My town, Izlude,  is connected to Alberta by the harbor in the West. There is so much traffic between us, I almost become an Albertian.  Hehehe~";
 	next;
 	mes "[Edgar]";
 	mes "There's this guy I know pretty well, Phelix, who lives in Alberta. That guy is really stingy... He charges for everything!";
@@ -81,7 +81,7 @@
 				mes "some more.";
 				close;
 			}
-			set Zeny, Zeny-250;
+			set zeny,zeny-250;
 			warp "alberta",195,164;
 			end;
 		}

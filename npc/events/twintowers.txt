@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== eAthena Script =======================================
 //= Twin Towers NPCs
 //===== By: ==================================================
 //= sEiKaN (1.0)
 //===== Current Version: =====================================
 //= 1.6
 //===== Compatible With: =====================================
-//= rAthena Project; 0315+
+//= Any Athena Version; 0315+
 //===== Description: =========================================
 //= mRO Event: Twin Towers NPCs
 //===== Additional Comments: =================================
@@ -33,7 +33,7 @@ prontera,146,92,4	script	Twin Towers#tt1::Twin-Towers	812,{
 	next;
 	menu "I shall accept your offer.",YES,"I'll ask for your service next time.",NO;
 
-	NO:
+	NO:	
 	mes "[Twin Towers]"; 
 	mes "Er, what a pity. Traveling by yourself is still the best evidence of adventure.";
 	mes "Isn't this proving that you are still young?";
@@ -48,7 +48,7 @@ prontera,146,92,4	script	Twin Towers#tt1::Twin-Towers	812,{
 	mes "Forget all your troubles, and create a splendid legend in this wonderful world.";
 	mes "This is such a wonderful world, and you'll always be a great adventurer!";
 	close;
-	YES:
+	YES:	
 	mes "[Twin Towers]";
 	mes "The flaming passion of an adventurer,";
 	mes "The desire to explore the unknown realms,";
@@ -88,7 +88,7 @@ prontera,146,92,4	script	Twin Towers#tt1::Twin-Towers	812,{
 
 morocc,160,97,4	duplicate(Twin-Towers)	Twin Towers#tt2	812
 payon,176,226,4	duplicate(Twin-Towers)	Twin Towers#tt3	812
-izlude,134,92,4	duplicate(Twin-Towers)	Twin Towers#tt4	812
+izlude,134,123,4	duplicate(Twin-Towers)	Twin Towers#tt4	812
 alberta,25,238,4	duplicate(Twin-Towers)	Twin Towers#tt5	812
 geffen,120,60,4	duplicate(Twin-Towers)	Twin Towers#tt6	812
 aldebaran,143,116,4	duplicate(Twin-Towers)	Twin Towers#tt7	812

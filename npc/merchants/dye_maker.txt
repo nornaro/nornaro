@@ -1,14 +1,13 @@
-//===== rAthena Script ======================================= 
+//===== eAthena Script ======================================= 
 //= Dye Maker
 //===== By: ================================================== 
-//= rAthena Dev Team
+//= eAthena Dev Team
 //===== Current Version: ===================================== 
 //= 1.4
 //===== Compatible With: ===================================== 
-//= rAthena Project
+//= eAthena SVN
 //===== Description: ========================================= 
-//= [Official Conversion]
-//= Quests to create the eight colored Dyestuffs.
+//= [Aegis Conversion]
 //===== Additional Comments: ================================= 
 //= 1.0 Fully working [kobra_k88]
 //= 1.1 Spell Checked [Nexon] 
@@ -184,7 +183,7 @@ S_MakeDye:
 		// delete items
 		for (set .@i, 0; .@i < .@size ; set .@i, .@i+1)
 			delitem .@item[.@i], .@count[.@i];
-		set Zeny, Zeny-.@cost;
+		set zeny,zeny-.@cost;
 		// get dyestuff
 		getitem .@dyestuff,1;
 		

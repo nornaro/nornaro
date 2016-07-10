@@ -33,8 +33,9 @@
 // Main packet version of the DB to use (default = max available version)
 // Client detection is faster when all clients use this version.
 // Version 23 is the latest Sakexe (above versions are for Renewal clients)
-//packet_db_ver: 46
+//packet_db_ver: 23
 packet_db_ver: default
+
 
 packet_ver: 5
 0x0064,55
@@ -80,8 +81,8 @@ packet_ver: 5
 0x008c,-1,globalmessage,2:4
 0x008d,-1
 0x008e,-1
-//0x008f,-1
-0x0090,7,npcclicked,2:6
+//0x008f,0
+0x0090,7,npcclicked,2
 0x0091,22
 0x0092,28
 0x0093,2
@@ -107,10 +108,10 @@ packet_ver: 5
 0x00a7,8,useitem,2:4
 0x00a8,7
 0x00a9,6,equipitem,2:4
-0x00aa,7,ZC_WEAR_EQUIP_ACK,2:4:6
+0x00aa,7
 0x00ab,4,unequipitem,2
 0x00ac,7
-//0x00ad,-1
+//0x00ad,0
 0x00ae,-1
 0x00af,6
 0x00b0,8
@@ -195,7 +196,7 @@ packet_ver: 5
 0x00ff,10,replypartyinvite,2:6
 0x0100,2,leaveparty,0
 0x0101,6
-0x0102,6,partychangeoption,2
+0x0102,6,partychangeoption,2:4
 0x0103,30,removepartymember,2:6
 0x0104,79
 0x0105,31
@@ -240,7 +241,7 @@ packet_ver: 5
 0x012c,3
 0x012d,4
 0x012e,2,closevending,0
-0x012f,-1,openvending,2:4:0:84
+0x012f,-1
 0x0130,6,vendinglistreq,2
 0x0131,86
 0x0132,6
@@ -278,7 +279,7 @@ packet_ver: 5
 0x0152,-1
 0x0153,-1,guildchangeemblem,2:4
 0x0154,-1
-0x0155,-1,guildchangememberposition,2:4
+0x0155,-1,guildchangememberposition,2
 0x0156,-1
 0x0157,6
 0x0158,-1
@@ -290,14 +291,14 @@ packet_ver: 5
 0x015e,6
 0x015f,42
 0x0160,-1
-0x0161,-1,guildchangepositioninfo,2:4
+0x0161,-1,guildchangepositioninfo,2
 0x0162,-1
 0x0163,-1
 0x0164,-1
-0x0165,30,createguild,2:6
+0x0165,30,createguild,6
 0x0166,-1
 0x0167,3
-0x0168,14,guildinvite,2:6:10
+0x0168,14,guildinvite,2
 0x0169,3
 0x016a,30
 0x016b,10,guildreplyinvite,2:6
@@ -305,7 +306,7 @@ packet_ver: 5
 0x016d,14
 0x016e,186,guildchangenotice,2:6:66
 0x016f,182
-0x0170,14,guildrequestalliance,2:6:10
+0x0170,14,guildrequestalliance,2
 0x0171,30
 0x0172,10,guildreplyalliance,2:6
 0x0173,3
@@ -327,11 +328,11 @@ packet_ver: 5
 0x0183,10,guilddelalliance,2:6
 0x0184,10
 0x0185,34
-//0x0186,-1
+//0x0186,0
 0x0187,6
 0x0188,8
 0x0189,4
-0x018a,4,quitgame,2
+0x018a,4,quitgame,0
 0x018b,4
 0x018c,29
 0x018d,-1
@@ -350,7 +351,7 @@ packet_ver: 5
 0x019a,14
 0x019b,10
 0x019c,-1,localbroadcast,2:4
-0x019d,6,gmhide,2
+0x019d,6,gmhide,0
 0x019e,2
 0x019f,6,catchpet,2
 0x01a0,3
@@ -395,7 +396,7 @@ packet_ver: 5
 0x01c7,2
 0x01c8,13
 0x01c9,97
-//0x01ca,-1
+//0x01ca,0
 0x01cb,9
 0x01cc,9
 0x01cd,30
@@ -425,7 +426,7 @@ packet_ver: 5
 0x01e5,6
 0x01e6,26
 0x01e7,2,sndoridori,0
-0x01e8,28,createparty2,2:26:27
+0x01e8,28,createparty2,2
 0x01e9,81
 0x01ea,6
 0x01eb,10
@@ -440,9 +441,9 @@ packet_ver: 5
 0x01f4,32
 0x01f5,9
 0x01f6,34
-0x01f7,14,adoptreply,2:6:10
+0x01f7,14,adoptreply,0
 0x01f8,2
-0x01f9,6,adoptrequest,2
+0x01f9,6,adoptrequest,0
 0x01fa,48
 0x01fb,56
 0x01fc,-1
@@ -460,11 +461,9 @@ packet_ver: 5
 0x0208,11,friendslistreply,2:6:10
 0x0209,36
 0x020a,10
-//0x020b,-1
-//0x020c,-1
+//0x020b,0
+//0x020c,0
 0x020d,-1
-0x8b3,-1
-0x8d6,6,ZC_CLEAR_DIALOG,2
 
 //2004-07-05aSakexe
 packet_ver: 6
@@ -692,10 +691,10 @@ packet_ver: 15
 0x022c,64
 
 //2005-04-25aSakexe
-0x022d,5,hommenu,2:4
-0x0232,9,hommoveto,2:6
-0x0233,11,homattack,2:6:10
-0x0234,6,hommovetomaster,2
+0x022d,5,hommenu,4
+0x0232,9,hommoveto,6
+0x0233,11,homattack,0
+0x0234,6,hommovetomaster,0
 
 //2005-05-09aSakexe
 packet_ver: 16
@@ -734,9 +733,9 @@ packet_ver: 16
 0x0216,6
 0x0217,2,blacksmith,0
 0x022f,5
-0x0231,26,changehomunculusname,2
+0x0231,26,changehomunculusname,0
 0x023a,4
-0x023b,36,storagepassword,2:4:20
+0x023b,24,storagepassword,0
 0x023c,6
 
 //2005-06-22aSakexe
@@ -759,7 +758,7 @@ packet_ver: 17
 0x0113,33,useskilltopos,12:15:18:31
 0x0116,12,dropitem,3:10
 0x0190,24,actionrequest,11:23
-0x0216,-1
+0x0216,0
 0x023d,-1
 0x023e,4
 
@@ -794,10 +793,10 @@ packet_ver: 18
 0x0249,3
 0x024a,70
 0x024b,4,auctioncancelreg,2
-0x024c,8,auctionsetitem,2:4
+0x024c,8,auctionsetitem,0
 0x024d,14
-0x024e,6,auctioncancel,2
-0x024f,10,auctionbid,2:6
+0x024e,6,auctioncancel,0
+0x024f,10,auctionbid,0
 0x0250,3
 0x0251,2
 0x0252,-1
@@ -830,13 +829,13 @@ packet_ver: 19
 
 //2005-08-17aSakexe
 0x0253,3
-0x0254,3,feelsaveok,2
+0x0254,3,feelsaveok,0
 
 //2005-08-29aSakexe
 0x0240,-1
-0x0248,-1,mailsend,2:4:28:68:69
+0x0248,-1,mailsend,2:4:28:68
 0x0255,5
-0x0256,-1
+0x0256,0
 0x0257,8
 
 //2005-09-12bSakexe
@@ -847,12 +846,12 @@ packet_ver: 19
 //2005-10-10aSakexe
 0x020e,32
 0x025a,-1
-0x025b,6,cooking,2:4
+0x025b,6,cooking,0
 
 //2005-10-13aSakexe
 0x007a,6
 0x0251,32
-0x025c,4,auctionbuysell,2
+0x025c,4,auctionbuysell,0
 
 //2005-10-17aSakexe
 0x007a,58
@@ -864,8 +863,8 @@ packet_ver: 19
 0x0260,6
 
 //2005-11-07aSakexe
-0x024e,6,auctioncancel,2
-0x0251,34,auctionsearch,2:4:8:32
+0x024e,6,auctioncancel,0
+0x0251,34,auctionsearch,0
 
 //2006-01-09aSakexe
 0x0261,11
@@ -936,7 +935,7 @@ packet_ver: 20
 0x0285,6
 0x0286,4
 0x0287,-1
-0x0288,6
+0x0288,6,cashshopbuy,2:4
 0x0289,8
 0x028a,18
 0x028b,-1
@@ -958,9 +957,9 @@ packet_ver: 20
 0x029c,66
 0x029d,-1
 0x029e,11
-0x029f,3,mermenu,2
-0x02a0,-1
-0x02a1,-1
+0x029f,3,mermenu,0
+0x02a0,0
+0x02a1,0
 0x02a2,8
 
 //2007-01-08aSakexe
@@ -987,8 +986,8 @@ packet_ver: 21
 
 //2007-01-29aSakexe
 0x029b,72
-0x02a3,-1
-0x02a4,-1
+0x02a3,0
+0x02a4,0
 0x02a5,8
 
 // 2007-02-05aSakexe
@@ -1015,7 +1014,7 @@ packet_ver: 22
 0x0190,19,actionrequest,5:18
 
 //2007-05-07aSakexe
-0x01fd,15,repairitem,2:4:6:7:9:11:13
+0x01fd,15,repairitem,2
 
 //2007-02-27aSakexe to 2007-10-02aSakexe
 0x0288,10,cashshopbuy,2:4:6
@@ -1046,7 +1045,7 @@ packet_ver: 22
 0x02c5,30
 0x02c6,30
 0x02c7,7,replypartyinvite2,2:6
-0x02c8,3,partytick,2
+0x02c8,3
 0x02c9,3
 0x02ca,3
 0x02cb,20
@@ -1057,12 +1056,12 @@ packet_ver: 22
 0x02d0,-1
 0x02d1,-1
 0x02d2,-1
-0x02d3,4,ZC_NOTIFY_BIND_ON_EQUIP,2
+0x02d3,4
 0x02d4,29
 0x02d5,2
 0x02d6,6,viewplayerequip,2
 0x02d7,-1
-0x02d8,10,equiptickbox,2:6
+0x02d8,10,equiptickbox,6
 0x02d9,10
 0x02da,3
 0x02db,-1,battlechat,2:4
@@ -1108,8 +1107,8 @@ packet_ver: 22
 0x02ef,8
 
 //2008-03-18aSakexe
-0x02bf,-1
-0x02c0,-1
+0x02bf,0
+0x02c0,0
 0x02f0,10
 0x02f1,2,progressbar,0
 0x02f2,2
@@ -1312,7 +1311,7 @@ packet_ver: 23
 //2009-04-08aSakexe
 0x02a6,-1
 0x02a7,-1
-0x044a,6,clientversion,2
+0x044a,6
 
 //Renewal Clients
 //2008-08-27aRagexeRE
@@ -1388,7 +1387,7 @@ packet_ver: 25
 //0x0447,2
 
 //2009-06-03aRagexeRE
-0x07d7,8,partychangeoption,2:6:7
+0x07d7,8,partychangeoption,2:6
 0x07d8,8
 0x07d9,254
 0x07da,6,partychangeleader,2
@@ -1418,7 +1417,7 @@ packet_ver: 25
 
 //2009-08-18aRagexeRE
 0x07e3,6
-0x07e4,-1,itemlistwindowselected,2:4:8:12
+0x07e4,-1,itemlistwindowselected,2:4:8
 0x07e6,8
 
 //2009-08-25aRagexeRE
@@ -1434,7 +1433,7 @@ packet_ver: 25
 
 //2009-09-29aRagexeRE
 //0x07ea,2
-//0x07eb,-1
+//0x07eb,0
 //0x07ec,6
 //0x07ed,8
 //0x07ee,6
@@ -1453,7 +1452,7 @@ packet_ver: 25
 //0x07f4,3
 
 //2009-10-27aRagexeRE
-0x07f5,6,gmfullstrip,2
+0x07f5,6,gmreqaccname,2
 0x07f6,14
 
 //2009-11-03aRagexeRE
@@ -1468,13 +1467,13 @@ packet_ver: 25
 0x07fb,25
 
 //2009-12-01aRagexeRE
-0x07fc,10
+//0x07fc,10
 //0x07fd,-1
 0x07fe,26
 //0x07ff,-1
 
 //2009-12-15aRagexeRE
-0x0800,-1
+//0x0800,-1
 //0x0801,-1
 
 //2009-12-22aRagexeRE
@@ -1586,7 +1585,7 @@ packet_ver: 25
 //0x083F,22
 
 //2010-06-29aRagexeRE
-0x00AA,9,ZC_WEAR_EQUIP_ACK,2:4:6:8
+0x00AA,9
 //0x07F1,18
 //0x07F2,8
 //0x07F3,6
@@ -1605,16 +1604,16 @@ packet_ver: 25
 //0x0841,19
 
 //2010-07-14aRagexeRE
-//0x0841,4
+//0x841,4
 
 //2010-08-03aRagexeRE
+0x0288,-1,cashshopbuy,2:4:8
 0x0839,66
 0x0842,6,recall2,2
 0x0843,6,remove2,2
 
 //2010-11-24aRagexeRE
 packet_ver: 26
-0x0288,-1,cashshopbuy,2:4:8:10
 0x0436,19,wanttoconnection,2:6:10:14:18
 0x035f,5,walktoxy,2
 0x0360,6,ticksend,2
@@ -1631,92 +1630,95 @@ packet_ver: 26
 0x0857,-1
 0x0858,-1
 0x0859,-1
-0x08d0,9,ZC_WEAR_EQUIP_ACK,2:4:6:8
 
-//2011-10-05aRagexeRE
+//Add new packets here
 packet_ver: 27
-0x0364,5,walktoxy,2
-0x0817,6,ticksend,2
-0x0366,5,changedir,2:4
-0x0815,6,takeitem,2
-0x0885,6,dropitem,2:4
-0x0893,8,movetokafra,2:4
-0x0897,8,movefromkafra,2:4
-0x0369,10,useskilltopos,2:4:6:8
-0x08ad,90,useskilltoposinfo,2:4:6:8:10
-0x088a,6,getcharnamerequest,2
-0x0838,6,solvecharname,2
-0x0439,8,useitem,2:4
-0x08d2,10
-0x08d1,7
-0x0846,4,cashshopreqtab,2 //2011-07-18
-
-// 2011-11-02aRagexe
-packet_ver: 28
-0x0436,26,friendslistadd,2
-0x0898,5,hommenu,2:4
-0x0281,36,storagepassword,2:4:20
-0x088d,26,partyinvite2,2
-0x083c,19,wanttoconnection,2:6:10:14:18
-0x08aa,7,actionrequest,2:6
-0x02c4,10,useskilltoid,2:4:6
-0x0811,-1,itemlistwindowselected,2:4:8:12
-0x0890,8
-0x08a5,18,bookingregreq,2:4:6
-0x0835,-1,reqopenbuyingstore,2:4:8:9:89
-0x089b,2,reqclosebuyingstore,0
-0x08a1,6,reqclickbuyingstore,2
-0x089e,-1,reqtradebuyingstore,2:4:8:12
-0x08ab,-1,searchstoreinfo,2:4:5:9:13:14:15
-0x088b,2,searchstoreinfonextpage,0
-0x08a2,12,searchstoreinfolistitemclick,2:6:10
-0x08cf,10 //Amulet spirits
-
-//2012-03-07fRagexeRE
-packet_ver:29
-0x086A,19,wanttoconnection,2:6:10:14:18
+0x022d,19,wanttoconnection,2:6:10:14:18
 0x0437,5,walktoxy,2
-0x0887,6,ticksend,2
-0x0890,5,changedir,2:4
-0x0865,6,takeitem,2
-0x02C4,6,dropitem,2:4
-0x093B,8,movetokafra,2:4
-0x0963,8,movefromkafra,2:4
-0x0438,10,useskilltopos,2:4:6:8
+0x035f,6,ticksend,2
+0x0893,5,changedir,2:4
+0x07e4,6,takeitem,2
+0x0362,6,dropitem,2:4
+0x07ec,8,movetokafra,2:4
+0x0364,8,movefromkafra,2:4
+0x0202,10,useskilltopos,2:4:6:8
 0x0366,90,useskilltoposinfo,2:4:6:8:10
-0x096A,6,getcharnamerequest,2
+0x08ad,6,getcharnamerequest,2
 0x0368,6,solvecharname,2
-0x0369,26,friendslistadd,2
-0x0863,5,hommenu,2:4
-0x0861,36,storagepassword,2:4:20
-0x0929,26,partyinvite2,2
-0x0885,7,actionrequest,2:6
-0x0889,10,useskilltoid,2:4:6
-0x0870,-1,itemlistwindowselected,2:4:8:12
-//0x0926,41,bookingregreq,2:4:6
-0x0815,-1,reqopenbuyingstore,2:4:8:9:89
-0x0817,2,reqclosebuyingstore,0
-0x0360,6,reqclickbuyingstore,2
-0x0811,-1,reqtradebuyingstore,2:4:8:12
-0x0884,-1,searchstoreinfo,2:4:5:9:13:14:15
-0x0835,2,searchstoreinfonextpage,0
-0x0838,12,searchstoreinfolistitemclick,2:6:10
-0x0439,8,useitem,2:4
-0x0365,41,bookingregreq,2:4:6
-
-//2012-04-10aRagexeRE
-packet_ver: 30
-0x01fd,15,repairitem,2:4:6:7:9:11:13
-0x089c,26,friendslistadd,2
-0x0885,5,hommenu,2:4
-0x0961,36,storagepassword,2:4:20
-0x0288,-1,cashshopbuy,2:4:8:10
-0x091c,26,partyinvite2,2
-0x094b,19,wanttoconnection,2:6:10:14:18
 0x0369,7,actionrequest,2:6
 0x083c,10,useskilltoid,2:4:6
+
+// Unknown
+//0x08C7,-1
+//0x08C8,34
+//0x08C9,2
+//0x08CA,-1
+//0x08CB,-1
+//0x08CC,109
+//0x08CD,2
+//0x08CE,10
+//0x08CF,9
+//0x08D0,7
+//0x08D1,10
+//0x08D2,10
+//0x08D3,14
+//0x08D4,-1
+
+packet_ver: 28
+//2011-11-22aRagexeRE
+0x0835,19,wanttoconnection,2:6:10:14:18
+0x0898,6,getcharnamerequest,2
+0x035f,6,solvecharname,2
+0x0899,6,ticksend,2
+0x0896,5,changedir,2:4
+0x0892,5,walktoxy,2
+0x022d,7,actionrequest,2:6
+0x08a1,10,useskilltoid,2:4:6
+0x08ad,10,useskilltopos,2:4:6:8
+0x0363,90,useskilltoposinfo,2:4:6:8:10
+0x0436,6,dropitem,2:4
+0x0893,6,takeitem,2
+0x0891,26,friendslistadd,2
+0x089e,5,hommenu,4
+0x0895,26,partyinvite2,2
+0x0364,36,storagepassword,0
+0x0202,18,bookingregreq,2:4:6
+0x0804,14,bookingsearchreq,2:4:6:8:12
+0x0808,14,bookingupdatereq,2
+0x0806,2,bookingdelreq,0
+0x0369,-1,itemlistwindowselected,2:4:8
+0x0887,-1,reqopenbuyingstore,2:4:8:9:89
+0x08a9,2,reqclosebuyingstore,0
+0x088c,6,reqclickbuyingstore,2
+0x089d,-1,reqtradebuyingstore,2:4:8:12
 0x0439,8,useitem,2:4
-0x0945,-1,itemlistwindowselected,2:4:8:12
+0x01fd,15,repairitem,2
+0x07ec,-1,searchstoreinfo,2:4:5:9:13:14:15
+0x0815,2,searchstoreinfonextpage,0
+0x0366,12,searchstoreinfolistitemclick,2:6:10
+0x0907,5,moveitem,2:4
+0x08a4,8,movetokafra,2:4
+0x0362,8,movefromkafra,2:4
+0x0803,4
+0x0805,-1
+0x0807,4
+0x0809,50
+0x080a,18
+0x080b,6
+0x0908,5
+
+//2012-04-10aRagexeRE
+packet_ver: 29
+0x01FD,15,repairitem,2
+0x089C,26,friendslistadd,2
+0x0885,5,hommenu,4
+0x0961,36,storagepassword,0
+0x091C,26,partyinvite2,2
+0x094B,19,wanttoconnection,2:6:10:14:18
+0x0369,7,actionrequest,2:6
+0x083C,10,useskilltoid,2:4:6
+0x0439,8,useitem,2:4
+0x0945,-1,itemlistwindowselected,2:4:8
 0x0815,-1,reqopenbuyingstore,2:4:8:9:89
 0x0817,2,reqclosebuyingstore,0
 0x0360,6,reqclickbuyingstore,2
@@ -1729,505 +1731,190 @@ packet_ver: 30
 0x0871,5,changedir,2:4
 0x0938,6,takeitem,2
 0x0891,6,dropitem,2:4
-0x086c,8,movetokafra,2:4
-0x08a6,8,movefromkafra,2:4
+0x086C,8,movetokafra,2:4
+0x08A6,8,movefromkafra,2:4
 0x0438,10,useskilltopos,2:4:6:8
 0x0366,90,useskilltoposinfo,2:4:6:8:10
 0x0889,6,getcharnamerequest,2
 0x0884,6,solvecharname,2
-0x08e6,4
-0x08e7,10,bookingsearchreq,2:4:6:8:12
-0x08e8,-1
-0x08e9,2,bookingdelreq,0
-0x08ea,4
-0x08eb,39,bookingupdatereq,2
-0x08ec,73
-0x08ed,43
-0x08ee,6
-0x08ef,6,bookingignorereq,2
-0x08f0,6
-0x08f1,6,bookingjoinpartyreq,2
-0x08f2,36
-0x08f3,-1
-0x08f4,6
-0x08f5,-1,bookingsummonmember,2:4
-0x08f6,22
-0x08f7,3
-0x08f8,7
-0x08f9,6
-0x08fa,6
-0x08fb,6,bookingcanceljoinparty,2
+0x08E5,41,bookingregreq,2:4	//Added to prevent disconnections
+0x08E6,4
+0x08E7,10,bookingsearchreq,2
+0x08E8,-1
+0x08E9,2,bookingdelreq,2
+0x08EA,4
+0x08EB,39,bookingupdatereq,2
+0x08EC,73
+0x08ED,43
+0x08EE,6
+0x08EF,6,bookingignorereq,2
+0x08F0,6
+0x08F1,6,bookingjoinpartyreq,2
+0x08F2,36
+0x08F3,-1
+0x08F4,6
+0x08F5,-1,bookingsummonmember,2:4
+0x08F6,22
+0x08F7,3
+0x08F8,7
+0x08F9,6
+0x08FA,6
+0x08FB,6,bookingcanceljoinparty,2
 0x0907,5,moveitem,2:4
 0x0908,5
-0x08d7,28,battlegroundreg,2:4
+0x08D7,28,battlegroundreg,2:4 //Added to prevent disconnections
+0x08CF,10 //Attribute Sphere
 0x0977,14 //Monster HP Bar
-0x0916,26,guildinvite2,2
-0x091d,41,bookingregreq,2:4:6
-0x08cb,10,ZC_PERSONAL_INFOMATION,2:4:6:8:10:11:13:15 //Still need further information
+0x8d2,10 //Fast Movement
 
-//2012-04-18aRagexeRE [Special Thanks to Judas!]
-packet_ver: 31
-0x023B,26,friendslistadd,2
-0x0361,5,hommenu,2:4
-0x08A8,36,storagepassword,2:4:20
-0x0802,26,partyinvite2,2
-0x022D,19,wanttoconnection,2:6:10:14:18
-0x0281,-1,itemlistwindowselected,2:4:8:12
-0x035F,6,ticksend,2
+//2013-12-23cRagexe
+packet_ver: 30
+0x0369,7,actionrequest,2:6
+0x083c,10,useskilltoid,2:4:6
+0x0437,5,walktoxy,2
+0x035f,6,ticksend,2
 0x0202,5,changedir,2:4
-0x07E4,6,takeitem,2
+0x07e4,6,takeitem,2
 0x0362,6,dropitem,2:4
-0x07EC,8,movetokafra,2:4
+0x07ec,8,movetokafra,2:4
 0x0364,8,movefromkafra,2:4
-0x096A,6,getcharnamerequest,2
+0x0438,10,useskilltopos,2:4:6:8
+0x0366,90,useskilltoposmoreinfo,2:4:6:8:10
+0x096a,6,getcharnamerequest,2
 0x0368,6,solvecharname,2
-0x08E5,41,bookingregreq,2:4:6    //Added to prevent disconnections
-0x08d2,10
-
-//2012-06-18
-packet_ver: 32
-0x0983,29 // ZC_MSG_STATE_CHANGE3
-0x0861,41,bookingregreq,2:4:6 //actually 12-05-03
-
-//2012-07-02aRagexeRE (unstable)
-packet_ver: 33
-0x0363,19,wanttoconnection,2:6:10:14:18
-0x0364,6,ticksend,2
-0x085a,7,actionrequest,2:6
-0x0861,8,movefromkafra,2:4
-0x0862,10,useskilltoid,2:4:6
-0x0863,10,useskilltopos,2:4:6:8
-0x0886,6,solvecharname,2
-0x0889,90,useskilltoposinfo,2:4:6:8:10
-0x089e,6,dropitem,2:4
-0x089f,6,takeitem,2
-0x08a0,8,movetokafra,2:4
-0x094a,6,getcharnamerequest,2
-0x0953,5,walktoxy,2
-0x0960,5,changedir,2:4
-0x0879,41,bookingregreq,2:4:6
-
-//2013-03-20Ragexe (Judas)
-packet_ver: 34
-0x014f,6,guildrequestinfo,2
-0x01fd,15,repairitem,2:4:6:7:9:11:13
-//0x0281,-1,itemlistwindowselected,2:4:8:12
-0x035f,6,reqclickbuyingstore,2
-0x0363,6,ticksend,2
-0x0365,12,searchstoreinfolistitemclick,2:6:10
-0x0438,6,dropitem,2:4
-0x0447,2,booking_playcancel,0 // CZ_BLOCKING_PLAY_CANCEL
-0x044A,6,clientversion,2
-0x0844,2,cashshopopen,0
-0x0849,16 //clif_cashshop_result
-0x0848,-1,cashshopbuy,2:6:4:10
-0x084a,2,cashshopclose,0
-0x084b,19 //fallitem4
-0x085a,90,useskilltoposinfo,2:4:6:8:10
-0x085d,18,bookingregreq,2:4:6
-0x0868,-1,itemlistwindowselected,2:4:8:12
-0x086d,26,partyinvite2,2
-0x086f,26,friendslistadd,2
-0x0874,8,movefromkafra,2:4
-0x0881,5,walktoxy,2
-0x0886,2,reqclosebuyingstore,0
-0x0888,19,wanttoconnection,2:6:10:14:18
-0x088e,7,actionrequest,2:6
-0x0897,5,changedir,2:4
-0x0898,6,getcharnamerequest,2
-0x089b,10,useskilltoid,2:4:6
-0x08ac,8,movetokafra,2:4
-0x08c9,2,cashshopitemlist,0
-0x08cf,10 //Amulet spirits
-0x08d2,10
-0x0907,5,moveitem,2:4
-0x0908,5
-0x090f,-1 // notify_newentry7
-0x0914,-1 // notify_moveentry
-0x0915,-1 // notify_standentry
-0x0922,-1,reqtradebuyingstore,2:4:8:12
-//0x092e,2,searchstoreinfonextpage,0
-0x0933,6,takeitem,2
-0x0938,-1,reqopenbuyingstore,2:4:8:9:89
-0x093f,5,hommenu,2:4
-0x0947,36,storagepassword,2:4:20
-0x094c,6,solvecharname,2
-0x094e,-1,searchstoreinfo,2:4:5:9:13:14:15
-0x0959,10,useskilltopos,2:4:6:8
-//0x095a,8,mailsetattach,2:4
-0x0977,14 //Monster HP Bar
-0x0978,6,reqworldinfo,2
-0x0979,50 //ackworldinfo
-0x097b,16,ZC_PERSONAL_INFOMATION,2:4:8:12:16:17:21:25 //Still need further information
-//0x0981,12,ZC_PERSONAL_INFOMATION_CHN,2:4:6:8:12:13:15:17:10 // Disabled until further information is found.
-0x0990,31 //additem
-0x0991,-1 //inv itemlist normal
-0x0992,-1 //inv itemlist equip
-0x0993,-1 //cart itemlist normal
-0x0994,-1 //cart itemlist equip
-0x0995,-1 //store itemlist normal
-0x0996,-1 //store itemlist equip
-0x0997,-1 //ZC_EQUIPWIN_MICROSCOPE_V5
-0x0998,8,equipitem,2:4 // CZ_REQ_WEAR_EQUIP_V5
-0x0999,11,ZC_WEAR_EQUIP_ACK,2:4:8:10 // cz_wear_equipv5
-0x099a,9 // take_off_equipv5
-0x099b,8 //maptypeproperty2
+0x0838,12,searchstoreinfolistitemclick,2:6:10
+0x0835,2,searchstoreinfonextpage,0
+0x0819,-1,searchstoreinfo,2:4:5:9:13:14:15
+0x0811,-1,reqtradebuyingstore,2:4:8:12
+0x0360,6,reqclickbuyingstore,2
+0x0817,2,reqclosebuyingstore,0
+0x0815,-1,reqopenbuyingstore,2:4:8:9:89
+0x0365,18,partybookingregisterreq,2:4
+// 0x0363,8 // CZ_JOIN_BATTLE_FIELD
+0x0281,-1,itemlistwindowselected,2:4:8
+0x022d,19,wanttoconnection,2:6:10:14:18
+0x0802,26,partyinvite2,2
+// 0x0436,4 // CZ_GANGSI_RANK
+0x023b,26,friendslistadd,2
+0x0361,5,hommenu,4
+0x08a4,36,storagepassword,0
 
 // New Packets
+0x08c8,34//ZC_NOTIFY_ACT3
 0x08ff,24 // ZC_EFST_SET_ENTER
+0x097c,4,ranking,2//CZ_REQ_RANKING
+0x097d,288//ZC_ACK_RANKING
+0x097e,12//ZC_UPDATE_RANKING_POINT
+0x0983,29 // ZC_MSG_STATE_CHANGE3
 0x0984,28 // ZC_EFST_SET_ENTER2
+0x0990,31 // ZC_ITEM_PICKUP_ACK_V5
+0x0991,-1 // ZC_INVENTORY_ITEMLIST_NORMAL_V5
+0x0992,-1 // ZC_INVENTORY_ITEMLIST_EQUIP_V5
+0x0993,-1 // ZC_CART_ITEMLIST_NORMAL_V5
+0x0994,-1 // ZC_CART_ITEMLIST_EQUIP_V5
+0x0995,-1 // ZC_STORE_ITEMLIST_NORMAL_V5
+0x0996,-1 // ZC_STORE_ITEMLIST_EQUIP_V5
+0x0997,-1 // ZC_EQUIPWIN_MICROSCOPE_V5
+0x0998,8,equipitem,2:4 // CZ_REQ_WEAR_EQUIP_V5
+0x0999,11 // ZC_ACK_WEAR_EQUIP_V5
+0x099a,9 // ZC_ACK_TAKEOFF_EQUIP_V5
+0x099b,8 // ZC_MAPPROPERTY_R2
 0x099f,22 // ZC_SKILL_ENTRY4
-
-//2013-05-15aRagexe (Yommy)
-packet_ver: 35
-0x0369,7,actionrequest,2:6
-0x083C,10,useskilltoid,2:4:6
-0x0437,5,walktoxy,2
-0x035F,6,ticksend,2
-0x0362,5,changedir,2:4
-0x08A1,6,takeitem,2
-0x0944,6,dropitem,2:4
-0x0887,8,movetokafra,2:4
-0x08AC,8,movefromkafra,2:4
-0x0438,10,useskilltopos,2:4:6:8
-0x0366,90,useskilltoposinfo,2:4:6:8:10
-0x096A,6,getcharnamerequest,2
-0x0368,6,solvecharname,2
-0x0838,12,searchstoreinfolistitemclick,2:6:10
-0x0835,2,searchstoreinfonextpage,0
-0x0819,-1,searchstoreinfo,2:4:5:9:13:14:15
-0x0811,-1,reqtradebuyingstore,2:4:8:12
-0x0360,6,reqclickbuyingstore,2
-0x0817,2,reqclosebuyingstore,0
-0x0815,-1,reqopenbuyingstore,2:4:8:9:89
-0x092D,18,bookingregreq,2:4:6
-//0x08AA,8 CZ_JOIN_BATTLE_FIELD
-0x0963,-1,itemlistwindowselected,2:4:8:12
-0x0943,19,wanttoconnection,2:6:10:14:18
-0x0947,26,partyinvite2,2
-//0x0862,4 CZ_GANGSI_RANK
-0x0962,26,friendslistadd,2
-0x0931,5,hommenu,2:4
-0x093e,36,storagepassword,2:4:20
-
-//2013-05-22Ragexe (Yommy)
-packet_ver: 36
-0x08A2,7,actionrequest,2:6
-0x095C,10,useskilltoid,2:4:6
-0x0360,5,walktoxy,2
-0x07EC,6,ticksend,2
-0x0925,5,changedir,2:4
-0x095E,6,takeitem,2
-0x089C,6,dropitem,2:4
-0x08a3,8,movetokafra,2:4
-0x087E,8,movefromkafra,2:4
-0x0811,10,useskilltopos,2:4:6:8
-0x0964,90,useskilltoposinfo,2:4:6:8:10
-0x08a6,6,getcharnamerequest,2
-0x0369,6,solvecharname,2
-0x093e,12,searchstoreinfolistitemclick,2:6:10
-0x08aa,2,searchstoreinfonextpage,0
-0x095b,-1,searchstoreinfo,2:4:5:9:13:14:15
-0x0952,-1,reqtradebuyingstore,2:4:8:12
-0x0368,6,reqclickbuyingstore,2
-0x086E,2,reqclosebuyingstore,0
-0x0874,-1,reqopenbuyingstore,2:4:8:9:89
-0x089B,18,bookingregreq,2:4:6
-//0x0965,8 CZ_JOIN_BATTLE_FIELD
-0x086A,-1,itemlistwindowselected,2:4:8:12
-0x08A9,19,wanttoconnection,2:6:10:14:18
-0x0950,26,partyinvite2,2
-//0x08AC,4 CZ_GANGSI_RANK
-0x0362,26,friendslistadd,2
-0x0926,5,hommenu,2:4
-0x088e,36,storagepassword,2:4:20
-
-//2013-05-29Ragexe (Shakto)
-packet_ver: 37
-0x0890,7,actionrequest,2:6
-0x0438,10,useskilltoid,2:4:6
-0x0876,5,walktoxy,2
-0x0897,6,ticksend,2
-0x0951,5,changedir,2:4
-0x0895,6,takeitem,2
-0x08A7,6,dropitem,2:4
-0x0938,8,movetokafra,2:4
-0x0957,8,movefromkafra,2:4
-0x0917,10,useskilltopos,2:4:6:8
-0x085E,90,useskilltoposinfo,2:4:6:8:10
-0x0863,6,getcharnamerequest,2
-0x0937,6,solvecharname,2
-0x085A,12,searchstoreinfolistitemclick,2:6:10
-0x0941,2,searchstoreinfonextpage,0
-0x0918,-1,searchstoreinfo,2:4:5:9:13:14:15
-0x0936,-1,reqtradebuyingstore,2:4:8:12
-0x0892,6,reqclickbuyingstore,2
-0x0964,2,reqclosebuyingstore,0
-0x0869,-1,reqopenbuyingstore,2:4:8:9:89
-0x0874,18,bookingregreq,2,4:6
-//0x088E,8 // CZ_JOIN_BATTLE_FIELD
-0x0958,-1,itemlistwindowselected,2:4:8:12
-0x0919,19,wanttoconnection,2:6:10:14:18
-0x08A8,26,partyinvite2,2
-//0x0888,4 // CZ_GANGSI_RANK
-0x0877,26,friendslistadd,2
-0x023B,5,hommenu,2:4
-0x0956,36,storagepassword,2:4:20
-
-//2013-06-05Ragexe (Shakto)
-packet_ver: 38
-0x0369,7,actionrequest,2:6
-0x083C,10,useskilltoid,2:4:6
-0x0437,5,walktoxy,2
-0x035F,6,ticksend,2
-0x0202,5,changedir,2:4
-0x07E4,6,takeitem,2
-0x0362,6,dropitem,2:4
-0x07EC,8,movetokafra,2:4
-0x0364,8,movefromkafra,2:4
-0x0438,10,useskilltopos,2:4:6:8
-0x0366,90,useskilltoposinfo,2:4:6:8:10
-0x096A,6,getcharnamerequest,2
-0x0368,6,solvecharname,2
-0x0838,12,searchstoreinfolistitemclick,2:6:10
-0x0835,2,searchstoreinfonextpage,0
-0x0819,-1,searchstoreinfo,2:4:5:9:13:14:15
-0x0811,-1,reqtradebuyingstore,2:4:8:12
-0x0360,6,reqclickbuyingstore,2
-0x0817,2,reqclosebuyingstore,0
-0x0815,-1,reqopenbuyingstore,2:4:8:9:89
-0x0365,18,bookingregreq,2:4:6
-//0x0363,8 // CZ_JOIN_BATTLE_FIELD
-0x0281,-1,itemlistwindowselected,2:4:8:12
-0x022D,19,wanttoconnection,2:6:10:14:18
-0x0802,26,partyinvite2,2
-//0x0436,4 // CZ_GANGSI_RANK
-0x023B,26,friendslistadd,2
-0x0361,5,hommenu,2,4
-0x0883,36,storagepassword,2:4:20
-0x097C,4,ranklist,2
-
-//2013-06-12Ragexe (Shakto)
-packet_ver: 39
-0x0369,7,actionrequest,2:6
-0x083C,10,useskilltoid,2:4:6
-0x0437,5,walktoxy,2
-0x035F,6,ticksend,2
-0x087E,5,changedir,2:4
-0x07E4,6,takeitem,2
-0x0362,6,dropitem,2:4
-0x07EC,8,movetokafra,2:4
-0x0364,8,movefromkafra,2:4
-0x0438,10,useskilltopos,2:4:6:8
-0x0366,90,useskilltoposinfo,2:4:6:8:10
-0x096A,6,getcharnamerequest,2
-0x0368,6,solvecharname,2
-0x0838,12,searchstoreinfolistitemclick,2:6:10
-0x0835,2,searchstoreinfonextpage,0
-0x0819,-1,searchstoreinfo,2:4:5:9:13:14:15
-0x0811,-1,reqtradebuyingstore,2:4:8:12
-0x0360,6,reqclickbuyingstore,2
-0x0817,2,reqclosebuyingstore,0
-0x0815,-1,reqopenbuyingstore,2:4:8:9:89
-0x0365,18,bookingregreq,2:4:6
-//0x0363,8 // CZ_JOIN_BATTLE_FIELD
-0x0281,-1,itemlistwindowselected,2:4:8:12
-0x0919,19,wanttoconnection,2:6:10:14:18
-0x0802,26,partyinvite2,2
-//0x0436,4 // CZ_GANGSI_RANK
-0x0940,26,friendslistadd,2
-0x093A,5,hommenu,2:4
-0x0964,36,storagepassword,2:4:20
-
-//2013-06-18Ragexe (Shakto)
-packet_ver: 40
-0x0889,7,actionrequest,2:6
-0x0951,10,useskilltoid,2:4:6
-0x088E,5,walktoxy,2
-0x0930,6,ticksend,2
-0x08A6,5,changedir,2:4
-0x0962,6,takeitem,2
-0x0917,6,dropitem,2:4
-0x0885,8,movetokafra,2:4
-0x0936,8,movefromkafra,2:4
-0x096A,10,useskilltopos,2:4:6:8
-0x094F,90,useskilltoposinfo,2:4:6:8:10
-0x0944,6,getcharnamerequest,2
-0x0945,6,solvecharname,2
-0x0890,12,searchstoreinfolistitemclick,2:6:10
-0x0363,2,searchstoreinfonextpage,0
-0x0281,-1,searchstoreinfo,2:4:5:9:13:14:15
-0x0891,-1,reqtradebuyingstore,2:4:8:12
-0x0862,6,reqclickbuyingstore,2
-0x085A,2,reqclosebuyingstore,0
-0x0932,-1,reqopenbuyingstore,2:4:8:9:89
-0x08A7,18,bookingregreq,2:4:6
-//0x087A,8 // CZ_JOIN_BATTLE_FIELD
-0x0942,-1,itemlistwindowselected,2:4:8:12
-0x095B,19,wanttoconnection,2:6:10:14:18
-0x0887,26,partyinvite2,2
-//0x0878,4 // CZ_GANGSI_RANK
-0x0953,26,friendslistadd,2
-0x02C4,5,hommenu,2:4
-0x0864,36,storagepassword,2:4:20
-
-//2013-06-26Ragexe
-packet_ver: 41
-0x0369,7,actionrequest,2:6
-0x083C,10,useskilltoid,2:4:6
-0x0437,5,walktoxy,2
-0x035F,6,ticksend,2
-0x094D,5,changedir,2:4
-0x088B,6,takeitem,2
-0x0952,6,dropitem,2:4
-0x0921,8,movetokafra,2:4
-0x0817,8,movefromkafra,2:4
-0x0438,10,useskilltopos,2:4:6:8
-0x0366,90,useskilltoposinfo,2:4:6:8:10
-0x096A,6,getcharnamerequest,2
-0x0368,6,solvecharname,2
-0x0838,12,searchstoreinfolistitemclick,2:6:10
-0x0835,2,searchstoreinfonextpage,0
-0x0819,-1,searchstoreinfo,2:4:5:9:13:14:15
-0x0811,-1,reqtradebuyingstore,2:4:8:12
-0x0360,6,reqclickbuyingstore,2
-0x0365,2,reqclosebuyingstore,0
-0x0815,-1,reqopenbuyingstore,2:4:8:9:89
-0x0894,18,bookingregreq,2:4:6
-//0x0860,8 // CZ_JOIN_BATTLE_FIELD
-0x08A5,-1,itemlistwindowselected,2:4:8:12
-0x088C,19,wanttoconnection,2:6:10:14:18
-0x0895,26,partyinvite2,2
-//0x088F,4 // CZ_GANGSI_RANK
-0x08AB,26,friendslistadd,2
-0x0960,5,hommenu,2:4
-0x0930,36,storagepassword,2:4:20
-
-//2013-07-03Ragexe
-packet_ver: 42
-0x0369,7,actionrequest,2:6
-0x083C,10,useskilltoid,2:4:6
-0x0437,5,walktoxy,2
-0x035F,6,ticksend,2
-0x0930,5,changedir,2:4
-0x07E4,6,takeitem,2
-0x0362,6,dropitem,2:4
-0x07EC,8,movetokafra,2:4
-0x0364,8,movefromkafra,2:4
-0x0438,10,useskilltopos,2:4:6:8
-0x0366,90,useskilltoposinfo,2:4:6:8:10
-0x096A,6,getcharnamerequest,2
-0x0368,6,solvecharname,2
-0x0838,12,searchstoreinfolistitemclick,2:6:10
-0x0835,2,searchstoreinfonextpage,0
-0x0819,-1,searchstoreinfo,2:4:5:9:13:14:15
-0x0811,-1,reqtradebuyingstore,2:4:8:12
-0x0202,6,reqclickbuyingstore,2
-0x0817,2,reqclosebuyingstore,0
-0x0815,-1,reqopenbuyingstore,2:4:8:9:89
-0x0365,18,bookingregreq,2:4:6
-//0x0363,8 // CZ_JOIN_BATTLE_FIELD
-0x0281,-1,itemlistwindowselected,2:4:8:12
-0x022D,19,wanttoconnection,2:6:10:14:18
-0x0802,26,partyinvite2,2
-//0x0436,4 // CZ_GANGSI_RANK
-0x0360,26,friendslistadd,2
-0x094A,5,hommenu,2:4
-0x0873,36,storagepassword,2:4:20
-
-//2013-07-10Ragexe
-packet_ver: 43
-0x0369,7,actionrequest,2:6
-0x083C,10,useskilltoid,2:4:6
-0x0437,5,walktoxy,2
-0x035F,6,ticksend,2
-0x0202,5,changedir,2:4
-0x07E4,6,takeitem,2
-0x0362,6,dropitem,2:4
-0x07EC,8,movetokafra,2:4
-0x0364,8,movefromkafra,2:4
-0x0438,10,useskilltopos,2:4:6:8
-0x0366,90,useskilltoposinfo,2:4:6:8:10
-0x096A,6,getcharnamerequest,2
-0x0368,6,solvecharname,2
-0x0838,12,searchstoreinfolistitemclick,2:6:10
-0x0835,2,searchstoreinfonextpage,0
-0x0819,-1,searchstoreinfo,2:4:5:9:13:14:15
-0x0811,-1,reqtradebuyingstore,2:4:8:12
-0x0360,6,reqclickbuyingstore,2
-0x0817,2,reqclosebuyingstore,0
-0x0815,-1,reqopenbuyingstore,2:4:8:9:89
-0x0365,18,bookingregreq,2:4:6
-//0x0363,8 // CZ_JOIN_BATTLE_FIELD
-0x0281,-1,itemlistwindowselected,2:4:8:12
-0x022D,19,wanttoconnection,2:6:10:14:18
-0x0802,26,partyinvite2,2
-//0x0436,4 // CZ_GANGSI_RANK
-0x023B,26,friendslistadd,2
-0x0361,5,hommenu,2:4
-0x0880,36,storagepassword,2:4:20
-0x0848,-1,cashshopbuy,2:6:4:10
-0x097D,288 //ZC_ACK_RANKING
-
-//2013-07-17Ragexe
-packet_ver: 44
-0x0918,7,actionrequest,2:6
-0x091E,10,useskilltoid,2:4:6
-0x083C,5,walktoxy,2
-0x02C4,6,ticksend,2
-0x088C,5,changedir,2:4
-0x08A9,6,takeitem,2
-0x0917,6,dropitem,2:4
-0x089B,8,movetokafra,2:4
-0x0956,8,movefromkafra,2:4
-0x0882,10,useskilltopos,2:4:6:8
-0x0952,90,useskilltoposinfo,2:4:6:8:10
-0x0958,6,getcharnamerequest,2
-0x0967,6,solvecharname,2
-0x0960,12,searchstoreinfolistitemclick,2:6:10
-0x0819,2,searchstoreinfonextpage,0
-0x086B,-1,searchstoreinfo,2:4:5:9:13:14:15
-0x093B,-1,reqtradebuyingstore,2:4:8:12
-0x0898,6,reqclickbuyingstore,2
-0x096A,2,reqclosebuyingstore,0
-0x08AA,-1,reqopenbuyingstore,2:4:8:9:89
-0x0862,18,bookingregreq,2:4:6
-//0x08A6,8 // CZ_JOIN_BATTLE_FIELD
-0x0897,-1,itemlistwindowselected,2:4:8:12
-0x091D,19,wanttoconnection,2:6:10:14:18
-0x092F,26,partyinvite2,2
-//0x086C,4 // CZ_GANGSI_RANK
-0x0863,26,friendslistadd,2
-0x088A,5,hommenu,2:4
-0x095B,36,storagepassword,2:4:20
-0x09A6,12,ZC_BANKING_CHECK,2:10
-0x09A7,10,bankdeposit,2:6
-0x09A8,16,ZC_ACK_BANKING_DEPOSIT,2:4:12
-0x09A9,10,bankwithdrawal,2:6
-0x09AA,16,ZC_ACK_BANKING_WITHDRAW,2:4:12
-0x09AB,6,bankcheck,2
-0x09B6,6,bankopen,2
-0x09B7,4,ZC_ACK_OPEN_BANKING,2
-0x09B8,6,bankclose,2
-0x09B9,4,ZC_ACK_CLOSE_BANKING,2
-
-//2013-07-31cRagexe
+0x09c1,10//ZC_C_MARKERINFO
 0x09ca,23 //ZC_SKILL_ENTRY5
+0x09cb,17//ZC_USE_SKILL2
+0x09ce,102,itemmonster,2 //CZ_ITEM_CREATE_EX
+0x09db,-1//ZC_NOTIFY_MOVEENTRY10
+0x09dc,-1//ZC_NOTIFY_NEWENTRY10
+0x09dd,-1//ZC_NOTIFY_STANDENTRY10
+0x09df,7//ZC_ACK_WHISPER02
 
-//2013-08-07Ragexe
-packet_ver: 45
+// Disconnect Prevent
+0x0447,2 //CZ_BLOCKING_PLAY_CANCEL
+0x09ab,6 //CZ_REQ_BANKING_CHECK
+0x09d4,2 //CZ_NPC_TRADE_QUIT
+
+0x0844,2,cashshopopen,2
+0x084a,2,cashshopclose,2
+0x0846,4,cashshopreqtab,2
+0x08c9,2,cashshopschedule,0
+0x0848,-1,cashshopbuy,2
+
+//2015-05-13aRagexe
+packet_ver: 31
 0x0369,7,actionrequest,2:6
-0x083C,10,useskilltoid,2:4:6
+0x083c,10,useskilltoid,2:4:6
 0x0437,5,walktoxy,2
-0x035F,6,ticksend,2
+0x035f,6,ticksend,2
+0x0924,5,changedir,2:4
+0x0958,6,takeitem,2
+0x0885,6,dropitem,2:4
+0x0879,8,movetokafra,2:4
+0x0864,8,movefromkafra,2:4
+0x0438,10,useskilltopos,2:4:6:8
+0x0366,90,useskilltoposmoreinfo,2:4:6:8:10
+0x096a,6,getcharnamerequest,2
+0x0368,6,solvecharname,2
+0x0838,12,searchstoreinfolistitemclick,2:6:10
+0x0835,2,searchstoreinfonextpage,0
+0x0819,-1,searchstoreinfo,2:4:5:9:13:14:15
+0x0811,-1,reqtradebuyingstore,2:4:8:12
+0x0360,6,reqclickbuyingstore,2
+0x022d,2,reqclosebuyingstore,0
+0x0815,-1,reqopenbuyingstore,2:4:8:9:89
+0x0883,18,partybookingregisterreq,2:4
+0x02c4,8 // cz_join_battle_field
+0x0960,-1,itemlistwindowselected,2:4:8
+0x0363,19,wanttoconnection,2:6:10:14:18
+0x094a,26,partyinvite2,2
+0x0927,4 // cz_gangsi_rank
+0x08a8,26,friendslistadd,2
+0x0817,5,hommenu,4
+0x0923,36,storagepassword,0
+
+// New Packets
+0x097a,-1//ZC_ALL_QUEST_LIST2
+//0x09f8,-1//ZC_ALL_QUEST_LIST3
+
+0x09e8,12//CZ_OPEN_MAILBOX
+
+0x09f7,75//ZC_PROPERTY_HOMUN_2
+
+0x09fd,-1//ZC_NOTIFY_MOVEENTRY11
+0x09fe,-1//ZC_NOTIFY_NEWENTRY11
+0x09ff,-1//ZC_NOTIFY_STANDENTRY11
+
+0x0a02,4//ZC_DRESSROOM_OPEN
+
+0x0a09,45//ZC_ADD_EXCHANGE_ITEM3
+0x0a0a,47//ZC_ADD_ITEM_TO_STORE3
+0x0a0b,47//ZC_ADD_ITEM_TO_CART3
+
+0x0a0c,56//ZC_ITEM_PICKUP_ACK_V6
+0x0a0d,-1//ZC_INVENTORY_ITEMLIST_EQUIP_V6
+
+0x0a0f,-1//ZC_CART_ITEMLIST_EQUIP_V6
+0x0a10,-1//ZC_STORE_ITEMLIST_EQUIP_V6
+
+0x0a27,8//ZC_RECOVERY2
+0x0a28,3//ZC_ACK_OPENSTORE2
+
+0x0a2e,6//CZ_REQ_CHANGE_TITLE
+
+//2015-10-29aRagexe
+packet_ver: 32
+0x0369,7,actionrequest,2:6
+0x083c,10,useskilltoid,2:4:6
+0x0437,5,walktoxy,2
+0x035f,6,ticksend,2
 0x0202,5,changedir,2:4
-0x07E4,6,takeitem,2
+0x07e4,6,takeitem,2
 0x0362,6,dropitem,2:4
-0x07EC,8,movetokafra,2:4
+0x07ec,8,movetokafra,2:4
 0x0364,8,movefromkafra,2:4
 0x0438,10,useskilltopos,2:4:6:8
-0x0366,90,useskilltoposinfo,2:4:6:8:10
-0x096A,6,getcharnamerequest,2
+0x0366,90,useskilltoposmoreinfo,2:4:6:8:10
+0x096a,6,getcharnamerequest,2
 0x0368,6,solvecharname,2
 0x0838,12,searchstoreinfolistitemclick,2:6:10
 0x0835,2,searchstoreinfonextpage,0
@@ -2236,31 +1923,30 @@ packet_ver: 45
 0x0360,6,reqclickbuyingstore,2
 0x0817,2,reqclosebuyingstore,0
 0x0815,-1,reqopenbuyingstore,2:4:8:9:89
-0x0365,18,bookingregreq,2:4:6
-//0x363,8 // CZ_JOIN_BATTLE_FIELD
-0x0281,-1,itemlistwindowselected,2:4:8:12
-0x022D,19,wanttoconnection,2:6:10:14:18
+0x0365,18,partybookingregisterreq,2:4
+0x0363,8 // CZ_JOIN_BATTLE_FIELD
+0x0281,-1,itemlistwindowselected,2:4:8
+0x022d,19,wanttoconnection,2:6:10:14:18
 0x0802,26,partyinvite2,2
-//0x436,4 // CZ_GANGSI_RANK
-0x023B,26,friendslistadd,2
-0x0361,5,hommenu,2:4
-0x0887,36,storagepassword,2:4:20
-0x09C1,10,ZC_C_MARKERINFO,2:6:8
+0x0436,4 // CZ_GANGSI_RANK
+0x023b,26,friendslistadd,2
+0x0361,5,hommenu,4
+0x0860,36,storagepassword,0
 
-//2013-12-23Ragexe
-packet_ver: 46
+//2016-03-23bRagexe
+packet_ver: 33
 0x0369,7,actionrequest,2:6
-0x083C,10,useskilltoid,2:4:6
+0x083c,10,useskilltoid,2:4:6
 0x0437,5,walktoxy,2
-0x035F,6,ticksend,2
-0x0202,5,changedir,2:4
-0x07E4,6,takeitem,2
-0x0362,6,dropitem,2:4
-0x07EC,8,movetokafra,2:4
-0x0364,8,movefromkafra,2:4
+0x035f,6,ticksend,2
+0x0933,5,changedir,2:4
+0x0869,6,takeitem,2
+0x093c,6,dropitem,2:4
+0x0926,8,movetokafra,2:4
+0x086a,8,movefromkafra,2:4
 0x0438,10,useskilltopos,2:4:6:8
-0x0366,90,useskilltoposinfo,2:4:6:8:10
-0x096A,6,getcharnamerequest,2
+0x0366,90,useskilltoposmoreinfo,2:4:6:8:10
+0x096a,6,getcharnamerequest,2
 0x0368,6,solvecharname,2
 0x0838,12,searchstoreinfolistitemclick,2:6:10
 0x0835,2,searchstoreinfonextpage,0
@@ -2269,24 +1955,20 @@ packet_ver: 46
 0x0360,6,reqclickbuyingstore,2
 0x0817,2,reqclosebuyingstore,0
 0x0815,-1,reqopenbuyingstore,2:4:8:9:89
-0x0365,18,bookingregreq,2:4:6
-//0x363,8 // CZ_JOIN_BATTLE_FIELD
-0x0281,-1,itemlistwindowselected,2:4:8:12
-0x022D,19,wanttoconnection,2:6:10:14:18
-0x0802,26,partyinvite2,2
-//0x436,4 // CZ_GANGSI_RANK
-0x023B,26,friendslistadd,2
-0x0361,5,hommenu,2:4
-0x08A4,36,storagepassword,2:4:20
-//New Packets
-//0x097E,12 //ZC_UPDATE_RANKING_POINT
-0x09B4,6,dull,0 //Cash Shop - Special Tab
-0x09CE,102,itemmonster,2
-0x09D4,2,dull,0 //npcshopclosed
-//NPC Market
-0x09D6,-1,dull,0 //npcmarketpurchase
-0x09D8,2,dull,0 //npcmarketclosed
-0x09DF,7
+0x0927,18,partybookingregisterreq,2:4
+0x0867,8 // CZ_JOIN_BATTLE_FIELD
+0x0896,-1,itemlistwindowselected,2:4:8
+0x0878,19,wanttoconnection,2:6:10:14:18
+0x0883,26,partyinvite2,2
+0x091b,4 // CZ_GANGSI_RANK
+0x0365,26,friendslistadd,2
+0x089a,5,hommenu,4
+0x0872,36,storagepassword,0
 
-//Add new packets here
-//packet_ver: 47
+0x0a38,3//
+0x0a46,14//
+0x0a47,3//
+0x0a48,2//
+
+//Add new packets here.
+//packet_ver: 34

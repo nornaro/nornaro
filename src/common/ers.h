@@ -40,7 +40,9 @@
 #ifndef _ERS_H_
 #define _ERS_H_
 
+#ifndef _CBASETYPES_H_
 #include "../common/cbasetypes.h"
+#endif
 
 /*****************************************************************************\
  *  (1) All public parts of the Entry Reusage System.                        *
@@ -69,11 +71,6 @@
 #ifndef ERS_ALIGNED
 #	define ERS_ALIGNED 1
 #endif /* not ERS_ALIGN_ENTRY */
-
-enum ERSOptions {
-	ERS_OPT_NONE           = 0,
-	ERS_OPT_CLEAR          = 1,/* silently clears any entries left in the manager upon destruction */
-};
 
 /**
  * Public interface of the entry manager.
@@ -126,7 +123,7 @@ typedef struct eri {
 #	define ers_entry_size(obj) (size_t)0
 #	define ers_destroy(obj)
 // Disable the public functions
-#	define ers_new(size,name,options) NULL
+#	define ers_new(size) NULL
 #	define ers_report()
 #	define ers_force_destroy_all()
 #else /* not DISABLE_ERS */
@@ -147,7 +144,7 @@ typedef struct eri {
  * @param The requested size of the entry in bytes
  * @return Interface of the object
  */
-ERS ers_new(uint32 size, char *name, enum ERSOptions options);
+ERS ers_new(uint32 size);
 
 /**
  * Print a report about the current state of the Entry Reusage System.
