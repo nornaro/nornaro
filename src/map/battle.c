@@ -1725,7 +1725,88 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 		switch (skill_num)
 		{	//Calc base damage according to skill
 			case NJ_ISSEN:
-				wd.damage = 40*sstatus->str +skill_lv*(sstatus->hp/10 + 35);
+				if(battle_config.issen == 0){
+					wd.damage = 40*sstatus->str +skill_lv*(sstatus->hp/10 + 35);
+				}
+				if(battle_config.issen == 1){
+					wd.damage = 40*sstatus->str +skill_lv*(sstatus->hp/10 + 35);
+					wd.damage2 = 0;
+					if( sc && sc->data[SC_BUNSINJYUTSU] )
+						wd.damage *= (1+sc->data[SC_BUNSINJYUTSU]->val2);
+				}
+				if(battle_config.issen == 2){
+					wd.damage += sstatus->str;
+					wd.damage *= 40;
+					wd.damage += skill_lv*(sstatus->hp*2/25);
+					if( sc && sc->data[SC_BUNSINJYUTSU] )
+						wd.damage *= (1+sc->data[SC_BUNSINJYUTSU]->val2);
+				}
+				if(battle_config.issen == 3){
+					wd.damage += sstatus->batk;
+					wd.damage *= 40;
+					wd.damage += skill_lv*(sstatus->hp*2/25);
+					if( sc && sc->data[SC_BUNSINJYUTSU] )
+						wd.damage *= (1+sc->data[SC_BUNSINJYUTSU]->val2);
+				}
+				if(battle_config.issen == 4){
+					if (sd) {
+						short index = sd->equip_index[EQI_HAND_R];
+						
+						if (index >= 0 &&
+							sd->inventory_data[index] &&
+							sd->inventory_data[index]->type == IT_WEAPON)
+							wd.damage += sd->inventory_data[index]->atk;
+
+						index = sd->equip_index[EQI_HAND_L];
+
+						if (index >= 0 &&
+							sd->inventory_data[index] &&
+							sd->inventory_data[index]->type == IT_WEAPON)
+							wd.damage += sd->inventory_data[index]->atk;
+					}
+					wd.damage += sstatus->batk;
+					wd.damage *= 40;
+					wd.damage += skill_lv*(sstatus->hp*2/25);
+					if( sc && sc->data[SC_BUNSINJYUTSU] )
+						wd.damage *= (1+sc->data[SC_BUNSINJYUTSU]->val2);
+				}
+				if(battle_config.issen == 5){
+					if (sd) {
+						short index = sd->equip_index[EQI_HAND_R];
+
+						index = sd->equip_index[EQI_HAND_L];
+
+						if (index >= 0 &&
+							sd->inventory_data[index] &&
+							sd->inventory_data[index]->type == IT_WEAPON)
+							wd.damage += sd->inventory_data[index]->atk;
+					}
+					wd.damage *= 40;
+					wd.damage += skill_lv*(sstatus->hp*2/25);
+					if( sc && sc->data[SC_BUNSINJYUTSU] )
+						wd.damage *= (1+sc->data[SC_BUNSINJYUTSU]->val2);
+				}
+				if(battle_config.issen == 6){
+					if (sd) {
+						short index = sd->equip_index[EQI_HAND_R];
+						
+						if (index >= 0 &&
+							sd->inventory_data[index] &&
+							sd->inventory_data[index]->type == IT_WEAPON)
+							wd.damage += sd->inventory_data[index]->atk;
+
+						index = sd->equip_index[EQI_HAND_L];
+
+						if (index >= 0 &&
+							sd->inventory_data[index] &&
+							sd->inventory_data[index]->type == IT_WEAPON)
+							wd.damage += sd->inventory_data[index]->atk;
+					}
+					wd.damage *= 40;
+					wd.damage += skill_lv*(sstatus->hp*2/25);
+					if( sc && sc->data[SC_BUNSINJYUTSU] )
+						wd.damage *= (1+sc->data[SC_BUNSINJYUTSU]->val2);
+				}
 				wd.damage2 = 0;
 				status_set_hp(src, 1, 0);
 				break;
@@ -6093,6 +6174,7 @@ static const struct _battle_data {
 	{ "gc_skill_edp_boost_formula_c",       &battle_config.gc_skill_edp_boost_formula_c,    1,      0,      1,              },
 	{ "freecast_start",						&battle_config.freecast_start,					1,      0,      1,				},
 	{ "freecast_stop",						&battle_config.freecast_stop,					1,      0,      1,				},
+	{ "issen",								&battle_config.issen,							4,      0,      6,				},
 };
 
 
