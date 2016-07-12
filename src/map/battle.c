@@ -2040,17 +2040,37 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				case MS_BOWLINGBASH:
 					skillratio+= 40*skill_lv;
 					break;
+				case AS_VENOMKNIFE:
+					if ((battle_config.venomknife&512) == 512 && sc && sc->data[SC_POISONREACT])
+						wd.damage *= (100+sc->data[SC_POISONREACT]->val2*50)/100;
+					if ((battle_config.venomknife&1) == 1 )
+						wd.damage += sstatus->str;
+					if ((battle_config.venomknife&2) == 2 )
+						wd.damage += sstatus->dex;
+					if ((battle_config.venomknife&4) == 4 )
+						wd.damage += sstatus->batk;
+					if ((battle_config.venomknife&8) == 8 )
+						wd.damage += pc_checkskill(sd, TF_POISON)*15;
+					if ((battle_config.venomknife&16) == 16 )
+						skillratio += pc_checkskill(sd, TF_POISON)*15;
+					if ((battle_config.venomknife&32) == 32 && pc_checkskill(sd, AS_POISONREACT)!=0)
+						wd.damage += pc_checkskill(sd, AS_POISONREACT)*30;
+					if ((battle_config.venomknife&64) == 64 && pc_checkskill(sd, AS_POISONREACT)!=0)
+						skillratio += pc_checkskill(sd, AS_POISONREACT)*30;
+					if ((battle_config.venomknife&128) == 128 && sc && sc->data[SC_POISONREACT])
+						skillratio += sc->data[SC_POISONREACT]->val2*50;
+					break;
 				case AS_GRIMTOOTH:
 					skillratio += 20*skill_lv;
-					break;
-				case AS_POISONREACT:
-					skillratio += 30*skill_lv;
 					break;
 				case AS_SONICBLOW:
 					skillratio += -50+5*skill_lv;
 					break;
 				case TF_SPRINKLESAND:
 					skillratio += 30;
+					break;
+				case TF_POISON:
+					wd.damage += 15*skill_lv;
 					break;
 				case MC_CARTREVOLUTION:
 					skillratio += 50;
@@ -2170,10 +2190,23 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				case CG_ARROWVULCAN:
 					skillratio += 100+100*skill_lv;
 					break;
+				case AS_POISONREACT:
+					wd.damage += pc_checkskill(sd,TF_POISON)*15;
+					wd.damage *= (100+30*skill_lv)/50;
+					break;
 				case AS_SPLASHER:
-					skillratio += 400+50*skill_lv;
-					if(sd)
-						skillratio += 30 * pc_checkskill(sd,AS_POISONREACT);
+					if (((tstatus->hp/tstatus->max_hp) <= (2/3)) && (tsc && tsc->data[SC_POISON]) && battle_config.splasher_killer != 0 && !battle_config.splasher_killer2 ) {
+						wd.damage = tstatus->max_hp*battle_config.splasher_killer/100;
+					} else {
+						wd.damage += pc_checkskill(sd,TF_POISON)*15;
+						skillratio += 400+50*skill_lv;
+						if(sd)
+							skillratio += 30 * pc_checkskill(sd,AS_POISONREACT);
+						if (sc && sc->data[SC_POISONREACT])
+							skillratio += sc->data[SC_POISONREACT]->val2*battle_config.splasher_react;
+						if (battle_config.splasher_killer != 0 && battle_config.splasher_killer2)
+							wd.damage += tstatus->max_hp*battle_config.splasher_killer/100;
+					} 
 					break;
 				case ASC_BREAKER:
 					skillratio += 100*skill_lv-100;
@@ -3024,8 +3057,8 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			if(sc->data[SC_EDP] &&
 			  	skill_num != ASC_BREAKER &&
 				skill_num != ASC_METEORASSAULT &&
-				skill_num != AS_SPLASHER &&
-				skill_num != AS_VENOMKNIFE &&
+				(skill_num != AS_SPLASHER || battle_config.splasher_edp) &&
+				(skill_num != AS_VENOMKNIFE || (battle_config.venomknife&256)==256) &&
 				skill_num != GC_CROSSIMPACT &&//EDP does not increase the final damage on Guillotine Cross skills. It instead
 				skill_num != GC_DARKILLUSION &&//increase the player's ATK (BATK and WATK) only during the brief moment certain
 				skill_num != GC_COUNTERSLASH &&//offensive Guillotine Cross skills are being used to give a renewal feeling. [Rytech]
@@ -3253,17 +3286,13 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				ATK_ADD(3*skill);
 			if (skill_num == NJ_KUNAI)
 				ATK_ADD(60);
-		}
+			}
 	} //Here ends flag.hit section, the rest of the function applies to both hitting and missing attacks
   	else if(wd.div_ < 0) //Since the attack missed...
 		wd.div_ *= -1; 
 
 	if(sd && (skill=pc_checkskill(sd,BS_WEAPONRESEARCH)) > 0) 
 		ATK_ADD(skill*2);
-
-	if(skill_num==TF_POISON)
-		ATK_ADD(15*skill_lv);
-
 	if( !(nk&NK_NO_ELEFIX) && !n_ele )
 	{	//Elemental attribute fix
 		if( wd.damage > 0 )
@@ -5342,7 +5371,7 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 				sce->val2 = 0;
 				skill_attack(BF_WEAPON,target,target,src,AS_POISONREACT,sce->val1,tick,0);
 			} else {
-				skill_attack(BF_WEAPON,target,target,src,TF_POISON, 5, tick, 0);
+				skill_attack(BF_WEAPON,target,target,src,AS_POISONREACT, 5, tick, 0);
 				--sce->val2;
 			}
 			if (sce->val2 <= 0)
@@ -6165,6 +6194,12 @@ static const struct _battle_data {
 	{ "freecast_stop",						&battle_config.freecast_stop,					1,      0,      1,				},
 	{ "issen",								&battle_config.issen,							4,      0,      6,				},
 	{ "bunshin",							&battle_config.bunshin,							1,      0,      1,				},
+	{ "venomknife",							&battle_config.venomknife,						395,    0,      INT_MAX,		},
+	{ "splasher_envenom",					&battle_config.splasher_envenom,				1,		0,		1,				},
+	{ "splasher_react",						&battle_config.splasher_react,					100,    0,		SHRT_MAX,		},
+	{ "splasher_killer",					&battle_config.splasher_killer,					90,		0,		SHRT_MAX,		},
+	{ "splasher_killer2",					&battle_config.splasher_killer2,				0,		0,		1,				},
+	{ "splasher_edp",						&battle_config.splasher_edp,					0,      0,		1,				},
 };
 
 

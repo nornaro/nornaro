@@ -400,6 +400,12 @@ extern struct Battle_Config
 	int freecast_stop;
 	int issen;
 	int bunshin;
+	int venomknife;
+	int splasher_envenom;
+	int splasher_react;
+	int splasher_killer;
+	int splasher_killer2;
+	int splasher_edp;
 
 	int display_hallucination;	// [Skotlex]
 	int use_statpoint_table;	// [Skotlex]
