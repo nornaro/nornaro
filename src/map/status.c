@@ -1113,7 +1113,14 @@ int status_damage(struct block_list *src,struct block_list *target,int hp, int s
 			if ((sce=sc->data[SC_ENDURE]) && !sce->val4) {
 				//Endure count is only reduced by non-players on non-gvg maps.
 				//val4 signals infinite endure. [Skotlex]
-				if (src && src->type != BL_PC && !map_flag_gvg(target->m) && !map[target->m].flag.battleground && --(sce->val2) < 0)
+				if (src && 
+					(src->type != BL_PC || (battle_config.endure&2) != 2) && 
+					(src->type == BL_PC || (battle_config.endure&4) != 4) &&
+					(!map_flag_gvg(target->m) || (battle_config.endure&8) != 8) && 
+					(map_flag_gvg(target->m) || (battle_config.endure&16) != 16) &&
+					(!map[target->m].flag.battleground || (battle_config.endure&32) != 32) && 
+					(map[target->m].flag.battleground || (battle_config.endure&64) != 64) && 
+					--(sce->val2) < 0)
 					status_change_end(target, SC_ENDURE, INVALID_TIMER);
 			}
 			if ((sce=sc->data[SC_GRAVITATION]) && sce->val3 == BCT_SELF)
@@ -5275,7 +5282,7 @@ static unsigned short status_calc_dmotion(struct block_list *bl, struct status_c
 {
 	if( !sc || !sc->count || map_flag_gvg(bl->m) || map[bl->m].flag.battleground )
 		return cap_value(dmotion,0,USHRT_MAX);
-		
+
 	if( sc->data[SC_ENDURE] )
 		return 0;
 	if( sc->data[SC_CONCENTRATION] )
@@ -7043,7 +7050,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 			break;
 		case SC_ENDURE:
 			val2 = 7; // Hit-count [Celest]
-			if( !(flag&1) && (bl->type&(BL_PC|BL_MER)) && !map_flag_gvg(bl->m) && !map[bl->m].flag.battleground && !val4 )
+			if( !(flag&1) && (bl->type&(BL_PC|BL_MER) || (battle_config.endure&2) != 2) && (!map_flag_gvg(bl->m) || (battle_config.endure&8) != 8) && (!map[bl->m].flag.battleground || (battle_config.endure&32) != 32) && !val4 )
 			{
 				struct map_session_data *tsd;
 				if( sd )
@@ -9031,7 +9038,7 @@ int status_change_end(struct block_list* bl, enum sc_type type, int tid)
 		return 0;
 
 	if (tid == INVALID_TIMER) {
-		if (type == SC_ENDURE && sce->val4)
+		if (type == SC_ENDURE && sce->val4 && (battle_config.endure&1)==1)
 			//Do not end infinite endure.
 			return 0;
 		if (sce->timer != INVALID_TIMER) //Could be a SC with infinite duration

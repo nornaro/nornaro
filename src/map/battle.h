@@ -406,6 +406,7 @@ extern struct Battle_Config
 	int splasher_killer;
 	int splasher_killer2;
 	int splasher_edp;
+	int endure;
 
 	int display_hallucination;	// [Skotlex]
 	int use_statpoint_table;	// [Skotlex]

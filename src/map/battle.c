@@ -6200,6 +6200,7 @@ static const struct _battle_data {
 	{ "splasher_killer",					&battle_config.splasher_killer,					90,		0,		SHRT_MAX,		},
 	{ "splasher_killer2",					&battle_config.splasher_killer2,				0,		0,		1,				},
 	{ "splasher_edp",						&battle_config.splasher_edp,					0,      0,		1,				},
+	{ "endure",								&battle_config.endure,							0,      0,		INT_MAX,		},
 };
 
 
