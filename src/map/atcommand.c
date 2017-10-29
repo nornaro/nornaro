@@ -1253,138 +1253,143 @@ ACMD_FUNC(jobchange)
 	if (!message || !*message || sscanf(message, "%d %d", &job, &upper) < 1)
 	{
 		int i, found = 0;
-		const struct { char name[16]; int id; } jobs[] = {
-			{ "novice",			0 },
-			{ "swordman",		1 },
-			{ "swordsman",		1 },
-			{ "magician",		2 },
-			{ "mage",			2 },
-			{ "archer",			3 },
-			{ "acolyte",		4 },
-			{ "merchant",		5 },
-			{ "thief",			6 },
-			{ "knight",			7 },
-			{ "priest",			8 },
-			{ "priestess",		8 },
-			{ "wizard",			9 },
-			{ "blacksmith",		10 },
-			{ "hunter",			11 },
-			{ "assassin",		12 },
-			{ "crusader",		14 },
-			{ "monk",			15 },
-			{ "sage",			16 },
-			{ "rogue",			17 },
-			{ "alchemist",		18 },
-			{ "bard",			19 },
-			{ "dancer",			20 },
-			{ "super novice",	23 },
-			{ "supernovice",	23 },
-			{ "gunslinger",		24 },
-			{ "gunner",			24 },
-			{ "ninja",			25 },
-			{ "novice high",	4001 },
-			{ "high novice",	4001 },
-			{ "swordman high",	4002 },
-			{ "swordsman high",	4002 },
-			{ "magician high",	4003 },
-			{ "mage high",		4003 },
-			{ "archer high",	4004 },
-			{ "acolyte high",	4005 },
-			{ "merchant high",	4006 },
-			{ "thief high",		4007 },
-			{ "lord knight",	4008 },
-			{ "high priest",	4009 },
-			{ "high priestess",	4009 },
-			{ "high wizard",	4010 },
-			{ "whitesmith",		4011 },
-			{ "sniper",			4012 },
-			{ "assassin cross",	4013 },
-			{ "paladin",		4015 },
-			{ "champion",		4016 },
-			{ "professor",		4017 },
-			{ "stalker",		4018 },
-			{ "creator",		4019 },
-			{ "clown",			4020 },
-			{ "gypsy",			4021 },
-			{ "baby novice",	4023 },
-			{ "baby swordman",	4024 },
-			{ "baby swordsman",	4024 },
-			{ "baby magician",	4025 },
-			{ "baby mage",		4025 },
-			{ "baby archer",	4026 },
-			{ "baby acolyte",	4027 },
-			{ "baby merchant",	4028 },
-			{ "baby thief",		4029 },
-			{ "baby knight",	4030 },
-			{ "baby priest",	4031 },
-			{ "baby priestess",	4031 },
-			{ "baby wizard",	4032 },
-			{ "baby blacksmith",4033 },
-			{ "baby hunter",	4034 },
-			{ "baby assassin",	4035 },
-			{ "baby crusader",	4037 },
-			{ "baby monk",		4038 },
-			{ "baby sage",		4039 },
-			{ "baby rogue",		4040 },
-			{ "baby alchemist",	4041 },
-			{ "baby bard",		4042 },
-			{ "baby dancer",	4043 },
-			{ "super baby",		4045 },
-			{ "taekwon",		4046 },
-			{ "taekwon boy",	4046 },
-			{ "taekwon girl",	4046 },
-			{ "star gladiator",	4047 },
-			{ "soul linker",	4049 },
-			{ "gangsi",			4050 },
-			{ "bongun",			4050 },
-			{ "munak",			4050 },
-			{ "death knight",	4051 },
-			{ "dark collector",	4052 },
-			{ "rune knight",	4054 },
-			{ "warlock",		4055 },
-			{ "ranger",			4056 },
-			{ "arch bishop",	4057 },
-			{ "mechanic",		4058 },
-			{ "guillotine",		4059 },
-			{ "rune knight 2",	4060 },
-			{ "warlock 2",		4061 },
-			{ "ranger 2",		4062 },
-			{ "arch bishop 2",	4063 },
-			{ "mechanic 2",		4064 },
-			{ "guillotine 2",	4065 },
-			{ "royal guard",	4066 },
-			{ "sorcerer",		4067 },
-			{ "minstrel",		4068 },
-			{ "wanderer",		4069 },
-			{ "sura",			4070 },
-			{ "genetic",		4071 },
-			{ "shadow chaser",	4072 },
-			{ "royal guard 2",	4073 },
-			{ "sorcerer 2",		4074 },
-			{ "minstrel 2",		4075 },
-			{ "wanderer 2",		4076 },
-			{ "sura 2",			4077 },
-			{ "genetic 2",		4078 },
-			{ "shadow chaser 2",4079 },
-			{ "baby rune",		4096 },
-			{ "baby warlock",	4097 },
-			{ "baby ranger",	4098 },
-			{ "baby bishop",	4099 },
-			{ "baby mechanic",	4100 },
-			{ "baby cross",		4101 },
-			{ "baby guard",		4102 },
-			{ "baby sorcerer",	4103 },
-			{ "baby minstrel",	4104 },
-			{ "baby wanderer",	4105 },
-			{ "baby sura",		4106 },
-			{ "baby genetic",	4107 },
-			{ "baby chaser",	4108 },
-			{ "super novice e",	4190 },
-			{ "super baby e",	4191 },
-			{ "kagerou",		4211 },
-			{ "oboro",			4212 },
-			{ "rebellion",		4215 },
-			{ "summoner",		4218 },
+		const struct { char name[20]; int id; } jobs[] = {
+			{ "novice",				0 },
+			{ "swordman",			1 },
+			{ "swordsman",			1 },
+			{ "magician",			2 },
+			{ "mage",				2 },
+			{ "archer",				3 },
+			{ "acolyte",			4 },
+			{ "merchant",			5 },
+			{ "thief",				6 },
+			{ "knight",				7 },
+			{ "priest",				8 },
+			{ "wizard",				9 },
+			{ "blacksmith",			10 },
+			{ "hunter",				11 },
+			{ "assassin",			12 },
+			{ "crusader",			14 },
+			{ "monk",				15 },
+			{ "sage",				16 },
+			{ "rogue",				17 },
+			{ "alchemist",			18 },
+			{ "bard",				19 },
+			{ "dancer",				20 },
+			{ "super novice",		23 },
+			{ "gunslinger",			24 },
+			{ "ninja",				25 },
+			{ "high novice",		4001 },
+			{ "high swordman",		4002 },
+			{ "high swordsman",		4002 },
+			{ "high magician",		4003 },
+			{ "high mage",			4003 },
+			{ "high archer",		4004 },
+			{ "high acolyte",		4005 },
+			{ "high merchant",		4006 },
+			{ "high thief",			4007 },
+			{ "lord knight",		4008 },
+			{ "high priest",		4009 },
+			{ "high priestess",		4009 },
+			{ "high wizard",		4010 },
+			{ "whitesmith",			4011 },
+			{ "sniper",				4012 },
+			{ "assassin cross",		4013 },
+			{ "paladin",			4015 },
+			{ "champion",			4016 },
+			{ "professor",			4017 },
+			{ "stalker",			4018 },
+			{ "creator",			4019 },
+			{ "clown",				4020 },
+			{ "gypsy",				4021 },
+			{ "baby novice",		4023 },
+			{ "baby swordman",		4024 },
+			{ "baby swordsman",		4024 },
+			{ "baby magician",		4025 },
+			{ "baby mage",			4025 },
+			{ "baby archer",		4026 },
+			{ "baby acolyte",		4027 },
+			{ "baby merchant",		4028 },
+			{ "baby thief",			4029 },
+			{ "baby knight",		4030 },
+			{ "baby priest",		4031 },
+			{ "baby priestess",		4031 },
+			{ "baby wizard",		4032 },
+			{ "baby blacksmith",	4033 },
+			{ "baby hunter",		4034 },
+			{ "baby assassin",		4035 },
+			{ "baby crusader",		4037 },
+			{ "baby monk",			4038 },
+			{ "baby sage",			4039 },
+			{ "baby rogue",			4040 },
+			{ "baby alchemist",		4041 },
+			{ "baby bard",			4042 },
+			{ "baby dancer",		4043 },
+			{ "super baby",			4045 },
+			{ "taekwon",			4046 },
+			{ "taekwon boy",		4046 },
+			{ "taekwon girl",		4046 },
+			{ "star gladiator",		4047 },
+			{ "soul linker",		4049 },
+			{ "gangsi",				4050 },
+			{ "bongun",				4050 },
+			{ "munak",				4050 },
+			{ "death knight",		4051 },
+			{ "dark collector",		4052 },
+			{ "rune knight",		4054 },
+			{ "warlock",			4055 },
+			{ "ranger",				4056 },
+			{ "arch bishop",		4057 },
+			{ "mechanic",			4058 },
+			{ "guillotine",			4059 },
+			{ "trans rune knight",	4060 },
+			{ "trans warlock",		4061 },
+			{ "trans ranger",		4062 },
+			{ "trans arch bishop",	4063 },
+			{ "trans mechanic",		4064 },
+			{ "trans guillotine",	4065 },
+			{ "royal guard",		4066 },
+			{ "sorcerer",			4067 },
+			{ "minstrel",			4068 },
+			{ "wanderer",			4069 },
+			{ "sura",				4070 },
+			{ "genetic",			4071 },
+			{ "shadow chaser",		4072 },
+			{ "trans royal guard",	4073 },
+			{ "trans sorcerer",		4074 },
+			{ "trans minstrel",		4075 },
+			{ "trans wanderer",		4076 },
+			{ "trans sura",			4077 },
+			{ "trans genetic",		4078 },
+			{ "trans shadow chaser",4079 },
+			{ "baby rune",			4096 },
+			{ "baby warlock",		4097 },
+			{ "baby ranger",		4098 },
+			{ "baby bishop",		4099 },
+			{ "baby mechanic",		4100 },
+			{ "baby cross",			4101 },
+			{ "baby guard",			4102 },
+			{ "baby sorcerer",		4103 },
+			{ "baby minstrel",		4104 },
+			{ "baby wanderer",		4105 },
+			{ "baby sura",			4106 },
+			{ "baby genetic",		4107 },
+			{ "baby chaser",		4108 },
+			{ "exp super novice",	4190 },
+			{ "exp super baby",		4191 },
+			{ "kagerou",			4211 },
+			{ "oboro",				4212 },
+			{ "rebellion",			4215 },
+			{ "summoner",			4218 },
+			{ "baby summoner",		4220 },
+			{ "baby ninja",			4222 },
+			{ "baby kagerou",		4223 },
+			{ "baby oboro",			4224 },
+			{ "baby taekwon",		4225 },
+			{ "baby star gladiator",4226 },
+			{ "baby soul linker",	4227 },
+			{ "baby gunslinger",	4228 },
+			{ "baby rebellion",		4229 },
 		};
 
 		for (i=0; i < ARRAYLENGTH(jobs); i++) {
@@ -1425,10 +1430,10 @@ ACMD_FUNC(jobchange)
 			clif_displaymessage(fd, "4075 Minstrel         4076 Wanderer         4077 Sura             4078 Genetic");
 			clif_displaymessage(fd, "4079 Shadow Chaser");
 			clif_displaymessage(fd, "----- Expanded Class -----");
-			clif_displaymessage(fd, "  23 Super Novice       24 Gunslinger         25 Ninja            4045 Super Baby");
-			clif_displaymessage(fd, "4046 Taekwon          4047 Star Gladiator   4049 Soul Linker      4050 Gangsi");
-			clif_displaymessage(fd, "4051 Death Knight     4052 Dark Collector   4190 Ex. Super Novice 4191 Ex. Super Baby");
-			clif_displaymessage(fd, "4211 Kagerou          4212 Oboro            4215 Rebellion        4218 Summoner");
+			clif_displaymessage(fd, "  23 Super Novice       24 Gunslinger         25 Ninja            4046 Taekwon");
+			clif_displaymessage(fd, "4047 Star Gladiator   4049 Soul Linker      4050 Gangsi           4051 Death Knight");
+			clif_displaymessage(fd, "4052 Dark Collector   4190 Ex. Super Novice 4211 Kagerou          4212 Oboro");
+			clif_displaymessage(fd, "4215 Rebellion        4218 Summoner");
 			clif_displaymessage(fd, "----- Baby Novice And Baby 1st Class -----");
 			clif_displaymessage(fd, "4023 Baby Novice      4024 Baby Swordman    4025 Baby Magician    4026 Baby Archer");
 			clif_displaymessage(fd, "4027 Baby Acolyte     4028 Baby Merchant    4029 Baby Thief");
@@ -1442,13 +1447,21 @@ ACMD_FUNC(jobchange)
 			clif_displaymessage(fd, "4100 Baby Mechanic    4101 Baby Glt. Cross  4102 Baby Royal Guard 4103 Baby Sorcerer");
 			clif_displaymessage(fd, "4104 Baby Minstrel    4105 Baby Wanderer    4106 Baby Sura        4107 Baby Genetic");
 			clif_displaymessage(fd, "4108 Baby Shadow Chaser");
+			clif_displaymessage(fd, "----- Expanded Baby Class -----");
+			clif_displaymessage(fd, "4045 Super Baby       4191 Ex. Super Baby   4220 Baby Summoner    4222 Baby Ninja");
+			clif_displaymessage(fd, "4223 Baby Kagerou     4224 Baby Oboro       4225 Baby Taekwon     4226 Baby Star Glad.");
+			clif_displaymessage(fd, "4227 Baby Soul Linker 4228 Baby Gunslinger  4229 Baby Rebellion");
 			return -1;
 		}
 	}
 
-	if (job == 13 || job == 21 || job == 22 || job == 26 || job == 27 || job == 28 || job == 29 || job == 30 ||
-		job == 4014 || job == 4022 || job == 4036 || job == 4044 || job == 4048 ||
-		(job >= JOB_RUNE_KNIGHT2 && job <= JOB_RUNE_KNIGHT_T6) || (job >= JOB_BABY_RUNE2 && job <= JOB_BABY_MECHANIC2))
+	if (job == JOB_KNIGHT2 || job == JOB_CRUSADER2 || job == JOB_WEDDING || 
+		(job >= JOB_XMAS && job <= JOB_SUMMER2) || 
+		job == JOB_LORD_KNIGHT2 || job == JOB_PALADIN2 || job == JOB_BABY_KNIGHT2 || 
+		job == JOB_BABY_CRUSADER2 || job == JOB_STAR_GLADIATOR2 || 
+		(job >= JOB_RUNE_KNIGHT2 && job <= JOB_RUNE_KNIGHT_T6) || 
+		(job >= JOB_BABY_RUNE2 && job <= JOB_BABY_MECHANIC2) || 
+		job == JOB_BABY_STAR_GLADIATOR2)
 	{// Deny direct transformation into dummy jobs
 		clif_displaymessage(fd, "You can not change into this job by command.");
 		return 0;
@@ -1491,10 +1504,10 @@ ACMD_FUNC(jobchange)
 		clif_displaymessage(fd, "4075 Minstrel         4076 Wanderer         4077 Sura             4078 Genetic");
 		clif_displaymessage(fd, "4079 Shadow Chaser");
 		clif_displaymessage(fd, "----- Expanded Class -----");
-		clif_displaymessage(fd, "  23 Super Novice       24 Gunslinger         25 Ninja            4045 Super Baby");
-		clif_displaymessage(fd, "4046 Taekwon          4047 Star Gladiator   4049 Soul Linker      4050 Gangsi");
-		clif_displaymessage(fd, "4051 Death Knight     4052 Dark Collector   4190 Ex. Super Novice 4191 Ex. Super Baby");
-		clif_displaymessage(fd, "4211 Kagerou          4212 Oboro            4215 Rebellion        4218 Summoner");
+		clif_displaymessage(fd, "  23 Super Novice       24 Gunslinger         25 Ninja            4046 Taekwon");
+		clif_displaymessage(fd, "4047 Star Gladiator   4049 Soul Linker      4050 Gangsi           4051 Death Knight");
+		clif_displaymessage(fd, "4052 Dark Collector   4190 Ex. Super Novice 4211 Kagerou          4212 Oboro");
+		clif_displaymessage(fd, "4215 Rebellion        4218 Summoner");
 		clif_displaymessage(fd, "----- Baby Novice And Baby 1st Class -----");
 		clif_displaymessage(fd, "4023 Baby Novice      4024 Baby Swordman    4025 Baby Magician    4026 Baby Archer");
 		clif_displaymessage(fd, "4027 Baby Acolyte     4028 Baby Merchant    4029 Baby Thief");
@@ -1508,6 +1521,10 @@ ACMD_FUNC(jobchange)
 		clif_displaymessage(fd, "4100 Baby Mechanic    4101 Baby Glt. Cross  4102 Baby Royal Guard 4103 Baby Sorcerer");
 		clif_displaymessage(fd, "4104 Baby Minstrel    4105 Baby Wanderer    4106 Baby Sura        4107 Baby Genetic");
 		clif_displaymessage(fd, "4108 Baby Shadow Chaser");
+		clif_displaymessage(fd, "----- Expanded Baby Class -----");
+		clif_displaymessage(fd, "4045 Super Baby       4191 Ex. Super Baby   4220 Baby Summoner    4222 Baby Ninja");
+		clif_displaymessage(fd, "4223 Baby Kagerou     4224 Baby Oboro       4225 Baby Taekwon     4226 Baby Star Glad.");
+		clif_displaymessage(fd, "4227 Baby Soul Linker 4228 Baby Gunslinger  4229 Baby Rebellion");
 		return -1;
 	}
 
@@ -2201,17 +2218,17 @@ ACMD_FUNC(body_style)
 	// Limit body styles to certain jobs since not all of them are released yet.
 	if (!(// Allow only certain jobs to have the option to change body styles to prevent errors.
 		//(sd->class_&MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT || 
-		//(sd->class_&MAPID_THIRDMASK) == MAPID_WARLOCK || 
-		//(sd->class_&MAPID_THIRDMASK) == MAPID_RANGER || 
+		(sd->class_&MAPID_THIRDMASK) == MAPID_WARLOCK || 
+		(sd->class_&MAPID_THIRDMASK) == MAPID_RANGER || 
 		(sd->class_&MAPID_THIRDMASK) == MAPID_ARCH_BISHOP || 
 		(sd->class_&MAPID_THIRDMASK) == MAPID_MECHANIC || 
 		(sd->class_&MAPID_THIRDMASK) == MAPID_GUILLOTINE_CROSS || 
 		(sd->class_&MAPID_THIRDMASK) == MAPID_ROYAL_GUARD || 
-		//(sd->class_&MAPID_THIRDMASK) == MAPID_SORCERER || 
-		//(sd->class_&MAPID_THIRDMASK) == MAPID_MINSTRELWANDERER || 
-		//(sd->class_&MAPID_THIRDMASK) == MAPID_SURA || 
-		(sd->class_&MAPID_THIRDMASK) == MAPID_GENETIC
-		//(sd->class_&MAPID_THIRDMASK) == MAPID_SHADOW_CHASER || 
+		(sd->class_&MAPID_THIRDMASK) == MAPID_SORCERER || 
+		(sd->class_&MAPID_THIRDMASK) == MAPID_MINSTRELWANDERER || 
+		(sd->class_&MAPID_THIRDMASK) == MAPID_SURA || 
+		(sd->class_&MAPID_THIRDMASK) == MAPID_GENETIC || 
+		(sd->class_&MAPID_THIRDMASK) == MAPID_SHADOW_CHASER
 		))
 	{
 		clif_displaymessage(fd, "This job has no alternate body styles.");
@@ -5871,6 +5888,25 @@ ACMD_FUNC(effect)
 }
 
 /*==========================================
+ * @effect2 by Rytech
+ * Works like @effect but with a 2nd value.
+ *------------------------------------------*/
+ACMD_FUNC(effect2)
+{
+	int type = 0, value = 0, flag = 0;
+	nullpo_retr(-1, sd);
+
+	if (!message || !*message || sscanf(message, "%d %d", &type, &value) < 1) {
+		clif_displaymessage(fd, "Please enter an effect number (usage: @effect <effect number> <value>).");
+		return -1;
+	}
+
+	clif_specialeffect_value(&sd->bl, type, value, (send_target)flag);
+	clif_displaymessage(fd, msg_txt(229)); // Your effect has changed.
+	return 0;
+}
+
+/*==========================================
  * @killer by MouseJstr
  * enable killing players even when not in pvp
  *------------------------------------------*/
@@ -6413,9 +6449,15 @@ ACMD_FUNC(changegm)
 		return -1;
 	}
 
+	if ( agit_flag == 1 || agit2_flag == 1 )
+	{
+		clif_displaymessage(fd, "You can't change guild leaders while War of Emperium is in progress.");
+		return -1;
+	}
+
 	if( map[sd->bl.m].flag.guildlock )
 	{
-		clif_displaymessage(fd, "You cannot change guild leaders on this map.");
+		clif_displaymessage(fd, "You can't change guild leaders on this map.");
 		return -1;
 	}
 
@@ -6426,7 +6468,7 @@ ACMD_FUNC(changegm)
 	}
 	
 	if((pl_sd=map_nick2sd((char *) message)) == NULL || pl_sd->status.guild_id != sd->status.guild_id) {
-		clif_displaymessage(fd, "Target character must be online and be a guildmate.");
+		clif_displaymessage(fd, "Targeted character must be online guildmate.");
 		return -1;
 	}
 
@@ -7463,6 +7505,8 @@ ACMD_FUNC(mobinfo)
 			else
 				clif_displaymessage(fd, atcmd_output);
 		}
+		// Divider placed at end to help see where info for a item ends in case of multiple items displayed.
+		clif_displaymessage(fd, "================================================================");
 	}
 	return 0;
 }
@@ -7895,8 +7939,9 @@ ACMD_FUNC(hommax)
 }
 
 /*==========================================
- * Show Items DB Info   v 1.0
+ * Show Items DB Info   v 2.0
  * originally by [Lupus] eAthena
+ * Upgraded by [Rytech]
  *------------------------------------------*/
 ACMD_FUNC(iteminfo)
 {
@@ -7922,16 +7967,58 @@ ACMD_FUNC(iteminfo)
 	}
 	for (i = 0; i < count; i++) {
 		item_data = item_array[i];
-		sprintf(atcmd_output, "Item: '%s'/'%s'[%d] (%d) Type: %s | Extra Effect: %s",
-			item_data->name,item_data->jname,item_data->slot,item_data->nameid,
-			itemdb_typename(item_data->type), 
-			(item_data->script==NULL)? "None" : "With script"
+
+		// Line 1 - Name, Slots, Item ID
+		sprintf(atcmd_output, "Item: '%s'/'%s'[%d] (%d)",
+			item_data->name,item_data->jname,item_data->slot,item_data->nameid
 		);
 		clif_displaymessage(fd, atcmd_output);
 
+		// Line 2 - Item Type And Weapon/Armor/Ammo Type
+		if ( item_data->type == IT_WEAPON )
+			sprintf(atcmd_output, "Item Type: %s | Weapon Type: %s",
+				itemdb_typename(item_data->type),itemdb_weapon_typename(item_data->look)
+			);
+		else if ( item_data->type == IT_ARMOR )
+			sprintf(atcmd_output, "Item Type: %s | Armor Type: %s",
+				itemdb_typename(item_data->type),itemdb_armor_typename(item_data->equip)
+			);
+		else if ( item_data->type == IT_AMMO )
+			sprintf(atcmd_output, "Item Type: %s | Ammo Type: %s",
+				itemdb_typename(item_data->type),itemdb_ammo_typename(item_data->look)
+			);
+		else
+			sprintf(atcmd_output, "Item Type: %s",
+				itemdb_typename(item_data->type)
+			);
+		clif_displaymessage(fd, atcmd_output);
+
+		// Line 3 - Extra Info
+		if ( item_data->type == IT_WEAPON )
+			sprintf(atcmd_output, "Attack: %d | Range: %d | Weapon Lv: %d | Equip Lv: %d | Refine: %s",
+				item_data->atk,item_data->range,item_data->wlv,item_data->elv,
+				(item_data->flag.no_refine==1)?"No":"Yes"
+			);
+		else if ( item_data->type == IT_ARMOR )
+			sprintf(atcmd_output, "Defense: %d | Equip Lv: %d | Refine: %s",
+				item_data->def,item_data->elv,
+				(item_data->flag.no_refine==1)?"No":"Yes"
+			);
+		else if ( item_data->type == IT_AMMO )
+			sprintf(atcmd_output, "Attack: %d | Equip Lv: %d",
+				item_data->atk,item_data->elv
+			);
+		else
+			sprintf(atcmd_output, "Equip Lv: %d",
+				item_data->elv
+			);
+			clif_displaymessage(fd, atcmd_output);
+
+		// Line 4 - Buy/Sell Price And Weight
 		sprintf(atcmd_output, "NPC Buy:%dz, Sell:%dz | Weight: %.1f ", item_data->value_buy, item_data->value_sell, item_data->weight/10. );
 		clif_displaymessage(fd, atcmd_output);
 
+		// Line 5 - Where To Get The Item
 		if (item_data->maxchance == -1)
 			strcpy(atcmd_output, " - Available in the shops only.");
 		else if (item_data->maxchance)
@@ -7939,6 +8026,9 @@ ACMD_FUNC(iteminfo)
 		else
 			strcpy(atcmd_output, " - Monsters don't drop this item.");
 		clif_displaymessage(fd, atcmd_output);
+
+		// Divider placed at end to help see where info for a item ends in case of multiple items displayed.
+		clif_displaymessage(fd, "================================================================");
 
 	}
 	return 0;
@@ -9466,12 +9556,13 @@ AtCommandInfo atcommand_info[] = {
 	{ "falcon",            20,20,     atcommand_falcon },
 	{ "cart",              20,20,     atcommand_cart },
 	{ "bodystyle",         40,40,     atcommand_body_style },
+	{ "skillfailmsg",      99,99,     atcommand_skillfailmsg },
+	{ "produceeffect",     99,99,     atcommand_produceeffect },
+	{ "effect2",           40,40,     atcommand_effect2 },
 	//Mutated Homunculus Commands
 	{ "hommutate",         60,60,     atcommand_hommutation },
 	{ "hommutation",       60,60,     atcommand_hommutation },
-	{ "hommax",            60,60,     atcommand_hommax },
-	{ "skillfailmsg",      99,99,     atcommand_skillfailmsg },
-	{ "produceeffect",     99,99,     atcommand_produceeffect }
+	{ "hommax",            60,60,     atcommand_hommax }
 };
 
 

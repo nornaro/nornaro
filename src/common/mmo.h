@@ -48,7 +48,7 @@
 
 #ifndef PACKETVER
 	//#define PACKETVER	20081126
-	#define PACKETVER 20151029
+	#define PACKETVER 20161228
 #endif
 // backward compatible PACKETVER 8 and 9
 #if PACKETVER == 8
@@ -97,6 +97,11 @@
 #define MAX_CHARS MAX_CHARS_SLOTS
 #endif
 
+// Allow players to create more then just human characters?
+// Current Races Supported: Human / Doram.
+// Setting is 1 for yes and 0 for no.
+#define ALLOW_OTHER_RACES 1
+
 //Number of slots carded equipment can have. Never set to less than 4 as they are also used to keep the data of forged items/equipment. [Skotlex]
 //Note: The client seems unable to receive data for more than 4 slots due to all related packets having a fixed size.
 #define MAX_SLOTS 4
@@ -105,7 +110,7 @@
 #define MAX_ZENY 1000000000
 #define MAX_FAME 1000000000
 #define MAX_CART 100
-#define MAX_SKILL 5057
+#define MAX_SKILL 5066
 #define GLOBAL_REG_NUM 256
 #define ACCOUNT_REG_NUM 64
 #define ACCOUNT_REG2_NUM 16
@@ -115,7 +120,7 @@
 #define MIN_WALK_SPEED 0
 #define MAX_WALK_SPEED 1000
 #define MAX_STORAGE 600
-#define MAX_GUILD_STORAGE 600
+#define MAX_GUILD_STORAGE 100*5	// Max storage is 100 * GD_GUILD_STORAGE level. [Rytech]
 #define MAX_PARTY 12
 #define MAX_GUILD 16+10*6	// increased max guild members +6 per 1 extension levels [Lupus]
 #define MAX_GUILDPOSITION 20	// increased max guild positions to accomodate for all members [Valaris] (removed) [PoW]
@@ -493,6 +498,7 @@ struct guild_member {
 	uint64 exp;
 	int exp_payper;
 	short online,position;
+	int last_login;
 	char name[NAME_LENGTH];
 	struct map_session_data *sd;
 	unsigned char modified;
@@ -589,6 +595,7 @@ enum {
 	GMI_GENDER,
 	GMI_CLASS,
 	GMI_LEVEL,
+	GMI_LAST_LOGIN,
 };
 
 enum {
@@ -779,6 +786,19 @@ enum {
 	JOB_REBELLION = 4215,
 
 	JOB_SUMMONER = 4218,
+
+	JOB_BABY_SUMMONER = 4220,
+
+	JOB_BABY_NINJA = 4222,
+	JOB_BABY_KAGEROU,
+	JOB_BABY_OBORO,
+	JOB_BABY_TAEKWON,
+	JOB_BABY_STAR_GLADIATOR,
+	JOB_BABY_SOUL_LINKER,
+	JOB_BABY_GUNSLINGER,
+	JOB_BABY_REBELLION,
+
+	JOB_BABY_STAR_GLADIATOR2 = 4238,
 
 	JOB_MAX,
 };

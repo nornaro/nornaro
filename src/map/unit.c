@@ -926,6 +926,7 @@ int unit_can_move(struct block_list *bl)
 			|| sc->data[SC_NETHERWORLD]
 			|| sc->data[SC_MEIKYOUSISUI]
 			|| sc->data[SC_KAGEHUMI]
+			|| sc->data[SC_KINGS_GRACE]
 			|| sc->data[SC_SUHIDE]
 			|| sc->data[SC_TINDER_BREAKER]
 		))
@@ -1049,6 +1050,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, short skill_num, sh
 		case TK_JUMPKICK:
 		case TK_COUNTER:
 		case HT_POWER:
+		case RL_QD_SHOT:
 			if (sc && sc->data[SC_COMBO] && sc->data[SC_COMBO]->val1 == skill_num)
 				target_id = sc->data[SC_COMBO]->val2;
 			break;
@@ -1090,6 +1092,9 @@ int unit_skilluse_id2(struct block_list *src, int target_id, short skill_num, sh
 		case HAMI_CASTLE:
 		case MH_LIGHT_OF_REGENE:
 		case MH_OVERED_BOOST:
+		case MH_STEINWAND:
+		case MH_GRANITIC_ARMOR:
+		case MH_PYROCLASTIC:
 			target = battle_get_master(src);
 			if (!target) return 0;
 			target_id = target->id;
@@ -2076,6 +2081,9 @@ int unit_remove_map_(struct block_list *bl, clr_type clrtype, const char* file, 
 		status_change_end(bl, SC_CURSEDCIRCLE_TARGET, INVALID_TIMER);
 		status_change_end(bl, SC_NETHERWORLD, INVALID_TIMER);
 		status_change_end(bl, SC_VACUUM_EXTREME, INVALID_TIMER);
+		status_change_end(bl, SC_C_MARKER, INVALID_TIMER);
+		status_change_end(bl, SC_H_MINE, INVALID_TIMER);
+		status_change_end(bl, SC_KINGS_GRACE, INVALID_TIMER);
 		status_change_end(bl, SC_SUHIDE, INVALID_TIMER);
 		status_change_end(bl, SC_TINDER_BREAKER, INVALID_TIMER);
 	}

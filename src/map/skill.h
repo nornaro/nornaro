@@ -19,8 +19,10 @@ struct status_change_entry;
 #define MAX_ARROW_RESOURCE		5
 #define MAX_SKILL_ABRA_DB		350
 #define MAX_SKILL_SPELLBOOK_DB	17
-#define MAX_SKILL_IMPROVISE_DB 16
+#define MAX_SKILL_IMPROVISE_DB	16
 #define MAX_SKILL_MAGICMUSHROOM_DB 23
+#define MAX_CRIMSON_MARKS 3
+#define MAX_HOWL_MINES 5
 
 #define MAX_SKILL_LEVEL 100
 
@@ -234,12 +236,6 @@ struct s_skill_magicmushroom_db {
 
 extern struct s_skill_magicmushroom_db skill_magicmushroom_db[MAX_SKILL_MAGICMUSHROOM_DB];
 
-struct s_skill_reproduce_db {
-	int skillid;
-	int reproduce;
-};
-extern struct s_skill_reproduce_db skill_reproduce_db[MAX_SKILL_DB];
-
 extern int enchant_eff[5];
 extern int deluge_eff[5];
 
@@ -378,6 +374,7 @@ int skill_spellbook( struct map_session_data *sd, int nameid);	// Warlock Spellb
 int skill_select_menu( struct map_session_data *sd, int flag, int skill_id); // Shadow Cheser Auto Shadow Spell [pakpil]
 int skill_elementalanalysis(struct map_session_data *sd, int n, int type, unsigned short *item_list); // Sorcerer Four Elemental Analisys.
 int skill_changematerial(struct map_session_data *sd, int n, unsigned short *item_list);	// Genetic Change Material.
+int skill_akaitsuki_damage (struct block_list* src, struct block_list *bl, int damage, int skillid, int skilllv, unsigned int tick);
 
 int skill_stasis_check(struct block_list *bl, int skillid);// Stasis skill usage check. [LimitLine]
 int skill_get_elemental_type(int skill_id, int skill_lv);
@@ -1212,6 +1209,7 @@ enum e_skill {
 	NPC_LEASH,
 	NPC_WIDELEASH,
 	NPC_WIDECRITICALWOUND,
+	NPC_EARTHQUAKE_K,
 
 	KN_CHARGEATK = 1001,
 	CR_SHRINK,
@@ -1681,6 +1679,10 @@ enum e_skill {
 	SU_CHATTERING,
 	SU_SPIRITOFSEA,
 
+	WE_CALLALLFAMILY = 5063,
+	WE_ONEFOREVER,
+	WE_CHEERUP,
+
 	HLIF_HEAL = 8001,
 	HLIF_AVOID,
 	HLIF_BRAIN,
@@ -1950,6 +1952,8 @@ enum {
 	UNT_B_TRAP,
 	UNT_FIRE_RAIN,
 	UNT_CN_POWDERING,
+	UNT_NYANGGRASS,
+	UNT_GROUNDDRIFT_NEUTRAL,
 
 	UNT_MAX
 };

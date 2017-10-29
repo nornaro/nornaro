@@ -192,7 +192,7 @@ proper jobs. Since Bard/Dancer type jobs are both the 2-2 job of the Archer and
 both of them use the same 'Job' bitmask, the gender setting is used to set which
 gender uses which weapon. Bards use instruments and Dancers use whips.
 This setting is used for a few other items like The Tuxedo, Wedding Dress, and
-the 2 different Mechanic exclusive Heads (Males get the red one and females
+the 2 different Mechanic exclusive headgears (Males get the red one and females
 get the yellow one)
 --------------------------------
 0 = Female
@@ -208,10 +208,11 @@ This setting affects if a weapon will equip in 1 or both hands ('View' setting a
 required for setting weapon to 1 or 2 handed behavior) and also sets what kind of
 armor piece a item is which also sets what slot or slots it equips to.
 Most equip items will use a single slot setting. However, some equips like certain
-weapons, Heads, and all accessorys require a combination of 2 or more slot bits
+weapons, headgears, and all accessorys require a combination of 2 or more slot bits
 added together. This setting works a little different for cards. When setting for
 cards, the setting tells which kinds of equips it can be attached to.
 --------------------------------
+Regular Values
 Normal Equips
       1 = Lower Head
       2 = Right Hand (Weapon)
@@ -248,13 +249,15 @@ Normal Equips
     136 = Accessory (Left And Right) (Normally Used On All Accessory Items)
     257 = Upper/Lower Head
     513 = Middle/Lower Head
+    768 = Upper/Middle Head
     769 = Upper/Middle/Lower Head
 Costume Equips
+   3072 = Costume Upper/Middle Head
    5120 = Costume Upper/Lower Head
    6144 = Costume Middle/Lower Head
    7168 = Costume Upper/Middle/Lower Head
 Shadow Equips
-3145728 = Shadow Accessory
+3145728 = Shadow Accessory (Left And Right)
 --------------------------------
 
 =wLV
@@ -286,10 +289,10 @@ are scripted. Refinements can also affect the effectiveness of certain skills.
 Sets the view ID for a item.
 Required for weapon, armor, and ammo type items.
 This setting serves a number of different functions.
-For Heads, shields, robes, costume Heads, and costume robes, the setting sets which sprite
+For headgears, shields, robes, costume headgears, and costume robes, the setting sets which sprite
 will appear when the item is equipped. Which range of sprites you can select from depends on
 the equip location thats set to the item. Example being items equipped on the head will display
-Head sprites, shield equips will display shields, and costume robes will display special
+headgear sprites, shield equips will display shields, and costume robes will display special
 sprites on the back. The setting works different for weapons and ammo. For weapon equips,
 the view setting will set what type of weapon the equip is and also set the correct weapon
 sprite for the weapon. For ammo, the view setting sets the ammo type.
@@ -314,9 +317,9 @@ Weapons
 16 = Katars
 17 = Revolvers
 18 = Rifles
-19 = Gatling guns
+19 = Gatling Guns
 20 = Shotguns
-21 = Grenade launchers
+21 = Grenade Launchers
 22 = Huuma Shurikens
 23 = Two-Handed Staffs
 

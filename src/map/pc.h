@@ -351,6 +351,8 @@ struct map_session_data {
 	short mission_mobid; //Stores the target mob_id for TK_MISSION
 	int die_counter; //Total number of times you've died
 	int devotion[5]; //Stores the account IDs of chars devoted to.
+	int crimson_mark[MAX_CRIMSON_MARKS];// Stores the account ID's of character's with a crimson mark.
+	int howl_mine[MAX_HOWL_MINES];// Stores the account ID's of character's with a howl mine.
 	int reg_num; //Number of registries (type numeric)
 	int regstr_num; //Number of registries (type string)
 
@@ -453,13 +455,13 @@ struct map_session_data {
 	int shadowform_id;
 };
 
-//Update this max as necessary. Raised from 80 to 84 as the Expanded Super Novice needs it. [Rytech]
-#define MAX_SKILL_TREE 84
+//Update this max as necessary. Raised from 84 to 85 as the Expanded Super Baby needs it. [Rytech]
+#define MAX_SKILL_TREE 85
 //Total number of classes (for data storage)
 #define CLASS_COUNT (JOB_MAX - JOB_NOVICE_HIGH + JOB_MAX_BASIC)
 
 enum weapon_type {
-	W_FIST,	//Bare hands
+	W_FIST = 0,	//Bare hands
 	W_DAGGER,	//1
 	W_1HSWORD,	//2
 	W_2HSWORD,	//3
@@ -540,6 +542,13 @@ enum equip_pos {
 #define EQP_COSTUME (EQP_COSTUME_HEAD_TOP|EQP_COSTUME_HEAD_MID|EQP_COSTUME_HEAD_LOW|EQP_COSTUME_GARMENT|EQP_COSTUME_FLOOR)
 #define EQP_SHADOW_ACC (EQP_SHADOW_ACC_L|EQP_SHADOW_ACC_R)
 #define EQP_SHADOW_EQUIPS (EQP_SHADOW_ARMOR|EQP_SHADOW_WEAPON|EQP_SHADOW_SHIELD|EQP_SHADOW_SHOES|EQP_SHADOW_ACC_R|EQP_SHADOW_ACC_L)
+// Needed for exact slot position checks.
+#define EQP_HELM_TL (EQP_HEAD_TOP|EQP_HEAD_LOW)
+#define EQP_HELM_ML (EQP_HEAD_MID|EQP_HEAD_LOW)
+#define EQP_HELM_TM (EQP_HEAD_TOP|EQP_HEAD_MID)
+#define EQP_COSTUME_HELM_TL (EQP_COSTUME_HEAD_TOP|EQP_COSTUME_HEAD_LOW)
+#define EQP_COSTUME_HELM_ML (EQP_COSTUME_HEAD_MID|EQP_COSTUME_HEAD_LOW)
+#define EQP_COSTUME_HELM_TM (EQP_COSTUME_HEAD_TOP|EQP_COSTUME_HEAD_MID)
 
 // Equip positions that use a visible sprite
 #if PACKETVER < 20110111
@@ -639,6 +648,9 @@ extern int duel_count;
 ||	( (class_) >= JOB_SUPER_NOVICE_E && (class_) <= JOB_SUPER_BABY_E   ) \
 ||	( (class_) >= JOB_KAGEROU        && (class_) <= JOB_OBORO          ) \
 ||	  (class_) == JOB_REBELLION      || (class_) == JOB_SUMMONER         \
+||    (class_) == JOB_BABY_SUMMONER \
+||	( (class_) >= JOB_BABY_NINJA     && (class_) <= JOB_BABY_REBELLION ) \
+||    (class_) == JOB_BABY_STAR_GLADIATOR2 \
 )
 
 int pc_class2idx(int class_);

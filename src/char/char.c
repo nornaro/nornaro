@@ -1392,7 +1392,7 @@ int make_new_char(struct char_session_data* sd, char* name_, int str, int agi, i
 	// Race selection from 0xa39 packet.
 	// 0 = Human
 	// 4218 = Doram
-	if ( race == RACE_HUMAN )
+	if ( race == RACE_HUMAN || ALLOW_OTHER_RACES == 0)
 	{	// Human - Defaults
 		// Job = Novice
 		// Starting HP/SP = 40/11
@@ -1606,6 +1606,16 @@ char * job_name(int class_)
 	case JOB_OBORO: return "Oboro";
 	case JOB_REBELLION: return "Rebellion";
 	case JOB_SUMMONER: return "Summoner";
+	case JOB_BABY_SUMMONER: return "Baby Summoner";
+	case JOB_BABY_NINJA: return "Baby Ninja";
+	case JOB_BABY_KAGEROU: return "Baby Kagerou";
+	case JOB_BABY_OBORO: return "Baby Oboro";
+	case JOB_BABY_TAEKWON: return "Baby Taekwon";
+	case JOB_BABY_STAR_GLADIATOR: return "Baby Star Gladiator";
+	case JOB_BABY_SOUL_LINKER: return "Baby Soul Linker";
+	case JOB_BABY_GUNSLINGER: return "Baby Gunslinger";
+	case JOB_BABY_REBELLION: return "Baby Rebellion";
+	case JOB_BABY_STAR_GLADIATOR2: return "Flying Baby Star Gladiator";
 	}
 	return "Unknown Job";
 }
@@ -2438,7 +2448,8 @@ int parse_fromlogin(int fd)
 					    jobclass == JOB_MINSTREL || jobclass == JOB_WANDERER ||
 					    jobclass == JOB_MINSTREL_T || jobclass == JOB_WANDERER_T ||
 					    jobclass == JOB_BABY_MINSTREL || jobclass == JOB_BABY_WANDERER ||
-					    jobclass == JOB_KAGEROU || jobclass == JOB_OBORO) {
+						jobclass == JOB_KAGEROU || jobclass == JOB_OBORO ||
+					    jobclass == JOB_BABY_KAGEROU || jobclass == JOB_BABY_OBORO) {
 						// job modification
 						if (jobclass == JOB_BARD || jobclass == JOB_DANCER) {
 							char_dat[i].status.class_ = (sex) ? JOB_BARD : JOB_DANCER;
@@ -2454,49 +2465,27 @@ int parse_fromlogin(int fd)
 							char_dat[i].status.class_ = (sex) ? JOB_BABY_MINSTREL : JOB_BABY_WANDERER;
 						} else if (jobclass == JOB_KAGEROU || jobclass == JOB_OBORO) {
 							char_dat[i].status.class_ = (sex) ? JOB_KAGEROU : JOB_OBORO;
+						} else if (jobclass == JOB_BABY_KAGEROU || jobclass == JOB_BABY_OBORO) {
+							char_dat[i].status.class_ = (sex) ? JOB_BABY_KAGEROU : JOB_BABY_OBORO;
 						}
-						// remove specifical skills of classes 19, 4020 and 4042
-						for(j = 315; j <= 322; j++) {
+						// Removes Bard/Dancer gender exclusive skills.
+						for(j = 315; j <= 330; j++) {
 							if (char_dat[i].status.skill[j].id > 0 && !char_dat[i].status.skill[j].flag) {
 								char_dat[i].status.skill_point += char_dat[i].status.skill[j].lv;
 								char_dat[i].status.skill[j].id = 0;
 								char_dat[i].status.skill[j].lv = 0;
 							}
 						}
-						// remove specifical skills of classes 20, 4021 and 4043
-						for(j = 323; j <= 330; j++) {
+						// Removes Minstrel/Wanderer gender exclusive skills.
+						for(j = 2350; j <= 2383; j++) {
 							if (char_dat[i].status.skill[j].id > 0 && !char_dat[i].status.skill[j].flag) {
 								char_dat[i].status.skill_point += char_dat[i].status.skill[j].lv;
 								char_dat[i].status.skill[j].id = 0;
 								char_dat[i].status.skill[j].lv = 0;
 							}
 						}
-						// Removes Minstrel exclusive skills.
-						for(j = 2381; j <= 2383; j++) {
-							if (char_dat[i].status.skill[j].id > 0 && !char_dat[i].status.skill[j].flag) {
-								char_dat[i].status.skill_point += char_dat[i].status.skill[j].lv;
-								char_dat[i].status.skill[j].id = 0;
-								char_dat[i].status.skill[j].lv = 0;
-							}
-						}
-						// Removes Wanderer exclusive skills.
-						for(j = 2350; j <= 2352; j++) {
-							if (char_dat[i].status.skill[j].id > 0 && !char_dat[i].status.skill[j].flag) {
-								char_dat[i].status.skill_point += char_dat[i].status.skill[j].lv;
-								char_dat[i].status.skill[j].id = 0;
-								char_dat[i].status.skill[j].lv = 0;
-							}
-						}
-						// Removes Kagerou exclusive skills.
-						for(j = 3023; j <= 3025; j++) {
-							if (char_dat[i].status.skill[j].id > 0 && !char_dat[i].status.skill[j].flag) {
-								char_dat[i].status.skill_point += char_dat[i].status.skill[j].lv;
-								char_dat[i].status.skill[j].id = 0;
-								char_dat[i].status.skill[j].lv = 0;
-							}
-						}
-						// Removes Oboro exclusive skills.
-						for(j = 3026; j <= 3029; j++) {
+						// Removes Kagerou/Oboro gender exclusive skills.
+						for(j = 3023; j <= 3029; j++) {
 							if (char_dat[i].status.skill[j].id > 0 && !char_dat[i].status.skill[j].flag) {
 								char_dat[i].status.skill_point += char_dat[i].status.skill[j].lv;
 								char_dat[i].status.skill[j].id = 0;
@@ -2779,8 +2768,9 @@ void char_read_fame_list(void)
 	}
 	// Build Taekwon ranking list
 	for (i = 0, j = 0; i < char_num && j < fame_list_size_taekwon; i++) {
-		if (char_dat[id[i]].status.fame &&
-			char_dat[id[i]].status.class_ == JOB_TAEKWON)
+		if (char_dat[id[i]].status.fame && (
+			char_dat[id[i]].status.class_ == JOB_TAEKWON ||
+			char_dat[id[i]].status.class_ == JOB_BABY_TAEKWON))
 		{
 			fame_item.id = char_dat[id[i]].status.char_id;
 			fame_item.fame = char_dat[id[i]].status.fame;

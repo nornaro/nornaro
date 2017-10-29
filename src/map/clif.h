@@ -29,7 +29,7 @@ struct party_booking_ad_info;
 #include <stdarg.h>
 // packet DB
 #define MAX_PACKET_DB		0xf00
-#define MAX_PACKET_VER		33
+#define MAX_PACKET_VER		37
 #define	MAX_PACKET_POS		20
 
 struct s_packet_db {
@@ -559,6 +559,7 @@ int clif_party_hp(struct map_session_data *sd);
 void clif_hpmeter_single(int fd, int id, unsigned int hp, unsigned int maxhp);
 int clif_hpmeter(struct map_session_data *sd);
 int clif_hpmeter_sub(struct block_list *bl, va_list ap);
+int clif_party_job_and_level(struct map_session_data *sd);
 
 // guild
 int clif_guild_created(struct map_session_data *sd,int flag);
@@ -643,6 +644,7 @@ void clif_friendslist_reqack(struct map_session_data *sd, struct map_session_dat
 void clif_weather(int m); // [Valaris]
 int clif_specialeffect(struct block_list* bl, int type, enum send_target target); // special effects [Valaris]
 void clif_specialeffect_single(struct block_list* bl, int type, int fd);
+int clif_specialeffect_value(struct block_list* bl, int effect_id, int num, send_target target);
 int clif_messagecolor(struct block_list* bl, unsigned long color, const char* msg); // Mob/Npc color talk [SnakeDrak]
 int clif_message(struct block_list *bl, const char* msg); // messages (from mobs/npcs) [Valaris]
 
@@ -788,6 +790,7 @@ void clif_map_type2(struct block_list *bl,enum send_target target);
 int clif_crimson_marker_xy(struct map_session_data *sd);
 int clif_crimson_marker_xy_single(int fd, struct map_session_data *sd);
 int clif_crimson_marker_xy_remove(struct map_session_data *sd);
+int clif_crimson_marker_xy_all(struct map_session_data *sd, struct block_list *bl, short mark);
 
 // V5 Item Packets
 void clif_inventorylist_v5(struct map_session_data *sd);

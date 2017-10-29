@@ -546,6 +546,16 @@ extern struct Battle_Config
 	int costume_refine_def;
 	int shadow_refine_def;
 	int cashshop_price_rate;
+	int player_baselv_req_skill;
+	int warmer_show_heal;
+	int baby_hp_sp_penalty;
+	int baby_crafting_penalty;
+	int plag_renewal_expanded_skills;
+	int plag_doram_skills;
+	int allow_bloody_lust_on_boss;
+	int allow_bloody_lust_on_warp;
+	int homunculus_pyroclastic_autocast;
+	int pyroclastic_breaks_weapon;
 
 	// Costume Outfits
 	int hanbok_ignorepalette;

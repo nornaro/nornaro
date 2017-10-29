@@ -1044,7 +1044,8 @@ bool pc_can_Adopt(struct map_session_data *p1_sd, struct map_session_data *p2_sd
 		return false;
 	}
 
-	if( !(b_sd->status.class_ >= JOB_NOVICE && b_sd->status.class_ <= JOB_THIEF) )
+	if( !((b_sd->status.class_ >= JOB_NOVICE && b_sd->status.class_ <= JOB_THIEF) || b_sd->status.class_ == JOB_GUNSLINGER || 
+		b_sd->status.class_ == JOB_NINJA || b_sd->status.class_ == JOB_TAEKWON || b_sd->status.class_ == JOB_SUMMONER) )
 		return false;
 
 	return true;
@@ -1082,6 +1083,7 @@ bool pc_adoption(struct map_session_data *p1_sd, struct map_session_data *p2_sd,
 		// Baby Skills
 		pc_skill(b_sd, WE_BABY, 1, 0);
 		pc_skill(b_sd, WE_CALLPARENT, 1, 0);
+		pc_skill(b_sd, WE_CHEERUP, 1, 0);
 
 		// Parents Skills
 		pc_skill(p1_sd, WE_CALLBABY, 1, 0);
@@ -1613,6 +1615,11 @@ int pc_calc_skilltree(struct map_session_data *sd)
 						}
 					}
 				}
+				// Some Summoner skills requires the player to reach a cetain base level to unlock.
+				if( battle_config.player_baselv_req_skill == 1 && sd->status.base_level < 100 && 
+					skill_tree[c][i].id >= SU_POWEROFFLOCK && skill_tree[c][i].id <= SU_SPIRITOFSEA )
+					f = 0;
+				// Some skills require the player to reach a certain job level to unlock.
 				if( sd->status.job_level < skill_tree[c][i].joblv )
 					f = 0; // job level requirement wasn't satisfied
 			}
@@ -1712,6 +1719,9 @@ static void pc_check_skilltree(struct map_session_data *sd, int skill)
 				}
 			}
 			if( !f )
+				continue;
+			if( battle_config.player_baselv_req_skill == 1 && sd->status.base_level < 100 && 
+				skill_tree[c][i].id >= SU_POWEROFFLOCK && skill_tree[c][i].id <= SU_SPIRITOFSEA )
 				continue;
 			if( sd->status.job_level < skill_tree[c][i].joblv )
 				continue;
@@ -4230,7 +4240,7 @@ int pc_useitem(struct map_session_data *sd,int n)
 
 	 //Prevent mass item usage. [Skotlex]
 	if( ( DIFF_TICK(sd->canuseitem_tick, tick) > 0 && sd->inventory_data[n]->type == IT_HEALING ) ||
-		( DIFF_TICK(sd->canusecashfood_tick, tick) > 0 && (itemdb_iscashfood(sd->status.inventory[n].nameid) ))
+		(itemdb_iscashfood(sd->status.inventory[n].nameid) && DIFF_TICK(sd->canusecashfood_tick, tick) > 0)
 	)
 		return 0;
 
@@ -4246,6 +4256,8 @@ int pc_useitem(struct map_session_data *sd,int n)
 		(sd->sc.data[SC_DEEPSLEEP] || sd->sc.data[SC_CRYSTALIZE]) && sd->status.inventory[n].nameid != ITEMID_NAUTHIZ_RUNE ||
 		sd->sc.data[SC_SATURDAYNIGHTFEVER] ||
 		sd->sc.data[SC_HEAT_BARREL_AFTER] ||
+		sd->sc.data[SC_FLASHCOMBO] ||
+		sd->sc.data[SC_KINGS_GRACE] ||
 		sd->sc.data[SC_SUHIDE]
 	))
 		return 0;
@@ -5097,6 +5109,10 @@ int pc_jobid2mapid(unsigned short b_class)
 		case JOB_BABY_ACOLYTE:          return MAPID_BABY_ACOLYTE;
 		case JOB_BABY_MERCHANT:         return MAPID_BABY_MERCHANT;
 		case JOB_BABY_THIEF:            return MAPID_BABY_THIEF;
+		case JOB_BABY_TAEKWON:          return MAPID_BABY_TAEKWON;
+		case JOB_BABY_GUNSLINGER:       return MAPID_BABY_GUNSLINGER;
+		case JOB_BABY_NINJA:            return MAPID_BABY_NINJA;
+		case JOB_BABY_SUMMONER:         return MAPID_BABY_SUMMONER;
 	//Baby 2-1 Jobs
 		case JOB_SUPER_BABY:            return MAPID_SUPER_BABY;
 		case JOB_BABY_KNIGHT:           return MAPID_BABY_KNIGHT;
@@ -5105,6 +5121,10 @@ int pc_jobid2mapid(unsigned short b_class)
 		case JOB_BABY_PRIEST:           return MAPID_BABY_PRIEST;
 		case JOB_BABY_BLACKSMITH:       return MAPID_BABY_BLACKSMITH;
 		case JOB_BABY_ASSASSIN:         return MAPID_BABY_ASSASSIN;
+		case JOB_BABY_STAR_GLADIATOR:   return MAPID_BABY_STAR_GLADIATOR;
+		case JOB_BABY_REBELLION:        return MAPID_BABY_REBELLION;
+		case JOB_BABY_KAGEROU:
+		case JOB_BABY_OBORO:            return MAPID_BABY_KAGEROUOBORO;
 	//Baby 2-2 Jobs
 		case JOB_BABY_CRUSADER:         return MAPID_BABY_CRUSADER;
 		case JOB_BABY_SAGE:             return MAPID_BABY_SAGE;
@@ -5113,6 +5133,7 @@ int pc_jobid2mapid(unsigned short b_class)
 		case JOB_BABY_MONK:             return MAPID_BABY_MONK;
 		case JOB_BABY_ALCHEMIST:        return MAPID_BABY_ALCHEMIST;
 		case JOB_BABY_ROGUE:            return MAPID_BABY_ROGUE;
+		case JOB_BABY_SOUL_LINKER:      return MAPID_BABY_SOUL_LINKER;
 	//3-1 Jobs
 		case JOB_SUPER_NOVICE_E:        return MAPID_SUPER_NOVICE_E;
 		case JOB_RUNE_KNIGHT:           return MAPID_RUNE_KNIGHT;
@@ -5240,6 +5261,10 @@ int pc_mapid2jobid(unsigned short class_, int sex)
 		case MAPID_BABY_ACOLYTE:          return JOB_BABY_ACOLYTE;
 		case MAPID_BABY_MERCHANT:         return JOB_BABY_MERCHANT;
 		case MAPID_BABY_THIEF:            return JOB_BABY_THIEF;
+		case MAPID_BABY_TAEKWON:          return JOB_BABY_TAEKWON;
+		case MAPID_BABY_GUNSLINGER:       return JOB_BABY_GUNSLINGER;
+		case MAPID_BABY_NINJA:            return JOB_BABY_NINJA;
+		case MAPID_BABY_SUMMONER:         return JOB_BABY_SUMMONER;
 	//Baby 2-1 Jobs
 		case MAPID_SUPER_BABY:            return JOB_SUPER_BABY;
 		case MAPID_BABY_KNIGHT:           return JOB_BABY_KNIGHT;
@@ -5248,6 +5273,9 @@ int pc_mapid2jobid(unsigned short class_, int sex)
 		case MAPID_BABY_PRIEST:           return JOB_BABY_PRIEST;
 		case MAPID_BABY_BLACKSMITH:       return JOB_BABY_BLACKSMITH;
 		case MAPID_BABY_ASSASSIN:         return JOB_BABY_ASSASSIN;
+		case MAPID_BABY_STAR_GLADIATOR:   return JOB_BABY_STAR_GLADIATOR;
+		case MAPID_BABY_REBELLION:        return JOB_BABY_REBELLION;
+		case MAPID_BABY_KAGEROUOBORO:     return sex?JOB_BABY_KAGEROU:JOB_BABY_OBORO;
 	//Baby 2-2 Jobs
 		case MAPID_BABY_CRUSADER:         return JOB_BABY_CRUSADER;
 		case MAPID_BABY_SAGE:             return JOB_BABY_SAGE;
@@ -5255,6 +5283,7 @@ int pc_mapid2jobid(unsigned short class_, int sex)
 		case MAPID_BABY_MONK:             return JOB_BABY_MONK;
 		case MAPID_BABY_ALCHEMIST:        return JOB_BABY_ALCHEMIST;
 		case MAPID_BABY_ROGUE:            return JOB_BABY_ROGUE;
+		case MAPID_BABY_SOUL_LINKER:      return JOB_BABY_SOUL_LINKER;
 	//3-1 Jobs
 		case MAPID_SUPER_NOVICE_E:        return JOB_SUPER_NOVICE_E;
 		case MAPID_RUNE_KNIGHT:           return JOB_RUNE_KNIGHT;
@@ -5537,6 +5566,22 @@ char* job_name(int class_)
 
 	case JOB_SUMMONER:
 		return msg_txt(658);
+
+	case JOB_BABY_SUMMONER:
+		return msg_txt(659);
+
+	case JOB_BABY_NINJA:
+	case JOB_BABY_KAGEROU:
+	case JOB_BABY_OBORO:
+	case JOB_BABY_TAEKWON:
+	case JOB_BABY_STAR_GLADIATOR:
+	case JOB_BABY_SOUL_LINKER:
+	case JOB_BABY_GUNSLINGER:
+	case JOB_BABY_REBELLION:
+		return msg_txt(660 - JOB_BABY_NINJA+class_);
+
+	case JOB_BABY_STAR_GLADIATOR2:
+		return msg_txt(664);
 	
 	default:
 		return msg_txt(699);
@@ -6220,8 +6265,8 @@ int pc_resetlvl(struct map_session_data* sd,int type)
 		if(sd->status.class_ == JOB_NOVICE_HIGH) {
 			sd->status.status_point=100;	// not 88 [celest]
 			// give platinum skills upon changing
-			pc_skill(sd,142,1,0);
-			pc_skill(sd,143,1,0);
+			pc_skill(sd,NV_FIRSTAID,1,0);
+			pc_skill(sd,NV_TRICKDEAD,1,0);
 		}
 	}
 
@@ -6378,6 +6423,9 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 
 		if((sd->sc.data[SC_SPRITEMABLE] && pc_checkskill(sd, SU_SPRITEMABLE)))
 			status_change_end(&sd->bl,SC_SPRITEMABLE,INVALID_TIMER);
+
+		if((sd->sc.data[SC_SOULATTACK] && pc_checkskill(sd, SU_SOULATTACK)))
+			status_change_end(&sd->bl,SC_SOULATTACK,INVALID_TIMER);
 	}
 
 	for( i = 1; i < MAX_SKILL; i++ )
@@ -6583,7 +6631,23 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
 			status_change_end(&devsd->bl, SC_DEVOTION, INVALID_TIMER);
 		sd->devotion[k] = 0;
 	}
-	
+
+	for(k = 0; k < MAX_CRIMSON_MARKS; k++)
+	if (sd->crimson_mark[k]){
+		struct map_session_data *cmarksd = map_id2sd(sd->crimson_mark[k]);
+		if (cmarksd)
+			status_change_end(&cmarksd->bl, SC_C_MARKER, INVALID_TIMER);
+		sd->crimson_mark[k] = 0;
+	}
+
+	for(k = 0; k < MAX_HOWL_MINES; k++)
+	if (sd->howl_mine[k]){
+		struct map_session_data *hminesd = map_id2sd(sd->howl_mine[k]);
+		if (hminesd)
+			status_change_end(&hminesd->bl, SC_H_MINE, INVALID_TIMER);
+		sd->howl_mine[k] = 0;
+	}
+
 	if( sd->shadowform_id )
 	{
 		struct block_list *s_bl = map_id2bl(sd->shadowform_id);
@@ -7289,12 +7353,13 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 		pc_setglobalreg(sd, "CLONE_SKILL", 0);
 		pc_setglobalreg(sd, "CLONE_SKILL_LV", 0);
 	}
-	if(sd->reproduceskill_id)
-	{//Check
+
+	if(sd->reproduceskill_id) {
 		sd->reproduceskill_id = 0;
 		pc_setglobalreg(sd, "REPRODUCE_SKILL",0);
 		pc_setglobalreg(sd, "REPRODUCE_SKILL_LV",0);
 	}
+
 	if ((b_class&&MAPID_UPPERMASK) != (sd->class_&MAPID_UPPERMASK))
 	{ //Things to remove when changing class tree.
 		const int class_ = pc_class2idx(sd->status.class_);
@@ -7371,6 +7436,9 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 
 	if (sd->sc.data[SC_SPRITEMABLE] && !pc_checkskill(sd, SU_SPRITEMABLE))
 		status_change_end(&sd->bl,SC_SPRITEMABLE,INVALID_TIMER);
+
+	if (sd->sc.data[SC_SOULATTACK] && !pc_checkskill(sd, SU_SOULATTACK))
+		status_change_end(&sd->bl,SC_SOULATTACK,INVALID_TIMER);
 	
 	if(sd->status.manner < 0)
 		clif_changestatus(&sd->bl,SP_MANNER,sd->status.manner);
@@ -8300,6 +8368,18 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 		return 0;
 	}
 
+	if ( sd->sc.data[SC_PYROCLASTIC] )
+	{// Can't equip/swap weapons. If a 2 handed weapon is equipped, don't allow equipping a shield or anything else in the left hand.
+		if ( pos&EQP_HAND_R || (pos&EQP_HAND_L && (sd->status.weapon==W_2HSWORD || sd->status.weapon==W_2HSPEAR || 
+			sd->status.weapon==W_2HAXE || sd->status.weapon==W_2HMACE || sd->status.weapon==W_BOW || sd->status.weapon==W_KATAR || 
+			sd->status.weapon==W_REVOLVER || sd->status.weapon==W_RIFLE || sd->status.weapon==W_GATLING || sd->status.weapon==W_SHOTGUN || 
+			sd->status.weapon==W_GRENADE || sd->status.weapon==W_HUUMA || sd->status.weapon==W_2HSTAFF)))
+		{
+			clif_equipitemack(sd,n,0,0);
+			return 0;
+		}
+	}
+
 	if(pos == EQP_ACC) { //Accesories should only go in one of the two,
 		pos = req_pos&EQP_ACC;
 		if (pos == EQP_ACC) //User specified both slots.. 
@@ -8489,8 +8569,9 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag)
 		return 0;
 	}
 
-	// if player is berserk then cannot unequip
-	if( !(flag&2) && sd->sc.count && (sd->sc.data[SC_BERSERK]) )
+	if( !(flag&2) && sd->sc.count && 
+		(sd->sc.data[SC_BERSERK] || // Prevents unequipping anything.
+		(sd->sc.data[SC_PYROCLASTIC] && sd->status.inventory[n].equip & EQP_HAND_R)) )// Can't unequip weapon.
 	{
 		clif_unequipitemack(sd,n,0,0);
 		return 0;
