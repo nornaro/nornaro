@@ -1747,7 +1747,10 @@ static void mob_item_drop(struct mob_data *md, struct item_drop_list *dlist, str
 	if( sd == NULL ) sd = map_charid2sd(dlist->third_charid);
 
 	if( sd
-		&& (drop_rate <= sd->state.autoloot || ditem->item_data.nameid == sd->state.autolootid)
+		&& ( (drop_rate <= sd->state.autoloot 
+				&& drop_rate >= battle_config.item_auto_get_min
+				&& drop_rate < battle_config.item_auto_store ) 
+			|| ditem->item_data.nameid == sd->state.autolootid)
 		&& (battle_config.idle_no_autoloot == 0 || DIFF_TICK(last_tick, sd->idletime) < battle_config.idle_no_autoloot)
 		&& (battle_config.homunculus_autoloot?1:!flag)
 #ifdef AUTOLOOT_DISTANCE
@@ -1761,6 +1764,19 @@ static void mob_item_drop(struct mob_data *md, struct item_drop_list *dlist, str
 			ers_free(item_drop_ers, ditem);
 			return;
 		}
+	}
+	if (sd
+		&& (drop_rate >= battle_config.item_auto_store)
+		&& (battle_config.homunculus_autoloot ? 1 : !flag)
+		&& (itemdb_canstore(&ditem->item_data, pc_isGM(sd)))
+#ifdef AUTOLOOT_DISTANCE
+		&& sd->bl.m == md->bl.m
+		&& check_distance_blxy(&sd->bl, dlist->x, dlist->y, AUTOLOOT_DISTANCE)
+#endif
+		) {	//Autostore.
+			storage_add_auto(sd, &ditem->item_data, 1);
+			ers_free(item_drop_ers, ditem);
+			return;
 	}
 	ditem->next = dlist->item;
 	dlist->item = ditem;

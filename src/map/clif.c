@@ -6920,13 +6920,30 @@ int clif_item_identify_list(struct map_session_data *sd)
 
 	WFIFOHEAD(fd,MAX_INVENTORY * 2 + 4);
 	WFIFOW(fd,0)=0x177;
-	for(i=c=0;i<MAX_INVENTORY;i++){
-		if(sd->status.inventory[i].nameid > 0 && !sd->status.inventory[i].identify){
-			WFIFOW(fd,c*2+4)=i+2;
-			c++;
+	if (battle_config.identify == 1) {
+		for (i = c = 0; i<MAX_INVENTORY; i++) {
+			if (sd->status.inventory[i].nameid > 0 && !sd->status.inventory[i].identify) {
+				sd->status.inventory[i].identify = 1;
+				clif_item_identified(sd, i, 0);
+			}
+		}
+		if (battle_config.identify_storage == 1) {
+			for (i = c = 0; i<MAX_STORAGE; i++) {
+				if (sd->status.storage.items[i].nameid > 0 && !sd->status.storage.items[i].identify) {
+					sd->status.storage.items[i].identify = 1;
+					clif_item_identified(sd, i, 0);
+				}
+			}
+		}
+	} else {
+		for (i = c = 0; i<MAX_INVENTORY; i++) {
+			if (sd->status.inventory[i].nameid > 0 && !sd->status.inventory[i].identify) {
+				WFIFOW(fd, c * 2 + 4) = i + 2;
+				c++;
+			}
 		}
 	}
-	if(c > 0) {
+	if(c > 0 ) {
 		WFIFOW(fd,2)=c*2+4;
 		WFIFOSET(fd,WFIFOW(fd,2));
 		sd->menuskill_id = MC_IDENTIFY;
@@ -8137,10 +8154,13 @@ int clif_autospell(struct map_session_data *sd,int skilllv)
 	WFIFOHEAD(fd,packet_len(0x1cd));
 	WFIFOW(fd, 0)=0x1cd;
 
-	if(skilllv>0 && pc_checkskill(sd,MG_NAPALMBEAT)>0)
-		WFIFOL(fd,2)= MG_NAPALMBEAT;
+	if(skilllv>0 && pc_checkskill(sd,WZ_EARTHSPIKE)>0 && battle_config.earthspike_autospell == 1)
+		WFIFOL(fd,2)= WZ_EARTHSPIKE;
 	else
-		WFIFOL(fd,2)= 0x00000000;
+		if (skilllv>0 && pc_checkskill(sd, MG_NAPALMBEAT)>0)
+			WFIFOL(fd, 2) = MG_NAPALMBEAT;
+		else
+			WFIFOL(fd, 2) = 0x00000000;
 	if(skilllv>1 && pc_checkskill(sd,MG_COLDBOLT)>0)
 		WFIFOL(fd,6)= MG_COLDBOLT;
 	else
@@ -8161,10 +8181,13 @@ int clif_autospell(struct map_session_data *sd,int skilllv)
 		WFIFOL(fd,22)= MG_FIREBALL;
 	else
 		WFIFOL(fd,22)= 0x00000000;
-	if(skilllv>9 && pc_checkskill(sd,MG_FROSTDIVER)>0)
-		WFIFOL(fd,26)= MG_FROSTDIVER;
+	if (skilllv>0 && pc_checkskill(sd, WZ_EARTHSPIKE)>0 && battle_config.earthspike_autospell == 2)
+		WFIFOL(fd, 26) = WZ_EARTHSPIKE;
 	else
-		WFIFOL(fd,26)= 0x00000000;
+		if(skilllv>9 && pc_checkskill(sd,MG_FROSTDIVER)>0)
+			WFIFOL(fd,26)= MG_FROSTDIVER;
+		else
+			WFIFOL(fd,26)= 0x00000000;
 
 	WFIFOSET(fd,packet_len(0x1cd));
 	sd->menuskill_id = SA_AUTOSPELL;
@@ -12202,7 +12225,7 @@ void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
 	if( sd->ud.skilltimer != INVALID_TIMER )
 	{
 		if( skillnum != SA_CASTCANCEL &&
-			!(skillnum == SO_SPELLFIST && (sd->ud.skillid == MG_FIREBOLT || sd->ud.skillid == MG_COLDBOLT || sd->ud.skillid == MG_LIGHTNINGBOLT)) )
+			!(skillnum == SO_SPELLFIST && (sd->ud.skillid == MG_FIREBOLT || sd->ud.skillid == MG_COLDBOLT || sd->ud.skillid == MG_LIGHTNINGBOLT || sd->ud.skillid == WZ_EARTHSPIKE)) )
 			return;
 	}
 	else if( DIFF_TICK(tick, sd->ud.canact_tick) < 0 )

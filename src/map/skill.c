@@ -847,7 +847,7 @@ int skill_additional_effect (struct block_list* src, struct block_list *bl, int 
 		break;
 
 	case WZ_FROSTNOVA:
-		sc_start(bl,SC_FREEZE,skilllv*5+35,skilllv,skill_get_time2(skillid,skilllv));
+		sc_start(bl,SC_FREEZE,skilllv*5+33,skilllv,skill_get_time2(skillid,skilllv));
 		break;
 
 	case WZ_STORMGUST:
@@ -2982,7 +2982,7 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 
 	if (!(flag&2) &&
 		(
-			skillid == MG_COLDBOLT || skillid == MG_FIREBOLT || skillid == MG_LIGHTNINGBOLT
+			skillid == MG_COLDBOLT || skillid == MG_FIREBOLT || skillid == MG_LIGHTNINGBOLT || skillid == WZ_EARTHSPIKE
 		) &&
 		(sc = status_get_sc(src)) &&
 		sc->data[SC_DOUBLECAST] &&
@@ -4057,7 +4057,11 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, int 
 		unsigned int dir = map_calc_dir(bl, src->x, src->y);
 
 		// teleport to target (if not on WoE grounds)
-		if( !map_flag_gvg(src->m) && !map[src->m].flag.battleground && unit_movepos(src, bl->x, bl->y, 0, 1) )
+		if  ( (	( !map_flag_gvg(src->m) || battle_config.chargeatk_gvg ) && 
+				( !map[src->m].flag.battleground || battle_config.chargeatk_bg ) && 
+			unit_movepos(src, bl->x, bl->y, 0, 1 ) 
+			)
+		)
 			clif_slide(src, bl->x, bl->y);
 
 		// cause damage and knockback if the path to target was a straight one
@@ -6794,10 +6798,17 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, in
 
 	case AL_HOLYWATER:
 		if(sd) {
-			if (skill_produce_mix(sd, skillid, 523, 0, 0, 0, 1))
-				clif_skill_nodamage(src,bl,skillid,skilllv,1);
-			else
-				clif_skill_fail(sd,skillid,0,0,0);
+			if (battle_config.mass_benedicta) {
+				if (skill_produce_mix(sd, skillid, 523, 0, 0, 0, 1))
+					clif_skill_nodamage(src,bl,skillid,skilllv,1);
+				else
+					clif_skill_fail(sd,skillid,0,0,0);
+			} else {
+				while (skill_produce_mix(sd, skillid, 523, 0, 0, 0, 1)) {
+					clif_skill_nodamage(src, bl, skillid, skilllv, 1);
+				}
+				clif_skill_fail(sd, skillid, 0, 0, 0);
+			}
 		}
 		break;
 
@@ -7296,7 +7307,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, in
 			clif_autospell(sd,skilllv);
 		else {
 			int maxlv=1,spellid=0;
-			static const int spellarray[3] = { MG_COLDBOLT,MG_FIREBOLT,MG_LIGHTNINGBOLT };
+			static const int spellarray[4] = { MG_COLDBOLT,MG_FIREBOLT,MG_LIGHTNINGBOLT,WZ_EARTHSPIKE };
 			if(skilllv >= 10) {
 				spellid = MG_FROSTDIVER;
 //				if (tsc && tsc->data[SC_SPIRIT] && tsc->data[SC_SPIRIT]->val2 == SA_SAGE)
@@ -13902,10 +13913,16 @@ int skill_check_condition_castbegin(struct map_session_data* sd, short skill, sh
 	case TK_READYDOWN:
 	case TK_READYSTORM:
 	case TK_READYTURN:
-	case TK_JUMPKICK:
-		if( (sd->class_&MAPID_UPPERMASK) == MAPID_SOUL_LINKER )
+		if( (sd->class_&MAPID_UPPERMASK) == MAPID_SOUL_LINKER)
 		{// Soul Linkers cannot use this skill
 			clif_skill_fail(sd,skill,0,0,0);
+			return 0;
+		}
+		break;
+	case TK_JUMPKICK:
+		if ((sd->class_&MAPID_UPPERMASK) == MAPID_SOUL_LINKER && !battle_config.linker_jumpkick)
+		{// Soul Linkers cannot use this skill
+			clif_skill_fail(sd, skill, 0, 0, 0);
 			return 0;
 		}
 		break;
@@ -15245,6 +15262,10 @@ int skill_delayfix (struct block_list *bl, int skill_id, int skill_lv)
 			case CR_SHIELDBOOMERANG:
 				if (sc->data[SC_SPIRIT]->val2 == SL_CRUSADER)
 					time /= 2;
+				break;
+			case PA_SHIELDCHAIN:
+				if (sc->data[SC_SPIRIT]->val2 == SL_CRUSADER)
+					time *= (battle_config.shieldchain_delay/100);
 				break;
 			case AS_SONICBLOW:
 				if (!map_flag_gvg(bl->m) && !map[bl->m].flag.battleground && sc->data[SC_SPIRIT]->val2 == SL_ASSASIN)

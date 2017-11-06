@@ -7141,7 +7141,11 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 			break;
 		case SC_ENDURE:
 			val2 = 7; // Hit-count [Celest]
-			if( !(flag&1) && (bl->type&(BL_PC|BL_MER) || (battle_config.endure&2) != 2) && (!map_flag_gvg(bl->m) || (battle_config.endure&8) != 8) && (!map[bl->m].flag.battleground || (battle_config.endure&32) != 32) && !val4 )
+			if( !(flag&1) && 
+				(bl->type&(BL_PC|BL_MER) || (battle_config.endure&2) != 2) && 
+				(!map_flag_gvg(bl->m) || (battle_config.endure&8) != 8) && 
+				(!map[bl->m].flag.battleground || (battle_config.endure&32) != 32) && 
+				!val4 )
 			{
 				struct map_session_data *tsd;
 				if( sd )

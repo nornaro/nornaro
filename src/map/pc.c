@@ -1242,7 +1242,7 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 		sd->autobonus3[i].active = INVALID_TIMER;
 
 	if (battle_config.item_auto_get)
-		sd->state.autoloot = 10000;
+		sd->state.autoloot = battle_config.item_auto_get_max;
 
 	if (battle_config.disp_experience)
 		sd->state.showexp = 1;

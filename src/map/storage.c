@@ -178,6 +178,43 @@ static int storage_additem(struct map_session_data* sd, struct item* item_data, 
 	return 0;
 }
 
+int storage_add_auto(struct map_session_data* sd, struct item* item_data, int amount)
+{
+	struct storage_data* stor = &sd->status.storage;
+	struct item_data *data;
+	int i;
+
+	if (item_data->nameid <= 0 || amount <= 0)
+		return 1;
+
+	data = itemdb_search(item_data->nameid);
+
+	if (itemdb_isstackable2(data))
+	{//Stackable
+		for (i = 0; i < MAX_STORAGE; i++) {
+			if (compare_item(&stor->items[i], item_data)) {// existing items found, stack them
+				if (amount > MAX_AMOUNT - stor->items[i].amount)
+					return 1;
+				stor->items[i].amount += amount;
+				return 0;
+			}
+		}
+	}
+
+	// find free slot
+	ARR_FIND(0, MAX_STORAGE, i, stor->items[i].nameid == 0);
+	if (i >= MAX_STORAGE)
+		return 1;
+
+	// add item to slot
+	memcpy(&stor->items[i], item_data, sizeof(stor->items[0]));
+	stor->storage_amount++;
+	stor->items[i].amount = amount;
+	//clif_storageitemadded(sd,&stor->items[i],i,amount);
+	//clif_updatestorageamount(sd,stor->storage_amount);
+	return 0;
+}
+
 /*==========================================
  * Internal del-item function
  *------------------------------------------*/

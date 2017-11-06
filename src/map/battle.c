@@ -646,15 +646,33 @@ int battle_calc_damage(struct block_list *src,struct block_list *bl,struct Damag
 
 		if(sc->data[SC_ENERGYCOAT] && flag&BF_WEAPON
 			&& skill_num != WS_CARTTERMINATION)
-		{
-			struct status_data *status = status_get_status_data(bl);
-			int per = 100*status->sp / status->max_sp -1; //100% should be counted as the 80~99% interval
-			per /=20; //Uses 20% SP intervals.
-			//SP Cost: 1% + 0.5% per every 20% SP
-			if (!status_charge(bl, 0, (10+5*per)*status->max_sp/1000))
-				status_change_end(bl, SC_ENERGYCOAT, INVALID_TIMER);
-			//Reduction: 6% + 6% every 20%
-			damage -= damage * 6 * (1+per) / 100;
+		{	
+			if (sc->data[SC_ENERGYCOAT]->val1 == 1) {
+				struct status_data *status = status_get_status_data(bl);
+				if (!status_charge(bl, 0, 3 * damage / 10))
+					status_change_end(bl, SC_ENERGYCOAT, INVALID_TIMER);
+				damage -= (3 * damage) / 10;
+			}
+			if (sc->data[SC_ENERGYCOAT]->val1 == 2) {
+				struct status_data *status = status_get_status_data(bl);
+				int per = 100 * status->sp / status->max_sp - 1; //100% should be counted as the 80~99% interval
+				per /= 20; //Uses 20% SP intervals.
+						   //SP Cost: 1% + 0.5% per every 20% SP
+				if (!status_charge(bl, 0, 30))
+					status_change_end(bl, SC_ENERGYCOAT, INVALID_TIMER);
+				//Reduction: 6% + 6% every 20%
+				damage -= damage *  (6 * per) / 100;
+			}
+			if (sc->data[SC_ENERGYCOAT]->val1 == 3) {
+				struct status_data *status = status_get_status_data(bl);
+				int per = 100*status->sp / status->max_sp -1; //100% should be counted as the 80~99% interval
+				per /=20; //Uses 20% SP intervals.
+				//SP Cost: 1% + 0.5% per every 20% SP
+				if (!status_charge(bl, 0, (10+5*per)*status->max_sp/1000))
+					status_change_end(bl, SC_ENERGYCOAT, INVALID_TIMER);
+				//Reduction: 6% + 6% every 20%
+				damage -= damage * 6 * (1+per) / 100;
+			}
 		}
 
 		if( (sce = sc->data[SC_STONEHARDSKIN]) && flag&BF_WEAPON && damage > 0 )
@@ -1425,6 +1443,8 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 
 			case KN_AUTOCOUNTER:
 				wd.flag=(wd.flag&~BF_SKILLMASK)|BF_NORMAL;
+				wd.blewcount = battle_config.auto_counter_knock;
+				wd.div_ = battle_config.auto_counter_hits;
 				break;
 
 			case NPC_CRITICALSLASH:
@@ -1651,6 +1671,10 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 					break;
 				case CR_SHIELDBOOMERANG:
 					if( sc && sc->data[SC_SPIRIT] && sc->data[SC_SPIRIT]->val2 == SL_CRUSADER )
+						flag.hit = 1;
+					break;
+				case PA_SHIELDCHAIN:
+					if (sc && sc->data[SC_SPIRIT] && sc->data[SC_SPIRIT]->val2 == SL_CRUSADER && battle_config.shieldchain_nomiss)
 						flag.hit = 1;
 					break;
 			}
@@ -2089,6 +2113,11 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				case MS_BOWLINGBASH:
 					skillratio+= 40*skill_lv;
 					break;
+				case KN_AUTOCOUNTER:
+					if (battle_config.auto_counter == 1)
+						skillratio += battle_config.auto_counter_rate;
+					if (battle_config.auto_counter == 2)
+						skillratio += battle_config.auto_counter_rate*skill_lv;
 				case AS_VENOMKNIFE:
 					if ((battle_config.venomknife&512) == 512 && sc && sc->data[SC_POISONREACT])
 						wd.damage *= (100+sc->data[SC_POISONREACT]->val2*50)/100;
@@ -3167,6 +3196,11 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 					sc->data[SC_SPIRIT]->val2 == SL_CRUSADER)
 					ATK_ADDRATE(100);
 				break;
+			case PA_SHIELDCHAIN:
+				if (sc && sc->data[SC_SPIRIT] &&
+					sc->data[SC_SPIRIT]->val2 == SL_CRUSADER)
+					ATK_ADDRATE(battle_config.shieldchain_damage);
+				break;
 		}
 		
 		if( sd )
@@ -4007,7 +4041,10 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 						skillratio += 45;
 						break;
 					case WZ_FROSTNOVA:
-						skillratio += (100+skill_lv*10)*2/3-100;
+						if (tsc && tsc->data[SC_FREEZE])
+							skillratio = 0;
+						else
+							skillratio += (100+skill_lv*10)*2/3-100;
 						break;
 					case WZ_FIREPILLAR:
 						if (skill_lv > 10)
@@ -5928,6 +5965,9 @@ static const struct _battle_data {
 	{ "attribute_recover",                  &battle_config.attr_recover,                    1,      0,      1,              },
 	{ "flooritem_lifetime",                 &battle_config.flooritem_lifetime,              60000,  1000,   INT_MAX,        },
 	{ "item_auto_get",                      &battle_config.item_auto_get,                   0,      0,      1,              },
+	{ "item_auto_get_min",                  &battle_config.item_auto_get_min,               0,      0,		10000,			},
+	{ "item_auto_get_max",                  &battle_config.item_auto_get_max,               0,      0,		10000,			},
+	{ "item_auto_store",                    &battle_config.item_auto_store,                 0,      0,		10000,          },
 	{ "item_first_get_time",                &battle_config.item_first_get_time,             3000,   0,      INT_MAX,        },
 	{ "item_second_get_time",               &battle_config.item_second_get_time,            1000,   0,      INT_MAX,        },
 	{ "item_third_get_time",                &battle_config.item_third_get_time,             1000,   0,      INT_MAX,        },
@@ -6235,7 +6275,8 @@ static const struct _battle_data {
 	{ "duel_only_on_same_map",              &battle_config.duel_only_on_same_map,           0,      0,      1,              },
 	{ "skip_teleport_lv1_menu",             &battle_config.skip_teleport_lv1_menu,          0,      0,      1,              },
 	{ "allow_skill_without_day",            &battle_config.allow_skill_without_day,         0,      0,      1,              },
-	{ "allow_es_magic_player",              &battle_config.allow_es_magic_pc,               0,      0,      1,              },
+	{ "allow_es_magic_player",              &battle_config.allow_es_magic_pc,               0,      0,      1,              }, 
+	{ "es_magic_player_rate",               &battle_config.es_magic_player_rate,            100,    0,      INT_MAX,		},
 	{ "skill_caster_check",                 &battle_config.skill_caster_check,              1,      0,      1,              },
 	{ "status_cast_cancel",                 &battle_config.sc_castcancel,                   BL_NUL, BL_NUL, BL_ALL,         },
 	{ "pc_status_def_rate",                 &battle_config.pc_sc_def_rate,                  100,    0,      INT_MAX,        },
@@ -6358,6 +6399,20 @@ static const struct _battle_data {
 	{ "splasher_killer2",					&battle_config.splasher_killer2,				0,		0,		1,				},
 	{ "splasher_edp",						&battle_config.splasher_edp,					0,      0,		1,				},
 	{ "endure",								&battle_config.endure,							0,      0,		INT_MAX,		},
+	{ "shieldchain_nomiss",					&battle_config.shieldchain_nomiss,				1,      0,      1,				},
+	{ "shieldchain_damage",					&battle_config.shieldchain_damage,				100,    0,      INT_MAX,		},
+	{ "shieldchain_delay",					&battle_config.shieldchain_delay,				100,	0,      100,			},
+	{ "linker_jumpkick",					&battle_config.linker_jumpkick,					0,		0,      1,				},
+	{ "auto_counter",						&battle_config.auto_counter,					0,		0,      2,				},
+	{ "auto_counter_rate",					&battle_config.auto_counter_rate,				0,		0,      INT_MAX,		},
+	{ "auto_counter_hits",					&battle_config.auto_counter_hits,				0,		0,      INT_MAX,		},
+	{ "auto_counter_knock",					&battle_config.auto_counter_knock,				0,		0,      INT_MAX,		},
+	{ "chargeatk_gvg",						&battle_config.chargeatk_gvg,					0,		0,      1,				},
+	{ "chargeatk_bg",						&battle_config.chargeatk_bg,					0,		0,      1,				},
+	{ "identify",							&battle_config.identify,						1,		0,      1,				},
+	{ "identify_storage",					&battle_config.identify_storage,				1,		0,      1,				},
+	{ "earthspike_autospell",				&battle_config.earthspike_autospell,			2,		0,      INT_MAX,		},
+	{ "mass_benedicta",						&battle_config.mass_benedicta,					0,		0,      1, },
 };
 
 

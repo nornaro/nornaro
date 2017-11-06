@@ -11,6 +11,7 @@ struct item;
 //#include "map.h"
 struct map_session_data;
 
+int storage_add_auto(struct map_session_data* sd, struct item* item_data, int amount);
 int storage_delitem(struct map_session_data* sd, int n, int amount);
 int storage_storageopen(struct map_session_data *sd);
 int storage_storageadd(struct map_session_data *sd,int index,int amount);

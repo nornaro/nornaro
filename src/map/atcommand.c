@@ -6560,11 +6560,11 @@ ACMD_FUNC(autoloot)
 		rate = (int)(drate*100);
 	}
 	if (rate < 0) rate = 0;
-	if (rate > 10000) rate = 10000;
+	if (rate > battle_config.item_auto_get_max) rate = battle_config.item_auto_get_max;
 
 	sd->state.autoloot = rate;
 	if (sd->state.autoloot) {
-		snprintf(atcmd_output, sizeof atcmd_output, "Autolooting items with drop rates of %0.02f%% and below.",((double)sd->state.autoloot)/100.);
+		snprintf(atcmd_output, sizeof atcmd_output, "Autolooting items with drop rates of %0.02f%% and below.", ((double)sd->state.autoloot)/100.);
 		clif_displaymessage(fd, atcmd_output);
 	}else
 		clif_displaymessage(fd, "Autoloot is now off.");

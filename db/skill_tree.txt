@@ -39,7 +39,7 @@
 2,19,10,0,0,0,0,0,0,0,0,0,0 //MG_FIREBOLT#Fire Bolt#
 2,20,10,0,0,0,0,0,0,0,0,0,0 //MG_LIGHTNINGBOLT#Lightning Bolt#
 2,21,10,20,4,0,0,0,0,0,0,0,0 //MG_THUNDERSTORM#Thunderstorm#
-2,157,1,0,0,0,0,0,0,0,0,0,0 //MG_ENERGYCOAT#Energy Coat#
+2,157,3,0,0,0,0,0,0,0,0,0,0 //MG_ENERGYCOAT#Energy Coat#
 2,410,1,0,0,0,0,0,0,0,0,0,0 //WE_CALLBABY#Call Baby#
 2,681,1,0,0,0,0,0,0,0,0,0,0 //ALL_INCCARRY#Enlarge Weight Limit R#
 

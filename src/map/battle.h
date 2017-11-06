@@ -133,6 +133,9 @@ extern struct Battle_Config
 	int random_monster_checklv;
 	int attr_recover;
 	int item_auto_get;
+	int item_auto_get_min;
+	int item_auto_get_max;
+	int item_auto_store;
 	int flooritem_lifetime;
 	int item_first_get_time;
 	int item_second_get_time;
@@ -407,6 +410,20 @@ extern struct Battle_Config
 	int splasher_killer2;
 	int splasher_edp;
 	int endure;
+	int shieldchain_nomiss;
+	int shieldchain_damage;
+	int shieldchain_delay;
+	int linker_jumpkick;
+	int auto_counter;
+	int auto_counter_rate;
+	int auto_counter_hits;
+	int auto_counter_knock;
+	int chargeatk_gvg;
+	int chargeatk_bg;
+	int identify;
+	int identify_storage;
+	int earthspike_autospell;
+	int mass_benedicta;
 
 	int display_hallucination;	// [Skotlex]
 	int use_statpoint_table;	// [Skotlex]
@@ -455,6 +472,7 @@ extern struct Battle_Config
 
 	int allow_skill_without_day; // [Komurka]
 	int allow_es_magic_pc; // [Skotlex]
+	int es_magic_player_rate;
 	int skill_wall_check; // [Skotlex]
 	int cell_stack_limit; // [Skotlex]
 	int skill_caster_check; // [Skotlex]
